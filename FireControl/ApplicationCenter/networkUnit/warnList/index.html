@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>隐患列表</title>
+  <link rel="stylesheet" href="../../../css/reset.css">
+  <link rel="stylesheet" href="../../../css/common.css">
+  <link rel="stylesheet" href="../../../components/components.css">
+  <script src="../../../js/rem.js"></script>
+  <style>
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .list {
+      padding-top: .2rem;
+    }
+
+    .item {
+      width: 6.6rem;
+      margin: 0 auto .2rem;
+      border-radius: .1rem;
+      background-color: #ffffff;
+    }
+
+    .item .top {
+      position: relative;
+      border-bottom: 1px solid #E5E5E5;
+      padding: .24rem .2rem;
+      overflow: hidden;
+    }
+
+    .item .top .msg {
+      margin-right: .5rem;
+      background-color: #fff;
+      word-break: break-word;
+      font-size: .28rem;
+      line-height: .4rem;
+      color: #333;
+    }
+
+    .item .top .t-txt {
+      height: .24rem;
+      margin-top: .14rem;
+      font-size: .22rem;
+      line-height: .24rem;
+      color: #333;
+    }
+
+    .item .top .t-txt span {
+      color: #666;
+    }
+
+    .item .top .sta {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: .65rem;
+      height: .5rem;
+      padding-right: .05rem;
+      background-color: #e96e5d;
+      border-radius: 0 0 0 .7rem/ 0 0 0 .5rem;
+      font-size: .15rem;
+      line-height: .4rem;
+      text-align: right;
+      color: #fff;
+    }
+
+    .item .bottom {
+      padding: 0 .2rem;
+      height: .56rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .item .bottom .state {
+      height: .36rem;
+      padding: 0 .2rem;
+      border: 1px solid #4089D7;
+      border-radius: .18rem;
+      font-size: .22rem;
+      line-height: .36rem;
+      color: #4089D7;
+    }
+  </style>
+</head>
+<body>
+<div id="app" v-cloak>
+  <div class="page-all">
+    <div class="struc noFooter search">
+      <div class="header">
+        <head-nav left-arrow title="隐患列表" @click-left="onClickLeft">
+          <div slot="right" class="saixuan" @click="onClickRight"><span>筛选</span></div>
+        </head-nav>
+        <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <hs-list-load
+            :width="cont_width"
+            :height="cont_height"
+            v-model="loading"
+            :offset="1200"
+            :finished="finished"
+            :finished-text='finished_text'
+            @load="onLoad(page)"
+            pull-refresh
+            @refresh="onRefresh"
+          >
+            <ul class="list">
+              <template v-for="(item, index) in list">
+                <li class="item shadow-item" @click="toDetail(item)">
+                  <div class="top">
+                    <div class="msg"><span>{{item.hiddenTroubleContent}}</span></div>
+                    <div class="t-txt">隐患场所：<span>{{item.areaName}}</span></div>
+                    <div class="t-txt">上报人：<span>{{item.reportUserName}}</span></div>
+                    <div class="t-txt">创建时间：<span>{{item.creationTime.replace(/-/g, '/')}}</span></div>
+                    <div class="sta" v-if="item.isOverDue">已逾期</div>
+                  </div>
+                  <div class="bottom">
+                    <div class="state">{{item.hiddenTroubleStatus | status}}</div>
+                  </div>
+                </li>
+              </template>
+            </ul>
+          </hs-list-load>
+          <hs-list-null v-model="show_list_null"></hs-list-null>
+        </div>
+      </div>
+    </div>
+
+    <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .list .item" :list="list" :total="total"></hs-go-back>
+    <top-filter v-model="screen_show" :select="select" hide-title @confirm="confirm"></top-filter>
+  </div>
+</div>
+
+<script src="../../../js/es6-promise.auto.min.js"></script>
+<script src="../../../js/vue.min.js"></script>
+<script src="../../../js/axios.min.js"></script>
+<script src="../../../js/http.js"></script>
+<script src="../../../js/getQueryVariable.js"></script>
+<script src="../../../components/components.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        id: '',
+
+        show_list_null:false,
+        finished_text:'没有更多了',
+
+        screen_show: false,
+        search_text: '',
+
+        yhtype: '',
+        select: [
+          {
+            title: '单位类型', // title
+            last_text: '', // 最后一次点击的选项的文本
+            options: [// 0：已完成 9：待审核 1：进行中 3：待复查 8：已废弃
+              {text: '已完成', active: false, id: 0},
+              {text: '待整改', active: false, id: 1},
+              {text: '待复查', active: false, id: 3},
+              {text: '待指派', active: false, id: 9},
+              // {text: '已废弃', active: false, id: 8}
+            ]
+          }
+        ],
+
+        cont_width: '720px', // 组件宽度
+        cont_height: '720px', // 组件高度
+        loading: false, // 是否正在加载
+        finished: false, // 是否全部加载完成
+        page: 0,
+        list: [],
+        total: 0
+      },
+      created: function () {
+        this.id = getQueryVariable().id
+      },
+      mounted: function () {
+        var This = this
+
+        window.onload = function () {
+          var eMain = document.querySelector('#app .struc .main')
+          This.cont_width = eMain.clientWidth + 'px'
+          This.cont_height = eMain.clientHeight + 'px'
+        }
+      },
+      filters: {
+        status: function (val) {
+          var options = [
+            {text: '已完成', active: false, id: 0},
+            {text: '待整改', active: false, id: 1},
+            {text: '待复查', active: false, id: 3},
+            {text: '待指派', active: false, id: 9},
+          ]
+          for (var i = 0; i < options.length; i++) {
+            var option = options[i]
+            if (val == option.id) {
+              return option.text
+            }
+          }
+        }
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        // 筛选
+        onClickRight() {
+          this.screen_show = !this.screen_show
+        },
+        toDetail(item) {
+          window.location.href = '../warnDetail/index.html?id=' + item.hiddenTroubleReportId
+        },
+        // 遍历出选项
+        getOptions: function (data) {
+          var yhtype = '' // 消防维保状态
+
+          for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            for (var j = 0; j < item.options.length; j++) {
+              var option = item.options[j];
+              if (option.active) {
+                switch (i) {
+                  case 0:
+                    yhtype += ',' + option.id
+                    break;
+                }
+              }
+            }
+          }
+          this.yhtype = yhtype.replace(/^,/, '')
+        },
+        confirm: function (data) {
+          this.getOptions(data)
+
+          this.loading = false
+          this.finished = false
+          this.list = []
+          this.page = 0
+
+          this.onClickRight()
+          this.onLoad(this.page)
+        },
+        // 搜索
+        onSearch: function () {
+          this.loading = false
+          this.finished = false
+          this.page = 0
+          this.list = []
+
+          this.onLoad()
+        },
+        // 加载数据
+        onLoad: function (index) {
+          var This = this
+
+          this.apiGet('/Maintenance/GetHiddenDangerPageList', {
+            limit: 20, // 每页条数	 int,
+            offset: this.page * 20, //	当其显示起始数据 int,
+            unitid: this.id,
+            KeyWord: this.search_text, // 关键字
+            status: this.yhtype, // 隐患状态
+          }).then(function (res) {
+            var data = res.data.rows
+            This.total = res.data.total
+
+            if(!data) data = [];
+            for (var j = 0; j < data.length; j++) {
+              This.list.push(data[j])
+            }
+
+            if (data.length === 0 || !data) {
+                This.finished = true;
+            }
+
+            if (data.length === 0 && This.list.length === 0) {
+              // 显示缺省页
+              This.show_list_null = true
+              This.finished_text = ''
+            } else {
+              This.show_list_null = false
+            }
+
+            This.loading = false
+          }).catch(function (reason) {
+            This.loading = false
+            This.finished = true
+          })
+
+          this.page++
+        },
+        onRefresh: function () {
+            this.finished = false
+            this.list = []
+            this.page = 0
+
+            this.show_list_null = false
+            setTimeout(function () {
+                this.onLoad(this.page)
+            }.bind(this), 1000)
+        }
+      }
+    })
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <title>防火巡查数据统计</title>
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <script src="../../js/rem.js"></script>
+  <style>
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .clear:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    .search {
+      position: relative;
+      height: .78rem;
+      line-height: .78rem;
+      background-color: #3673BB;
+      margin-top: -2px;
+    }
+
+    .search input {
+      font-size: .22rem;
+      width: 5.9rem;
+      height: .46rem;
+      border-radius: .23rem;
+      outline: none;
+      padding-left: .7rem;
+      margin-left: 0.3rem;
+      background: #EFEFEF url('../../icon/search.png') .23rem .07rem no-repeat;
+      background-size: .28rem auto;
+      border: 0;
+    }
+
+    .search input::placeholder {
+      color: #999999;
+      font-size: .22rem;
+    }
+
+    .search img {
+      position: absolute;
+      right: .5rem;
+      top: .28rem;
+      width: .28rem;
+    }
+
+    .wrap {
+      width: 6.58rem;
+      /*height: 3.39rem;*/
+      margin: .2rem auto 0;
+      border: 1px solid rgba(247, 247, 247, 1);
+      border-radius: .1rem;
+    }
+
+    .wrap div {
+      background-color: #fff;
+    }
+
+    .navTop {
+      line-height: .56rem;
+      height: .56rem;
+      border-bottom: 1px solid #E5E5E5;
+      background: url('../../icon/clear.png') 6rem .07rem no-repeat;
+      background-size: .38rem auto;
+    }
+
+    .wrap .navText {
+      margin-bottom: 0;
+    }
+
+    .wrap .navTop i {
+      display: inline-block;
+      width: .08rem;
+      height: .32rem;
+      background: rgba(104, 189, 255, 1);
+      border-radius: .04rem;
+      vertical-align: middle;
+      margin-left: .14rem;
+      margin-right: .12rem;
+    }
+
+    .wrap .content {
+      padding-left: .39rem;
+      padding-top: .29rem;
+      overflow: hidden;
+    }
+
+    .wrap .content div {
+      float: left;
+      font-size: .24rem;
+      color: #666666;
+    }
+
+    .wrap .content div:last-child {
+      margin-bottom: .33rem;
+    }
+
+    .wrap .content div:nth-child(2), .wrap .content div:nth-child(3) {
+      line-height: .4rem;
+    }
+
+    .wrap .content .left {
+      width: 100%;
+      line-height: .4rem;
+    }
+
+    .wrap .content .mtop {
+      margin-top: .2rem;
+    }
+
+    .wrap .content div:first-child {
+      margin-right: .29rem;
+    }
+
+    .wrap img {
+      width: 1.64rem;
+      height: 1.22rem;
+      border-radius: .08rem;
+    }
+  </style>
+</head>
+<body>
+<div id="app" v-cloak>
+  <div class="struc noFooter">
+    <div class="header">
+      <head-nav left-arrow title="防火巡查数据统计" @click-left="onClickLeft"></head-nav>
+    </div>
+    <div class="main">
+      <div class="main-scroll">
+        <div class="search">
+          <input type="text" placeholder="搜索内容描述..." v-model="sousuo">
+          <img src="../../icon/clear.png" alt="" v-show="sousuo" @click="clear">
+        </div>
+        <tabs-nav class="tabs-nav" ref="tabsZj" :tabs="tabs" v-model="tab_index" @tab_index="skip"></tabs-nav>
+        <div class="wrap" v-for="(item,index) in datas" :key="index">
+          <div class="navTop" @click="unfold(index)"><i></i><span>基本信息</span></div>
+          <div class="content clear" ref="tent">
+            <div><img src="../../icon/zhpf.png" alt=""></div>
+            <div>单位名称：武汉普天科技有限公司</div>
+            <div>使用名称：武汉XX有限公司</div>
+            <div class="left mtop">本单位使用建筑：956m²</div>
+            <div class="left">总建筑面积：1033m²单位</div>
+            <div class="left">单位地址：武汉市洪山区徐家棚</div>
+            <div class="left">单位类型：学校</div>
+            <div class="left">{{item.name}}</div>
+          </div>
+        </div>
+        <div class="wrap">
+          <div class="navTop navText"><i></i><span>基本信息</span></div>
+          <div class="content clear">
+            <div class="left mtop">本单位使用建筑：956m²</div>
+            <div class="left">总建筑面积：1033m²单位</div>
+            <div class="left">单位地址：武汉市洪山区徐家棚</div>
+            <div class="left">单位类型：学校</div>
+            <div class="left">建筑列表：主楼 1号楼 2</div>
+          </div>
+        </div>
+        <div style="height: .4rem;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/axios.min.js"></script>
+<!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+<script src="../../components/components.js"></script>
+<script>
+  window.onload = function () {
+    var vm = new Vue({
+      el: '#app',
+      data: function () {
+        return {
+          tabs: ['基本信息', '实时物联', '事件记录', '消防维护', '防火巡查'],
+          tab_index: 0,
+          sousuo: '',
+          height: '',
+          datas: [
+            {name: 'a', hiden: true,},
+            //   {name:'b',hiden:true,},
+            //   {name:'c',hiden:true,},
+            //   {name:'d',hiden:true,}
+          ]
+        }
+      },
+      mounted() {
+      },
+      methods: {
+        onClickLeft: function () {
+          window.history.go(-1)
+        },
+        skip(index) {
+          if (index == 2)
+            window.location.href = '../unitive/S_incident.html';
+        },
+        unfold(index) {
+          if (this.datas[index].hiden) {
+            this.datas[index].hiden = !this.datas[index].hiden
+            this.$refs.tent[index].style.display = 'none';
+          } else {
+            this.datas[index].hiden = !this.datas[index].hiden
+            this.$refs.tent[index].style.display = 'block';
+          }
+        },
+        clear() {
+          this.sousuo = ''
+        },
+        hiden() {
+          if (this.show) {
+            this.show = !this.show
+            this.$refs.reen.style.display = 'none'
+          } else {
+            this.show = !this.show
+            this.$refs.reen.style.display = 'block'
+          }
+        }
+      }
+    })
+  }
+</script>
+</body>
+</html>

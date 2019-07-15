@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设备列表</title>
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../components/components.css">
+    <script src="../../js/rem.js"></script>
+</head>
+<style>
+    .main-scroll{
+        background-color: #E5E5E5;
+    }
+    .deviceWrap{
+        width: 100%;
+        border-top: 1px solid transparent;
+    }
+    .deviceWrap .item{
+        margin: 0 0.3rem;
+        padding: 0.24rem;
+        background-color: #FFFFFF;  
+        margin-top: 0.2rem;
+        border-radius: 0.08rem;
+        box-sizing: border-box;
+    }
+    .deviceWrap .item .item_l{
+        width: 1.35rem;
+        height: 1.01rem;
+        display: inline-block;
+        box-sizing: border-box;
+        /* display: flex;
+        flex-direction: column;
+        justify-content: center; */
+    }
+    .deviceWrap .item .item_l img{
+        /* height: 1.01rem; */
+        width: 100%;
+        height: 100%;
+        /* display: block; */
+        border-radius: 0.08rem;
+    }
+    .deviceWrap .item .item_m{
+        display: inline-block;
+        vertical-align: top;
+        height: 1.01rem;
+        line-height: 1.01rem;
+        color: #666666;
+        font-size: 0.28rem;
+        margin-left: 0.2rem;
+        width: 50%;
+        overflow: hidden;
+        text-overflow:ellipsis; 
+        white-space: nowrap;
+    }
+    .deviceWrap .item .item_r{
+        float: right;
+        height: 1.01rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .deviceWrap .item .item_r .d_state{
+        width: 1.16rem;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        text-align: center;
+        font-size: 0.4rem;
+        color: #FFFFFF;
+        border-radius: 0.3rem;
+        transform: scale(0.5);
+        transform-origin: 100% 50%;
+        padding: 0.02rem 0.05rem;
+    }
+    .deviceWrap .item .item_r .d_state.normal{
+        background-color: #45C7F2;
+    }
+    .deviceWrap .item .item_r .d_state.abnormal{
+        background-color: #D66E56;
+    }
+    .scanWrap{
+        width: 1.08rem;
+        height: 1.08rem;
+        position: fixed;
+        bottom:0.3rem;
+        right: 0.2rem;
+        z-index: 999;
+    }
+    .scanWrap>img{
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+    <div id="app">
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav title="设备列表" class="head-nav-bar"><span slot="left"></span></head-nav>
+                    <!-- <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search> -->
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                            <hs-list-load :width="cont_width" :height="cont_height" v-model="loading"
+                                    :immediate-check="false" :offset="1200" :finished="finished" :finished-text="finished_text"
+                                    @load="getData(page)" pull-refresh @refresh="onRefresh">
+                                <div class="deviceWrap">
+                                    <div class="item shadow-item" v-for="(item,index) in list" :key="index" @click="toDetail(item)">
+                                        <div class="item_l">
+                                            <img :src="item.imageUrl" alt="">
+                                        </div>
+                                        <div class="item_m">
+                                            {{item.name}}
+                                        </div>
+                                        <div class="item_r">
+                                            <div class="d_state normal" v-if="item.state == 1">正常</div>
+                                            <div class="d_state abnormal" v-if="item.state == 0">异常</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </hs-list-load>
+                            <hs-list-null v-model="show_list_null"></hs-list-null>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../js/es6-promise.auto.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/axios.min.js"></script>
+<script src="../../js/http.js"></script>
+<script src="../../components/components.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data:{
+            cont_width: '375px', // tabs组件宽度
+            cont_height: '375px', // tabs 组件高度
+            loading: false, // 是否正在加载
+            finished: true, // 是否全部加载完成
+            finished_text: '没有更多了',
+            page: 0,
+
+            list: [],
+
+            show_list_null:false,
+
+            familyId:'',//家庭id
+        },
+        mounted:function(){
+            // localStorage.setItem('familyId','ca1d3ecc62a9459588a63e83ba926038');
+            this.familyId = localStorage.getItem('familyId');
+
+            var This = this;
+            window.onload = function () {
+                var eMain = document.querySelector('.struc .main')
+                This.cont_width = eMain.clientWidth + 'px'
+                This.cont_height = eMain.clientHeight + 'px'
+            }
+            this.getData();
+        },
+        methods:{
+            //下拉刷新
+            onRefresh:function(){
+                // this.finished = false
+                this.list = []
+
+                this.show_list_null = false
+                setTimeout(function () {
+                    this.getData(this.page)
+                }.bind(this), 1000)
+            },
+            getData:function(){
+                var This = this;
+                this.apiGet('/Family/devices',{
+                    id: this.familyId,//家庭id 测试id:ca1d3ecc62a9459588a63e83ba926038
+                })
+                .then(function(res){
+                    var data = res.data.data;
+
+                    if(!data || data.length == 0){
+                    // 显示缺省页
+                    This.show_list_null = true;
+                        This.finished_text = '';
+                    }
+
+                    for (var i = 0; i < data.length; i++) {
+                        var datum = data[i]
+
+                        if (!datum.fileUrls) {
+                            datum.fileUrls = '[]'
+                        }
+
+                        try {
+                            datum.fileUrls = JSON.parse(datum.fileUrls)
+                        } catch (e) {
+                            datum.fileUrls = []
+                        }
+
+                        datum.imgs = []
+                        for (var j = 0; j < datum.fileUrls.length; j++) {
+                            datum.imgs.push(imageURL + datum.fileUrls[j].FileName)
+                        }
+                    }
+
+                    for(var l = 0;l < data.length; l++){
+                        This.list.push(data[l]);
+                    }
+                }).catch(function(err){
+                    
+                })
+            },
+            //扫描
+            doScan:function(){
+                console.log('扫描')
+            },
+            //详情
+            toDetail:function(item){
+                console.log(item.id);
+                window.location.href = './deviceDetail.html?oldId='+item.id;
+            }
+        }
+    })
+</script>
+</html>

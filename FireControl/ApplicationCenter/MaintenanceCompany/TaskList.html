@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>维保任务列表</title>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/script_px2rem.js"></script>
+	<script src="../../js/swiper.min.js"></script>
+	<script src="../../js/mui.min.js"></script>
+	<link rel="stylesheet" href="../../css/mui.min.css">
+	<link rel="stylesheet" href="../../css/swiper.min.css">
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/application-center.css">
+</head>
+<body style="background: #EFEFEF">
+	<div class="task-list"> 
+		<div class="public-color fixed-top">
+			<div class="header-back public-color">
+				<a href="javascript:history.back(-1)" class="back-btn"><i class="back-icon"></i></a>
+				<div class="header-title">页面已淘汰</div>
+				<div class="screening">筛选<i class="screening-icon"></i></div>
+			</div>
+			<div class="search-base public-color">
+				<div class="search-box">
+					<i class="search-icon"></i>
+					<input type="text" placeholder="请输入公司名称">
+					<i class="del-icon"></i>
+				</div>
+			</div>
+		</div>
+		<div class="main">
+			<div class="generated mui-content mui-scroll-wrapper" id="refreshContainer">
+				<div class="company-list mui-scroll">
+					<ul class="mui-table-view mui-table-view-chevron">
+						<!-- <div class="item">
+							<a href="">
+								<div class="item-top">
+									<div class="company-name">武汉普天科技有限公司例行维保</div>
+									<div class="time">创建时间： 2019-05-26 17：45</div>
+								</div>
+								<div class="address">维保场所： 某某公司<span class="state">已完成</span></div>
+							</a>
+						</div> -->
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		<!-- 筛选 -->
+		<div class="screening-tc">
+			<div class="tc-center">
+				<div class="screening-icon">
+					<div class="title">任务类型 <div class="checked-text"></div></div>
+					<div class="level-list clearfix">
+						<div>待指派</div>
+						<div>未开始</div>
+						<div>未确认</div>
+						<div>进行中</div>
+						<div>已完成</div>
+						<div>被取消</div>
+					</div>
+				</div>
+				<div class="confirm-btn">
+					<a href="javascript:;" class="reset fl">重置</a>
+					<a href="javascript:;" class="confirm fr">确定</a>
+				</div>
+			</div>
+			<div class="shadow-box"></div>
+		</div>
+	</div>
+</body>
+<script src="../../js/common.js"></script>
+<script>
+var ScreeningState=false; //弹窗状态
+var level=-1;  //转态
+var stateAny=['待指派','未开始','未确认','进行中','已完成',"被取消"];
+var InputVal=''; //关键字
+var total //总数
+var offset=1 //页码
+var limit= 20 //每页数量
+var number=20; //单页个数
+var index=''; //当前状态
+var startX;  //开始触碰屏幕的左距离
+var moveEndX; //手指离开屏幕的左距离
+var ScreeningConditi=true; //筛选条件显示状态
+/*搜索*/
+$(".search-base input").change(function(){
+	InputVal=$(this).val();
+	Ajax()
+})
+$(".search-box .del-icon").click(function(){
+	$(".search-box input").val('');
+	InputVal='';
+	Ajax()
+})
+
+
+/*筛选*/
+$(".level-list div").click(function(){
+	if($(this).hasClass("active")){
+		$(this).removeClass("active");
+		$(this).parent().parent().find(".checked-text").text("")
+	}else{
+		$(this).addClass("active");
+		$(this).parent().parent().find(".checked-text").text($(this).text())
+	}
+})
+
+$(".checked-text").click(function(){
+	if(ScreeningConditi){
+		$(this).addClass("active")//.parents(".screening-icon").find(".level-list").hide();
+		ScreeningConditi=!ScreeningConditi;
+	}else{
+		$(this).removeClass("active")//.parents(".screening-icon").find(".level-list").show();
+		ScreeningConditi=!ScreeningConditi;
+	}
+	
+})
+
+$(".screening").click(function(){
+	$(".level-list div").removeClass("active")
+	$(".screening-tc").show().find(".tc-center").animate({"left":".7rem"},300);
+	ScreeningState=!ScreeningState;
+	if(index===''){
+		$(".level-list div").removeClass("active");
+		$(".checked-text").text('');
+	}else{
+		for(var i=0;i<index.length;i++){
+			$(".level-list div").eq(index[i]).addClass("active");
+			$(".checked-text").text($(".level-list div").eq(index[i]).text())
+			
+		}
+	}
+})
+
+/*点击左侧阴影部分隐藏弹窗*/
+$(".shadow-box").click(function(){
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	ScreeningState=!ScreeningState
+})
+
+/*筛选确认按钮*/
+$(".confirm-btn .confirm").click(function(){
+	level='';
+	for(var i=0;i<$(".level-list div").length;i++){
+		if($(".level-list div").eq(i).hasClass("active")==true){
+			level=level+(i+1)+",";
+			index=index+i;
+		}
+	}
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	level=level.slice(0,level.length-1);
+	Ajax();
+	ScreeningState=!ScreeningState
+	console.log("搜索的类型："+level)
+
+})
+
+/*筛选重置*/
+$(".reset").click(function(){
+	$(".tc-center").find(".active").removeClass("active");
+	$(".tc-center").find(".checked-text").text("");
+	level='';
+	index='';
+	Ajax();
+})
+
+/*滑动隐藏筛选弹窗*/
+$(".screening-tc").on("touchstart", function(e) {
+   startX = e.originalEvent.changedTouches[0].pageX;
+   
+});
+$(".screening-tc").on("touchend", function(e) {
+   moveEndX = e.originalEvent.changedTouches[0].pageX;
+   if(moveEndX>startX+50){
+   		$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+   		ScreeningState=!ScreeningState;
+   }
+});
+
+/*获取地址栏参数*/
+var id=getQueryVariable().id; //公司id
+var CompanyName=getQueryVariable().CompanyName; //公司名称
+$(".header-title").text(CompanyName); //设置状态栏信息
+
+/*上拉刷新，下拉加载*/
+mui.init({
+  pullRefresh : {
+    container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+    down : {
+      auto: true,//可选,默认false.首次加载自动上拉刷新一次
+      callback :pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据； 
+    },
+    up : {
+    	auto:false,//可选,默认false.自动上拉加载一次
+    	contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+      	contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+    	callback :OnPull
+    }
+  }
+
+});
+function pullfresh(){
+	Ajax();
+	mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+}
+function OnPull(){
+	limit=limit+number;
+	setTimeout("Ajax()",1000)
+    
+}
+function Ajax(){
+	commonAjax ("","api/Maintenance/GetMaintenanceTaskPageList?offset=0&limit="+limit+"&keyword="+InputVal+"&company="+id+"&status="+level+"",NewList,"get")
+	function NewList(rs){  //渲染数据
+		total=rs.total;
+		console.log(rs)
+		if(total==0){ //无数据，添加类名
+			$(".mui-table-view").addClass("none");
+			$(".mui-table-view").html('');
+		}else{
+			$(".mui-table-view").html('');
+	   		for(var i=0;i<rs.rows.length;i++){
+	   			rs.rows[i].taskStartTime=rs.rows[i].taskStartTime.replace("T"," ");
+				$(".mui-table-view").append("<div class='item'><a href='' id='"+rs.rows[i].id+"'><div class='item-top'><div class='company-name'>"+rs.rows[i].taskName+"</div><div class='time'>创建时间："+rs.rows[i].taskStartTime+"</div></div><div class='address'>联网单位： "+rs.rows[i].repairCompanyName+"<span class='state'>"+stateAny[rs.rows[i].currentStatus-1]+"</span></div></a></div>")
+			}
+		}
+		if(limit>total){ //全部内容加载完毕
+			mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+			      		
+		}else{
+			mui.toast('加载了'+number+'条消息');
+			mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);//传入false,表示还有数据
+		    mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+		}
+	}
+}
+
+/*跳转详情页*/
+mui("#refreshContainer").on("tap","a",function(){
+	window.location.href = "MaintenanceDetails.html?id="+$(this).attr("id")+"";
+
+		
+});
+
+</script>
+</html>

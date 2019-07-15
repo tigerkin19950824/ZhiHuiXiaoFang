@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>人员详情</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <script src="../../js/rem.js"></script>
+  <!-- mui -->
+  <!--<link rel="stylesheet" href="../../css/imageview.css"/>-->
+  <!--<link rel="stylesheet" href="../../css/mui.imageviewer.css"/>-->
+  <!--<link rel="stylesheet" href="../../css/mui.min.css">-->
+  <style>
+    .struc .main {
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+
+    .tabs-nav .tab-wrap .tab-ul-2 div.tab-text {
+      flex: 1 1 25%;
+    }
+
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .tab-cont {
+      position: absolute;
+      top: .88rem;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      overflow: auto;
+    }
+
+    /* 基本信息 start */
+    .jbxx .jbxx-item {
+      width: 6.6rem;
+      /*height: 3.39rem;*/
+      margin: .2rem auto 0;
+      background-color: #fff;
+      border: 1px solid rgba(247, 247, 247, 1);
+      border-radius: .1rem;
+      overflow: hidden;
+      padding-bottom: 0.24rem;
+    }
+
+    .jbxx .jbxx-item .navTop {
+      /* line-height: .56rem;
+      height: .56rem; */
+      font-size: 0.28rem;
+      background: #fff url('../../icon/jiantou_bottom_icon.png') 6rem .24rem no-repeat;
+      background-size: .23rem auto;
+      padding: 0.24rem 0.24rem;
+      box-sizing: border-box;
+      padding-bottom: 0;
+    }
+
+
+    .jbxx .jbxx-item .navTop i {
+      display: inline-block;
+      width: .08rem;
+      height: .32rem;
+      background: rgba(104, 189, 255, 1);
+      border-radius: .04rem;
+      vertical-align: top;
+      margin-left: .14rem;
+      margin-right: .12rem;
+    }
+    .jbxx .jbxx-item .navTop span{
+      display: inline-block;
+      line-height: 0.32rem;
+      vertical-align: top;
+    }
+    .jbxx .jbxx-item .cont-iframe {
+      width: 6.2rem;
+      height: 4.8rem;
+      margin: .2rem auto;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page-all">
+    <div class="struc noFooter search">
+      <div class="header">
+        <head-nav left-arrow :title="title" @click-left="onClickLeft"></head-nav>
+        <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <tabs-nav class="tabs-nav" ref="tabsZj" :tabs="tabs" v-model="tab_index" :swipe-threshold="5"></tabs-nav>
+          <div class="tab-cont" v-show="tab_index===0">
+            <ul class="jbxx">
+              <li class="jbxx-item shadow-item">
+                <div class="navTop" @click="unfold('t0')"><i></i><span>处警量</span></div>
+                <div class="cont-iframe" v-if="info_state['t0']">
+                  <iframe :src="allNumSrc" frameborder="0" width="100%" height="100%"></iframe>
+                </div>
+              </li>
+              <li style="height: .3rem;"></li>
+            </ul>
+          </div>
+          <div class="tab-cont" v-show="tab_index===1">
+              <ul class="jbxx">
+                  <li class="jbxx-item shadow-item">
+                    <div class="navTop" @click="unfold('t0')"><i></i><span>A类告警</span></div>
+                    <div class="cont-iframe" v-if="info_state['t0']">
+                      <iframe :src="A_src" frameborder="0" width="100%" height="100%"></iframe>
+                    </div>
+                  </li>
+              </ul>
+          </div>
+          <div class="tab-cont" v-show="tab_index===2">
+              <ul class="jbxx">
+                  <li class="jbxx-item shadow-item">
+                    <div class="navTop" @click="unfold('t0')"><i></i><span>B类告警</span></div>
+                    <div class="cont-iframe" v-if="info_state['t0']">
+                      <iframe :src="C_src" frameborder="0" width="100%" height="100%"></iframe>
+                    </div>
+                  </li>
+              </ul>
+          </div>
+          <div class="tab-cont" v-show="tab_index===3">
+              <ul class="jbxx">
+                  <li class="jbxx-item shadow-item">
+                    <div class="navTop" @click="unfold('t0')"><i></i><span>人员离岗</span></div>
+                    <div class="cont-iframe" v-if="info_state['t0']">
+                      <iframe :src="C_src" frameborder="0" width="100%" height="100%"></iframe>
+                    </div>
+                  </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/es6-promise.auto.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/axios.min.js"></script>
+<script src="../../js/http.js"></script>
+<script src="../../js/getQueryVariable.js"></script>
+<script src="../../components/components.js"></script>
+<!-- mui -->
+<!--<script src="../../js/mui.min.js"></script>-->
+<!--<script src="../../js/mui.imageViewer.js"></script>-->
+<!--<script src="../../js/mui.previewimage.js"></script>-->
+<!--<script src="../../js/mui.zoom.js"></script>-->
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: function () {
+        return {
+          title: '人员详情',
+          tabs: ['总计', 'A类告警', 'B类告警', '人员离岗'],
+          tab_index: 0,
+          search_text: '',
+
+          id: '', // id
+          name: '', // 名称
+          src:'http://192.168.10.160:8898/thinkReport/board/APP_MonitorCenter/SuperviserAlarmDoneNum?', //总计
+          allNumSrc:'',
+          A_src:'',
+          B_src:'',
+          C_src:'',
+
+          testtesttest: false,
+          info_state: {
+            t0: true,
+            t1: true,
+            t2: true,
+            t3: true,
+            t4: true
+          },
+
+        }
+      },
+      mounted:function(){
+        this.allNumSrc = this.src+'userId='+this.id+"&alarmType='A','B','C','D','人员离岗'";
+        this.A_src = this.src+'userId='+this.id+"&alarmType='A'";
+        this.B_src = this.src+'userId='+this.id+"&alarmType='B'";
+        this.C_src = this.src+'userId='+this.id+"&alarmType='人员离岗'";
+      },
+      watch: {
+        tab_index: function (val) {
+          switch (val) {
+            case 0:
+
+              break;
+            case 1:
+
+              break;
+            case 2:
+
+              break;
+            case 3:
+
+              break;
+            case 4:
+
+              break;
+            default:
+              break
+          }
+        }
+      },
+      created: function () {
+        var query = getQueryVariable()
+        this.id = query.id
+        this.name = query.name
+
+        if (this.name) {
+          this.title = this.name
+        }
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        onSearch: function () {
+          // console.log('search');
+          if (this.tab_index === 2) {
+            this.sjjl.loading = false
+            this.sjjl.finished = false
+            this.sjjl.page = 0
+            this.sjjl.list = []
+
+            this.getSjjl()
+          } else if (this.tab_index === 4) {
+            this.xfwb.loading = false
+            this.xfwb.finished = false
+            this.xfwb.page = 0
+            this.xfwb.list = []
+
+            this.getXfwb()
+          }
+        },
+        unfold: function (index) {
+          this.info_state[index] = !this.info_state[index]
+        },
+      }
+    })
+  })();
+</script>
+</body>
+</html>

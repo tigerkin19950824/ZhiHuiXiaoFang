@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设备事件记录</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <link rel="stylesheet" href="./equimentEvent.css">
+    <script src="../../../js/rem.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="page-all" v-cloak>
+            <div class="struc noFooter search">
+                <div class="header">
+                    <head-nav left-arrow title="设备事件记录" @click-right="clickRight()" @click-left="clickLeft()">
+                        <div slot="right">
+                            <div class="headRight">
+                                <span class="title">筛选</span>
+                                <img src="../../../icon/shaxuanIocn.png" alt="" class="rightIcon">
+                            </div>
+                        </div>
+                    </head-nav>
+                    <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <hs-list-load :width="cont_width" :height="cont_height" v-model="loading"
+                            :immediate-check="false" :offset="1200" :finished="finished" :finished-text="finished_text"
+                            @load="getData(page)" pull-refresh @refresh="onRefresh">
+                            <div class="eventAll" v-if="eventAllList !=''">
+                                <div class="event_item clearfix" v-for="(item,index) in eventAllList" :class="{'border-bottom-none': index == eventAllList.length-1}" :key="index">
+                                    <div class="event_item_l">
+                                        <img src="../../../icon/eq_fault.png" alt="" v-if="item.isNormal == 0">
+                                        <img src="../../../icon/eq_online.png" alt="" v-if="item.isNormal == 1">
+                                        <span class="title">{{item.name}}</span>
+                                    </div>
+                                    <div class="event_item_r">
+                                        <span class="title">{{item.createdOn}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </hs-list-load >
+                        <hs-list-null v-model="show_list_null"></hs-list-null>
+                    </div>
+                </div>
+            </div>
+            <top-filter v-model="screen_show" hide-title @confirm="doScreen()" @reset="reset">
+                <div slot="filter">
+                    <div class="screenWrap">
+                        <div class="screen_all">
+                            <div class="typeOne">
+                                <div class="type_title">
+                                    信号类型
+                                    <div class="type_son_text">{{type_son_text}}</div>
+                                </div>
+                                <div class="type_item">
+                                    <div class="type_item_son" :class="{active:type_sel.indexOf(item.id) !== -1}" v-for="(item,index) in deviceType" :key="index" @click="selectType(item)">
+                                        {{item.name}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </top-filter>
+            <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .eventAll .event_item" :list="eventAllList" :total="total"></hs-go-back>
+        </div>
+    </div>
+</body>
+<script src="../../../js/es6-promise.auto.min.js"></script>
+<script src="../../../js/vue.min.js"></script>
+<script src="../../../js/axios.min.js"></script>
+<script src="../../../js/http.js"></script>
+<script src="../../../components/components.js"></script>
+<script>
+    (function () {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                finished_text:'没有更多了',
+                show_list_null:false,
+                type_son_text:'',
+                eventAllList: [
+                    // { url: '../../../icon/eq_leave.png', title: '设备离线', time: '2019-5-29' },
+                    // { url: '../../../icon/eq_power.png', title: '电量过低', time: '2019-5-29' },
+                    // { url: '../../../icon/eq_online.png', title: '设备在线', time: '2019-5-29' },
+                    // { url: '../../../icon/eq_leave.png', title: '设备离线', time: '2019-5-29' },
+                    // { url: '../../../icon/eq_fault.png', title: '设备故障', time: '2019-5-29' },
+                ],//设备事件列表
+                screenList: [], //筛选条件数组
+                screen_show: false, //筛选弹窗显示隐藏
+                value: '',//搜索框数据
+                id: '', //设备id，由上级页面传递
+
+                cont_width: '375px', // tabs组件宽度
+                cont_height: '375px', // tabs 组件高度
+                loading: false, // 是否正在加载
+                finished: false, // 是否全部加载完成
+                page: 0,
+                screen_status: 0,
+                deviceType: [],//设备类型列表
+                type_sel: [],//选择类型
+                type: null,//用于传递筛选参数的字符串
+
+                search_text:'',
+                
+                total:null,
+            },
+            created: function () {
+            },
+            watch:{
+                search_text(val,oldVal){
+                    if(val == ''){
+                        this.eventAllList = [];
+                        this.page = 0;
+                        this.finished = false;
+                        this.getData(); 
+                    }
+                }
+            },
+            mounted: function () {
+                var This = this;
+                window.onload = function () {
+                    var eMain = document.querySelector('.struc .main');
+                    This.cont_width = eMain.clientWidth + 'px';
+                    This.cont_height = eMain.clientHeight + 'px';
+                    This.GetRequest();
+                }
+
+            },
+            methods: {
+                clickRight: function () {
+                    this.screen_show = !this.screen_show;
+                    if (this.screen_show) {
+                        this.getType();
+                    }
+                },
+                clickLeft() {
+                    window.location.href = 'wutos://finish';
+                },
+                getData: function (page) {
+                    var This = this;
+                    this.apiGet('/Device/GetDeviceEventPageList', {
+                        offset: this.page*20, //起始页码
+                        limit: 20, //每页数量
+                        deviceid: this.id, //设备ID
+                        eventtype: this.type, //设备事件类型
+                    }).then(function (res) {
+                        This.total = res.data.total;
+                        var data = res.data.rows;
+                        if(!data){
+                            data = [];
+                        }
+                        for (var j = 0; j < data.length; j++) {
+                            data[j].createdOn = data[j].createdOn.replace(/-/g,'/');
+                            This.eventAllList.push(data[j])
+                        }
+
+                        if (data.length === 0) {
+                            This.finished = true;
+                        }
+
+                        if (This.eventAllList.length === 0 && data.length === 0) {
+                            // 显示缺省页
+                            This.show_list_null = true;
+                            This.finished_text = '';
+                        }else{
+                            This.show_list_null = false;
+                        }
+                        This.loading = false;
+
+                    }).catch(function (err) {
+                        This.loading = false;
+                        This.finished = true;
+                    })
+
+                    this.page++;
+                },
+                //获取事件类型
+                getType: function () {
+                    var This = this;
+                    this.apiGet('/Device/GetDeviceEventTypeList', {
+                        deviceid: this.id,//设备id  测试id：f6e2a72b4f87454c8700ba20d2741ee9
+                    }).then(function (res) {
+                        This.deviceType = res.data;
+                    }).catch(function (err) {
+
+                    })
+                },
+                //获取设备id
+                GetRequest: function () {
+                    var url = location.search;
+                    var id = url.substr(url.indexOf("=") + 1);
+                    this.id = id;
+                    this.getData();
+                },
+                //设备类型选择
+                selectType: function (item) {
+                    if (this.type_sel.indexOf(item.id) == -1) {
+                        this.type_sel.push(item.id);
+                        this.type_son_text = item.name;
+                    } else {
+                        this.type_sel.splice(this.type_sel.indexOf(item.id), 1);
+                        this.type_son_text = '';
+                        
+                    }
+                    console.log(this.type_sel);
+                },
+                //确定
+                doScreen: function () {
+                    this.type = this.type_sel.join();
+                    this.eventAllList = [];
+                    this.screen_show = false;
+                    this.page = 0;
+                    this.getData();
+                },
+                //重置
+                reset:function(){
+                    this.type_sel = [];
+                    this.type = null;
+                    this.type_son_text = '';
+                },
+                //搜索
+                onSearch() {
+                    var data = this.eventAllList;
+                    var dataList = [];
+                    console.log('搜索',this.eventAllList);
+                    for(var i=0;i<data.length;i++){
+                        if(data[i].name.indexOf(this.search_text) !== -1){
+                            dataList.push(data[i]);
+                        }
+                    }
+                    this.eventAllList = dataList;
+                    this.finished = true;
+                },
+                onRefresh: function () {
+                    this.finished = false
+                    this.eventAllList = []
+                    this.page = 0
+
+                    this.show_list_null = false
+                    setTimeout(function () {
+                        this.getData(this.page)
+                    }.bind(this), 1000)
+                }
+            }
+        })
+    })();
+</script>
+
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>我的家庭</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <style>
+        .wrap {
+            position: relative;
+            font-size: .28rem;
+            display: inline-block;
+            width: 6.58rem;
+            margin-top: .21rem;
+            margin-left: .31rem;
+            background-color: #fff;
+            box-shadow:0px 3px 9px 0px rgba(160,160,160,0.33);
+            border-radius: .1rem;
+        }
+        .main-scroll{
+            background-color: #F0F0F0;
+        }
+        .text_first{
+            margin: .3rem 0 .18rem 0;
+            background: url('../../../icon/jiantou_right_icon.png') 5.8rem 0.04rem no-repeat;
+<<<<<<< HEAD
+            background-size: .23rem;
+=======
+            background-size: .2rem;
+>>>>>>> 44d5eb233ff8da9a5dbfc97817a12dcd1310b7b0
+        }
+        .text_first i{
+            display: inline-block;
+            width: .08rem;
+            height: .32rem;
+            background-color: #68BDFF;
+            border-radius: .04rem;
+            margin-left: .2rem;
+            margin-bottom: -.06rem;
+            margin-right: .13rem;
+        }
+        .text_two{
+            box-sizing: border-box;
+            padding-left: .41rem;
+            color:#999999;
+            font-size: .22rem;
+            padding-bottom: .3rem;
+            margin-left: .06rem;
+            width: 6.09rem;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        .text_three{
+            margin: .27rem 0 .2rem .21rem;
+            font-weight: bold;
+        }
+        .list>li{
+            height: 1.34rem;
+            line-height: 1.34rem;
+            box-sizing: border-box;
+            border-bottom: 1px solid #D2D2D2;
+            margin-left: .46rem;
+            margin-right: .06rem;
+            color:#666666;
+        }
+        .list>li:last-child{
+            border-bottom: 0;
+        }
+        .list>li>img{
+            vertical-align: -.1rem;
+            margin-right: .23rem;
+            width: .84rem;
+            height: .84rem;
+            border-radius: 50%;
+        }
+        .list>li>span{
+            display: inline-block;
+            line-height: .4rem;
+            padding-top: .3rem;
+            font-size: .3rem;
+            color:#333333;
+            font-weight: 500;
+        }.list>li>span>span{
+            font-size: .24rem;
+            color:#999999;
+        }
+        .QRcode{
+            display: inline-block;
+            width: 6.58rem;
+            font-size: .32rem;
+            margin-left: .31rem;
+            color:#333333;
+        }
+        .QRcode .QRcode_first{
+            font-size: .28rem;
+            margin-left: .22rem;
+            margin-top: .49rem;
+            margin-bottom: .41rem;
+            font-weight: bold;
+        }
+        .QRcode_center{
+            background-color: #fff;
+            height: .8rem;
+            line-height: .8rem;
+            border-radius: .08rem;
+            text-align: center;
+            margin-bottom: .27rem;
+            box-shadow:2px 3px 10px 0px rgba(199,199,199,0.47);
+        }
+        .right img{
+            vertical-align: -.07rem;
+            width: .36rem;
+            margin-right: .07rem;
+        }
+        .text_right{
+            margin-right: .3rem;
+            font-size: .24rem;
+        }
+        .file{
+            width: 3rem;font-size: .3rem
+        }
+        /* 弹框样式 */
+        .tankuang{
+            width: 6rem;
+            background-color: #fff;
+            position: absolute;
+            text-align: center;
+            border-radius: .1rem;
+            height: 3.1rem;
+            top:50%;
+            margin-top: -2.43rem;
+            left: 50%;
+            margin-left: -3rem;
+            z-index: 4;
+        }
+        .affirm{
+            color:#333333;
+            font-size: .3rem;
+            margin-top: .53rem;
+            margin-bottom: .4rem;
+        }
+        .text_is{
+            font-size: .28rem;
+            color:#666666;
+            margin-bottom: .71rem;
+        }
+        .text_bottom{
+            margin-bottom: .3rem;
+        }
+        .text_bottom>span{
+            display: inline-block;
+            width: 2rem;
+            height: .6rem;
+            text-align: center;
+            font-size: .26rem;
+            line-height: .6rem;
+            border:1px solid #BFBFBF;
+            box-shadow:2px 3px 10px 0px rgba(208,208,208,0.47);
+            border-radius: .08rem
+        }
+        .text_bottom .span_one{
+            margin-right: .36rem;
+            color:#333333;
+        }
+        .text_bottom .span_two{
+            background-color: #1A8EE9;
+            color:#fff;
+        }
+        .blur{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            opacity: .6;
+            z-index: 3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav left-arrow title="我的家庭" @click-left="retreat">
+                        <div slot="right" @click="returns" class="right">
+                                <img src="../../../icon/return.png" alt=""><span class="text_right">退出家庭</span>
+                        </div>
+                    </head-nav>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <div class="blur" v-if="tanchaungShow"></div>
+                        <div class="wrap">
+                            <div class="text_first" @click="addFamliyTo"><i></i>{{maxAddress}}</div>
+                            <div class="text_two">{{address}}</div>
+                            <div class="text_three">成员列表</div>
+                            <ul class="list">
+                                <li v-if="datasTwo.length!=0" v-for="(item,index) in datasTwo" :key="index"><img  :src='item.profileUrl' alt="">
+                                    <span>{{item.userName}}<br/>
+                                        <span>{{item.phoneNumber}}</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="QRcode">
+                            <div class="QRcode_first">我的二维码</div>
+                            <div class="QRcode_center" @click="MyQRcodeTo(1)">家庭二维码</div>
+                            <div class="QRcode_center" @click="MyQRcodeTo(2)">家庭守护下载地址</div>
+                        </div>
+                        <div class="tankuang" ref="Show"  v-if="tanchaungShow">
+                            <div class="affirm">请确认</div>
+                            <div class="text_is">是否退出家庭</div>
+                            <div class="text_bottom"><span class="span_one" @click="cancel">取消</span><span class="span_two" @click="confims">确定</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/vue.min.js"></script>
+    <script src="../../../js/axios.min.js"></script>
+    <script src="../../../js/rem.js"></script>
+    <script src="../../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../../components/components.js"></script>
+    <script src="../../../js/es6-promise.auto.min.js"></script>
+    <script src="../../../js/http.js"></script>
+    <script>
+       (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    tanchaungShow:false,
+                    plotName:'',
+                    address:'',
+                    maxAddress:'',
+                    datasTwo:[],
+                    familyId:'',
+                    userId:'',
+                    isadd:[],//地址数组
+                    communityId:''
+                },
+                mounted() {
+                    var This = this
+                    This.userId=localStorage.getItem('userId');
+                    This.familyId=localStorage.getItem('familyId');
+                    This.communityId=localStorage.getItem('communityId');
+                    This.getFamliy();
+                },
+                methods: {
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                    },
+                    //编辑地址
+                    addFamliyTo(){
+                        window.location.href='./addFamliy.html?val='+this.isadd
+                    },
+                    //跳转二维码
+                    MyQRcodeTo(val){
+                        if(val==1) window.location.href='../MyQRcode/index.html?id=1'
+                        if(val==2) window.location.href='../MyQRcode/index.html?id=2'
+                    },
+                    //获取家庭成员
+                    getFamliy:function(){
+                        var This=this;
+                        This.apiGet('Family/users',{
+                            // id:'ca1d3ecc62a9459588a63e83ba926038'
+                            id:This.familyId
+                        }).then(function(res){
+                            for(var i=0;i<res.data.data.length;i++){
+                                if(res.data.data[i].profileUrl===null){
+                                    res.data.data[i].profileUrl='../../../images/defaut.png'
+                                }
+                            }
+                            This.datasTwo=res.data.data
+                            This.isadd=This.datasTwo[0].familyAddress.split('-')
+                            for(var i=0;i<This.isadd.length;i++){
+                                if(i<2){
+                                    This.address+=This.isadd[i]
+                                }else{
+                                    This.maxAddress+=This.isadd[i]
+                                }
+                            }
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    // 退出家庭
+                    returns:function(){
+                        this.tanchaungShow=true;
+                    },
+                    //取消
+                    cancel:function(){
+                        this.tanchaungShow=false;
+                    },
+                    //确定
+                    confims:function(){
+                        var This=this;
+                        This.tanchaungShow=false;
+                        This.apiGet('Family/OutFamily',{
+                            userid:This.userId
+                        }).then(function(res){
+                            if(res.data.code==1){
+                                window.location.href='wutos://exit'
+                            }else{
+                                alert('退出失败')
+                            }
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    }
+                },
+            })
+        })()
+    </script>
+</body>
+
+</html>

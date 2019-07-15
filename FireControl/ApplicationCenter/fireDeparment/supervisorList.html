@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>监督员列表</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <link rel="stylesheet" href="./supervisorList.css">
+  <script src="../../js/rem.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div class="page-all">
+    <div class="struc noFooter search">
+      <div class="header">
+        <head-nav left-arrow title="监督员列表" @click-left="onClickLeft"></head-nav>
+        <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+            <hs-list-load :width="cont_width" :height="cont_height" v-model="loading" :immediate-check="false"
+            :offset="1200" :finished="finished" :finished-text="finished_text" @load="getData(page)" pull-refresh
+            @refresh="onRefresh">
+              <div class="superWrap">
+                  <div class="item shadow-item" v-for="(item,index) in list" :key="index">
+                    <div class="item_l">
+                      <img v-if="item.pictureBase64 !=null" :src="item.pictureBase64" alt=""/>
+                      <img v-else src="../../icon/default_img.png" alt=""/>
+                    </div>
+                    <div class="item_m">
+                      <div class="name">
+                        {{item.name}}
+                      </div>
+                      <div class="item_m_con">
+                        <div class="company_num">
+                          联网单位数：<span class="num">{{item.organizer}}</span>
+                        </div>
+                        <div class="home_num">
+                            联网家庭数：<span class="num">{{item.hostFamilies}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="item_r" :class="item.scoreClass">
+                      <div class="grade">
+                        {{item.score}}
+                      </div>
+                      <div class="grade_title">
+                        综合评分
+                      </div>
+                    </div>
+                  </div>
+              </div>
+          </hs-list-load>
+          <hs-list-null v-model="show_list_null"></hs-list-null>
+          <div style="height: .4rem;"></div>
+        </div>
+      </div>
+    </div>
+      <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .superWrap .item" :list="list" :total="total"></hs-go-back>
+    </div>
+  </div>
+
+  <script src="../../js/es6-promise.auto.min.js"></script>
+  <script src="../../js/vue.min.js"></script>
+  <script src="../../js/axios.min.js"></script>
+  <script src="../../js/http.js"></script>
+  <script src="../../js/getQueryVariable.js"></script>
+  <script src="../../components/components.js"></script>
+  <script>
+    (function () {
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          search_text:'',
+          id:'',
+          page: 0,
+          list:[],
+          total:'',
+
+          finished_text: '没有更多了',
+          show_list_null: false,
+          cont_width: '375px', // tabs组件宽度
+          cont_height: '375px', // tabs 组件高度
+          loading: false, // 是否正在加载
+          finished: false, // 是否全部加载完成
+        },
+        created:function(){
+          this.id = getQueryVariable().id;
+          this.getData();
+        },
+        mounted:function(){
+          var This = this;
+          window.onload = function () {
+            var eMain = document.querySelector('.struc .main')
+            This.cont_width = eMain.clientWidth + 'px'
+            This.cont_height = eMain.clientHeight + 'px'
+          }
+        },
+        methods: {
+          onClickLeft: function () {
+            window.location.href = 'wutos://finish';
+          },
+          getData: function () {
+            var This = this
+            this.apiGet('/FireDepartment/GetFireFighterList',{
+              uid: this.id,
+              offset: this.page*20,
+              limit: 20,
+            }).then(function (res) {
+                var data = res.data.rows;
+                This.total = res.data.total;
+                
+                if(!data) data = [];
+
+                for(var i = 0;i<data.length;i++){
+                  var score = data[i].score;
+
+                  if (score < 60) {
+                    data[i].scoreClass = 'bg01'
+                  } else if (score >= 80) {
+                    data[i].scoreClass = 'bg03'
+                  } else {
+                    data[i].scoreClass = 'bg02'
+                  }
+
+                  This.list.push(data[i]);
+                }
+
+                if(data.length === 0){
+                  This.finished = true;
+                }
+
+                if (This.list.length === 0 && data.length === 0) {
+                  // 显示缺省页
+                  This.show_list_null = true;
+                  This.finished_text = '';
+                } else {
+                  This.show_list_null = false;
+                }
+
+              This.loading = false;
+
+            }).catch(function (reason) {
+              This.loading = false;
+              This.finished = true;
+            })
+            this.page++;
+          },
+          onRefresh(){
+            this.finished = false
+            this.list = []
+            this.page = 0
+
+            this.show_list_null = false
+            setTimeout(function () {
+              this.getData()
+            }.bind(this), 1000)
+          },
+          onSearch(){
+
+          }
+        }
+      })
+    })();
+  </script>
+</body>
+
+</html>

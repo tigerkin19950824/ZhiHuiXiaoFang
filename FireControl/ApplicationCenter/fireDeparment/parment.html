@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>消防部门</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <link rel="stylesheet" href="./parment.css">
+  <script src="../../js/rem.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div class="struc noFooter">
+      <div class="header">
+        <head-nav left-arrow title="消防部门" @click-left="onClickLeft"></head-nav>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <div style="height: .2rem;"></div>
+          <a class="network-num shadow-item" href="./parmentList.html">
+            <img class="icon-left" src="../../icon/network.png" alt="">
+            <div class="title">消防部门数量</div>
+            <div class="num">{{num}}</div>
+            <img class="icon-right" src="../../icon/jiantou_right_icon.png" alt="">
+          </a>
+          <div class="chart shadow-item">
+            <div class="title_tab">
+              <div  :class="{active:tab_status == 0}"  @click="selectTab(0)">联网单位</div>
+              <div  :class="{active:tab_status == 1}"  @click="selectTab(1)">设备数量</div>
+              <div  :class="{active:tab_status == 2}"  @click="selectTab(2)">告警数</div>
+              <div  :class="{active:tab_status == 3}" class="border-right-none"  @click="selectTab(3)">监督员评分</div>
+            </div>
+            <div class="name">
+              <i></i><span>{{tab_text}}</span>
+            </div>
+            <!-- 联网单位排名 -->
+            <iframe class="frame" v-show="tab_status == 0" src="http://192.168.10.160:8898/thinkReport/board/APP_FireDepartment/UnitRank/" frameborder="0" width="100%" height="100%"></iframe>
+            <!-- 设备数量排名 -->
+            <iframe class="frame" v-show="tab_status == 1" src="http://192.168.10.160:8898/thinkReport/board/APP_FireDepartment/DeviceRank/" frameborder="0" width="100%" height="100%"></iframe>
+            <!-- 告警数排名 -->
+            <iframe class="frame" v-show="tab_status == 2" src="http://192.168.10.160:8898/thinkReport/board/APP_FireDepartment/AlarmRank/" frameborder="0" width="100%" height="100%"></iframe>
+          </div>
+          <div style="height: .4rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/es6-promise.auto.min.js"></script>
+  <script src="../../js/vue.min.js"></script>
+  <script src="../../js/axios.min.js"></script>
+  <script src="../../js/http.js"></script>
+  <script src="../../components/components.js"></script>
+  <script>
+    (function () {
+      var frame01 = document.getElementById('fram01');
+      // frame01.setAttribute('src', 'http://192.168.10.37:8898/thinkReport/board/dataCenter/deviceType/');
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          line01_show: true,
+          line02_show: true,
+          num:'',
+          tab_status:0,
+          tab_text:'联网单位'
+        },
+        mounted:function(){
+          this.getNum();
+        },
+        methods: {
+          onClickLeft: function () {
+            window.location.href = 'wutos://finish';
+          },
+          getNum: function () {
+          var This = this
+          this.apiGet('/CityOverView/GetAllData').then(function (res) {
+              // xfdd 消防部门数量
+
+              This.num = res.data.data.xfdd;
+
+            }).catch(function (reason) {
+              setTimeout(function () {
+                This.getNum()
+              }, 3000)
+            })
+          },
+          selectTab(val){
+            this.tab_status = val;
+            if(val == 0){
+              this.tab_text = '联网单位排名'
+            }
+            else if(val == 1){
+              this.tab_text = '设备数量排名'
+            }
+            else if(val == 2){
+              this.tab_text = '告警数排名'
+            }
+            else if(val == 3){
+              this.tab_text = '监督员评分'
+            }
+          }
+        }
+      })
+    })();
+  </script>
+</body>
+
+</html>

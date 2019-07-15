@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>流程详情</title>
+  <link rel="stylesheet" href="../../../css/reset.css">
+  <link rel="stylesheet" href="../../../css/common.css">
+  <link rel="stylesheet" href="../../../components/components.css">
+  <script src="../../../js/rem.js"></script>
+  <style>
+  .detailWrap, .main-scroll {
+    background-color: #EFEFEF;
+  }
+
+  .detailWrap {
+    position: relative;
+    width: 100%;
+    padding: .4rem;
+    box-sizing: border-box;
+  }
+
+  .detailItem {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .d_left {
+    position: relative;
+    align-self: stretch;
+    width: 1.2rem;
+  }
+
+  .d_left .sign {
+    width: 0.24rem;
+    height: 0.24rem;
+    margin: 0 auto;
+    font-size: 0;
+  }
+
+  .d_left .sign-0 {
+    width: 0.37rem;
+    height: 0.37rem;
+  }
+
+  .d_left .sign > img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .d_left .time_day {
+    width: 100%;
+    font-size: 0.2rem;
+    color: #333333;
+    margin-top: 0.1rem;
+    text-align: center;
+  }
+
+  .d_left .time_time {
+    width: 100%;
+    font-size: 0.18rem;
+    color: #999999;
+    margin-top: 0.06rem;
+    text-align: center;
+  }
+
+  .d_left i.line {
+    position: absolute;
+    top: .94rem;
+    left: 50%;
+    bottom: 0;
+    margin-left: -0.5px;
+    display: block;
+    width: 1px;
+    background-color: #aaa;
+  }
+  .d_left i.line.top_0,.d_left i.line-1.top_0{
+    position: absolute;
+    position: absolute;
+    top: 0.26rem;
+    left: 50%;
+    bottom: 0;
+    margin-left: -0.5px;
+    display: block;
+    width: 1px;
+    background-color: #aaa;
+  }
+
+  .d_left i.line-1 {
+    background-color: #1A8EE9;
+  }
+
+  .d_left i.point {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -.06rem;
+    width: .12rem;
+    height: .12rem;
+    background: #999;
+    border-radius: 50%;
+  }
+
+  .detailItem:last-of-type .d_right {
+    margin-bottom: 0;
+  }
+
+  .detailItem:last-of-type .d_left i.point {
+    display: block;
+  }
+
+  .d_right {
+    width: 5.28rem;
+    margin-right: .2rem;
+    padding: .3rem .25rem;
+    margin-bottom: .3rem;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border-radius: 0.1rem;
+  }
+
+  .d_right > .title {
+    font-size: 0.28rem;
+    color: #3673BB;
+  }
+
+  .place {
+    margin-top: 0.14rem;
+  }
+
+  .person, .result {
+    margin-top: 0.17rem;
+  }
+
+  .place_title, .person_title, .result_title {
+    color: #333333;
+    font-size: 0.24rem;
+    vertical-align: middle;
+  }
+
+  .place_val, .person_val, .result_val {
+    font-size: 0.24rem;
+    color: #999999;
+    vertical-align: middle;
+  }
+
+  .result_val {
+    display: inline-block;
+    width: 3.19rem;
+    line-height: 0.4rem;
+  }
+
+  .state {
+    width: 1.14rem;
+    height: 0.6rem;
+    display: inline-block;
+    line-height: 0.6rem;
+    font-size: 0.4rem;
+    border-radius: 0.3rem;
+    text-align: center;
+    background-color: #3673BB;
+    color: #ffffff;
+    transform: scale(0.5);
+    transform-origin: 0 50%;
+    padding: 0.02rem 0.05rem;
+  }
+
+  .normal {
+    background-color: #45C7F2;
+    color: #ffffff;
+  }
+
+  </style>
+</head>
+<body>
+<div id="app" v-cloak>
+  <div class="struc noFooter">
+    <div class="header">
+      <head-nav left-arrow title="流程详情" @click-left="onClickLeft"></head-nav>
+    </div>
+    <div class="main">
+      <div class="main-scroll">
+        <div class="detailWrap">
+          <div class="detailItem" v-for="(item, index) in list" :key="index">
+            <div class="d_left">
+              <div class="sign" :class="{'sign-0':index===0}">
+                <img v-if="index===0" src="../../../icon/sign01.png" alt="">
+                <img v-if="index != 0 && item.isChecked" src="../../../icon/warn_middle.png" alt="">
+                <img v-if="index != 0 && !item.isChecked" src="../../../icon/warn_middle-0.png" alt="">
+              </div>
+              <div class="time_day">{{item.excuteDate | getTime(true)}}</div>
+              <div class="time_time">{{item.excuteDate | getTime(false)}}</div>
+              <i class="line" :class="[{'line-1': item.isChecked},{top_0:item.excuteDate == null}]"></i>
+              <i class="point"></i>
+            </div>
+            <div class="d_right shadow-item">
+              <div class="title">{{item.pointName}}</div>
+              <div class="place">
+                <span class="place_title">场所名称：</span>
+                <span class="place_val">{{item.areaName}}</span>
+              </div>
+              <div class="person">
+                <span class="person_title">执行人：</span>
+                <span class="person_val">{{item.excuteUser}}</span>
+              </div>
+              <div class="result">
+                <span class="result_title">巡查结果：</span>
+                <span class="result_val state" v-if="item.result != null" :class="{normal: item.isNormal==1}">{{item.result}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="../../../js/es6-promise.auto.min.js"></script>
+<script src="../../../js/vue.min.js"></script>
+<script src="../../../js/axios.min.js"></script>
+<script src="../../../js/http.js"></script>
+<script src="../../../js/getQueryVariable.js"></script>
+<script src="../../../components/components.js"></script>
+<script>
+(function () {
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      id: '',
+      list: []
+    },
+    created: function () {
+      this.id = getQueryVariable().id
+    },
+    mounted: function () {
+      this.getInfo()
+    },
+    filters: {
+      getTime: function (val, type) {
+        if (!val && type) {
+          return 
+        }
+        if (!val && !type) {
+          return 
+        }
+        var date = val.match(/\d{1,2}(\d{1,2}-\d{1,2}-\d{1,2}) (\d{1,2}:\d{1,2}):\d{1,2}/)
+        if (type) {
+          return date[1]
+        } else {
+          return date[2]
+        }
+      }
+    },
+    methods: {
+      onClickLeft: function () {
+        window.location.href = 'wutos://finish'
+      },
+      getInfo: function () {
+        this.apiGet('/Maintenance/GetTourTaskDetailById', {
+          taskId: this.id
+        }).then(function (res) {
+          var data = res.data
+
+          for (var i = 0; i < data.length; i++) {
+            this.list.push(data[i])
+          }
+        }.bind(this)).catch(function (err) {
+          setTimeout(function () {
+            this.getInfo()
+          }.bind(this), 3000)
+        }.bind(this))
+      }
+    }
+  })
+})();
+</script>
+</body>
+</html>

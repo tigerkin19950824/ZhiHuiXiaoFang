@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>告警详情-屏蔽详情</title>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/script_px2rem.js"></script>
+	<script src="../../js/mui.min.js"></script>
+	<script src="../../js/swiper.min.js"></script>
+	<link rel="stylesheet" href="../../css/imageview.css" />
+	<link rel="stylesheet" href="../../css/mui.imageviewer.css" />
+	<link rel="stylesheet" href="../../css/swiper.min.css">
+	<link rel="stylesheet" href="../../css/mui.min.css">
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/pageCS/DetailsPageBCD.css">
+	
+</head>
+<body style="background: #efefef">
+	<div class="fire-alarm-false">
+		<div class="header-back public-color">
+			<a onclick="window.location.href='wutos://finish'" class="back-btn"><i class="back-icon"></i></a>
+			<div class="header-title">屏蔽详情</div>
+			<!-- <div class="screening">筛选<i class="screening-icon"></i></div> -->
+		</div>
+		<div class="main-list mui-content mui-scroll-wrapper" id="box">
+			<div class="mui-scroll">
+				<div class="center">
+					<div class="company-info">
+						<div class="company-address clearfix">
+							<i class="adress-icon"></i>
+							<div class="info">
+								<div class="name">公司名称</div>
+								<div class="adress-text">地址</div>
+							</div>
+						</div>
+						<div class="info-bot">
+							<div class='text-p fireControlJurisdiction'>消防管辖：<span class="color-gray"></span></div>
+						    <div class='text-p supervisorsResponsible'>消防监督员：<span class="color-gray"></span></div>
+						    <div class='text-p unitTypeInfo'>单位类别: <span class="color-gray"></span></div>
+						    <div class='text-p unitAttribute'>单位属性: <span class="color-gray"></span></div>
+						    <div class='text-p totalBuildingArea'>总建筑面积: <span class="color-gray"></span></div>
+						    <div class='text-p fireControlRoomLocationInfo'>消控室位置: <span class="color-gray"></span></div>
+						</div>
+					</div>
+					<div class="mui-row call-phone">
+						<div class="mui-col-sm-12 mui-col-xs-12">
+						    <div class="safetyManager">
+							    <p>消防安全管理人：<span></span></p>
+							    <p><a id="callPhone"></a></p>
+							    <i class="phone-icon"></i>
+						    </div>
+						</div>
+						<div class="mui-col-sm-12 mui-col-xs-12">
+							<div class="safetyManager">
+							    <p>消防安全管理人：<span></span></p>
+							    <p><a id="callPhone"></a></p>
+							    <i class="phone-icon"></i>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="basis-info">
+						<div class="title"><i class="left-icon"></i>建筑平面图</div>
+						<div class="info-img">
+							<div  class="clearfix">
+								<div class="fl ">XXXX大楼-2层</div>	
+								<div class="fr jiantou-right"></div>
+							</div>
+						</div>
+					</div> -->
+					<div class="log">
+						<div class="title"><i class="left-icon"></i>备案信息</div>
+						<div class="main-list">
+							<!-- <div class="item clearfix">
+								<div class="clearfix">
+									<div class="fl">
+										<i class="state-icon"></i>
+										<div class="data">12-21</div>
+										<div class="time">12:13</div>
+									</div>
+									<div class="fr">
+										<div class="state">屏蔽备案</div>
+										<div class="info-list">
+											<div>备案人: <span class="color-gray">李xx</span></div>
+											<div>备案名称: <span class="color-gray">xxxxxxx</span></div>
+											<div>备案恢复时间: <span class="color-gray">xxxxxxx</span></div>
+											<div>屏蔽点位数: <span class="color-gray">xxxxxxx</span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item clearfix">
+								<div class="clearfix">
+									<div class="fl">
+										<i class="state-icon"></i>
+										<div class="data">12-21</div>
+										<div class="time">12:13</div>
+									</div>
+									<div class="fr">
+										<div class="state">所有屏蔽点位恢复</div>
+										<div class="info-list">
+										</div>
+									</div>
+								</div>
+							</div> -->
+						</div>
+					</div>
+					<div class="shielding-box">
+						<div class="title"><i class="left-icon"></i>屏蔽设备<div class="screening"></div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 筛选 -->
+		<div class="screening-tc">
+			<div class="tc-center">
+				<div class="screening-icon">
+					<div class="title">屏蔽设备 <div class="checked-text"></div></div>
+					<div class="level-list clearfix">
+						<div>屏蔽中</div>
+						<div>已逾期</div>
+						<div>逾期恢复</div>
+						<div>已恢复</div>
+					</div>
+				</div>
+				<div class="generated mui-content mui-scroll-wrapper" id="refreshContainer">
+					<div class="company-list mui-scroll">
+						<ul class="mui-table-view mui-table-view-chevron">
+							<!-- <div class="item">
+								<div class="item-padding">
+									<div class="item-top">
+										<div class="company-name">烟雾报警器 YW-0001 </div>
+										<div class="time">XX大楼-2层 拷贝</div>
+									</div>
+									<div class="address">屏蔽起止时间： 2019-05-30 09:01 - 2019-05-30 09:01</div>
+								</div>
+							</div> -->
+						</ul>
+					</div>
+				</div>
+
+				<!-- <div class="confirm-btn">
+					<a href="javascript:;" class="reset fl">重置</a>
+					<a href="javascript:;" class="confirm fr">确定</a>
+				</div> -->
+			</div>
+			<div class="shadow-box"></div>
+		</div>
+		<!-- 返回顶部 -->
+		<div class="back-top">
+			<div class="data-num">
+				<p class="now-num">5</p>
+				<p class="all-num">32</p>
+			</div>
+			<i class="back-top-icon"></i>
+		</div>
+	</div>
+</body>
+<script src="../../js/common.js"></script>
+<!--  图片放大 -->
+<script type="text/javascript" src="../../js/mui.imageViewer.js" ></script>
+<script type="text/javascript" src="../../js/mui.previewimage.js" ></script>
+<script type="text/javascript" src="../../js/mui.zoom.js" ></script>
+<script>
+var index=''; //当前选中的状态
+var level=''; //筛选类型
+var total;
+var limit=20; //默认展示的数量
+var number=20; //每次加载的数量
+var ScreeningState=false; //弹窗的状态
+var ScreeningConditi='';
+var AjaxState=0;
+var BoxHeight;
+var ItemHeight;
+var boxTop;
+mui(".call-phone").on('tap','.safetyManager',function(){
+    let Phone = $(this).find("a").text(); 
+    window.location.href="tel:"+Phone
+}) 
+
+
+/*获取地址栏参数*/
+var alarmid=getQueryVariable().id; //告警id
+
+/*筛选*/
+$(".level-list div").click(function(){
+	limit=number;
+	AjaxState=2;
+	if($(this).hasClass("active")){
+		level='';
+		//level=level.split($(this).index()+6).join("");
+		index=index.split($(this).index()).join("")
+
+		if(index.length==0){
+			level='';
+		}else{
+			for(var i=0;i<index.length;i++){
+				
+				level+=","+(parseInt(index[i])+5)
+			}
+		}
+		
+		$(this).removeClass("active");
+		$(this).parent().parent().find(".checked-text").text("")
+	}else{
+		if(level==''){
+			level+=($(this).index()+5);
+		}else{
+			level+=","+($(this).index()+5);
+		}
+		index+=$(this).index();
+		$(this).addClass("active");
+		$(this).parent().parent().find(".checked-text").text($(this).text())
+	}
+	/*if(parseInt(level)==NaN){
+		console.log(level)
+		level='';
+	}*/
+	console.log(level)
+	EquipmentList();
+})
+
+$(".checked-text").click(function(){
+	if(ScreeningConditi){
+		$(this).addClass("active").parents(".screening-icon").find(".level-list").hide();
+		ScreeningConditi=!ScreeningConditi;
+	}else{
+		$(this).removeClass("active").parents(".screening-icon").find(".level-list").show();
+		ScreeningConditi=!ScreeningConditi;
+	}
+	
+})
+$(".screening").click(function(){
+	$(".back-top").show();
+	AjaxState=2;
+	EquipmentList();
+	$(".level-list div").removeClass("active")
+	$(".screening-tc").show().find(".tc-center").animate({"left":".7rem"},300);
+	ScreeningState=!ScreeningState;
+	if(index===''){
+		$(".level-list div").removeClass("active");
+		$(".checked-text").text('');
+	}else{
+		for(var i=0;i<index.length;i++){
+			$(".level-list div").eq(index[i]).addClass("active");
+			$(".checked-text").text($(".level-list div").eq(index[i]).text())
+			
+		}
+	}
+})
+/*点击左侧阴影部分隐藏弹窗*/
+$(".shadow-box").click(function(){
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	ScreeningState=!ScreeningState;
+	$(".back-top").hide();
+})
+
+/*筛选确认按钮*/
+/*$(".confirm-btn .confirm").click(function(){
+	level='';
+	index='';
+	limit=number;
+	AjaxState=2;
+	$(".shielding-info .swiper-slide").text('');
+	for(var i=0;i<$(".level-list div").length;i++){
+		if($(".level-list div").eq(i).hasClass("active")==true){
+			level=level+(i+6)+",";
+			index=index+i;
+		}
+	}
+
+	
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	level=level.slice(0,level.length-1);
+	EquipmentList();
+	ScreeningState=!ScreeningState
+	console.log("搜索的类型："+level)
+})*/
+
+/*筛选重置*/
+/*$(".reset").click(function(){
+	$(".tc-center").find(".active").removeClass("active");
+	$(".tc-center").find(".checked-text").text("");
+	level='';
+	index='';
+	limit=number;
+	AjaxState=2;
+	EquipmentList();
+})*/
+
+/*滑动隐藏筛选弹窗*/
+$(".screening-tc").on("touchstart", function(e) {
+   startX = e.originalEvent.changedTouches[0].pageX;
+   
+});
+$(".screening-tc").on("touchend", function(e) {
+   moveEndX = e.originalEvent.changedTouches[0].pageX;
+   if(moveEndX>startX+50){
+   		$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+   		ScreeningState=!ScreeningState;
+   		$(".back-top").hide();
+   }
+});
+
+
+
+commonAjax ("","api/Device/GetMonitorSignalDetailBySN?sn="+alarmid,fn,"get") //公司名称+备案信息 XHPB00000002
+function fn(rs){
+	console.log(rs)
+
+	/*地址，公司信息渲染*/
+	$(".company-address .name").text(rs.baseInfo.unitName);
+	$(".company-address .adress-text").text(rs.baseInfo.unitAddress);
+	$(".fireControlJurisdiction span").text(rs.baseInfo.fireControlJurisdiction);
+	$(".supervisorsResponsible span").text(rs.baseInfo.supervisorsResponsible+","+rs.baseInfo.supervisorsComanagement);
+	$(".unitTypeInfo span").text(rs.baseInfo.unitTypeInfo);
+	$(".unitAttribute span").text(rs.baseInfo.unitAttribute);
+	$(".totalBuildingArea span").text(rs.baseInfo.totalBuildingArea);
+	$(".fireControlRoomLocationInfo span").text(rs.baseInfo.fireControlRoomLocationInfo);
+
+	if(rs.baseInfo.safetyPersonList!=null&&rs.baseInfo.safetyPersonList.length!=0){
+		for(var i=0;i<rs.baseInfo.safetyPersonList.length;i++){
+			$(".mui-row .safetyManager").eq(i).find("span").text(rs.baseInfo.safetyPersonList[i].name)
+			$(".mui-row .safetyManager").eq(i).find("a").text(rs.baseInfo.safetyPersonList[i].phone)
+		}
+	}
+	
+	if(rs.logs!=null&&rs.logs.length!=0){
+		for(var i=0;i<rs.logs.length;i++){
+			var data=rs.logs[i].logDate.split(" ")[0].substring("5"); //月日
+			var time=rs.logs[i].logDate.split(" ")[1].substring("0","5"); //时分
+			console.log($.parseJSON(rs.logs[i].logDetail))
+			$(".log .main-list").append("<div class='item clearfix'><div class='clearfix'><div class='fl'><i class='state-icon'></i><div class='data'>"+data+"</div><div class='time'>"+time+"</div></div><div class='fr'><div class='state'>"+$.parseJSON(rs.logs[i].logDetail).LogType+"</div></div></div></div>	");
+
+			if(i>0&&i<rs.logs.length&&rs.logs[i].logDate.substring("0",'4')!=rs.logs[i-1].logDate.substring("0",'4')){
+				$(".log .main-list .item").eq(i-1).find(".clearfix").append("<div class='cancel-time'>"+rs.logs[i-1].logDate.substring("0",'4')+"</div>");
+			}
+			if($.parseJSON(rs.logs[i].logDetail).KeyValues!=null&&$.parseJSON(rs.logs[i].logDetail).KeyValues.length!=0){
+				$(".log .main-list .item").eq(i).find(".fr").append("<div class='info-list'></div>");
+				for(var j=0;j<$.parseJSON(rs.logs[i].logDetail).KeyValues.length;j++){
+					$(".log .main-list .item").eq(i).find(".info-list").append("<div>"+$.parseJSON(rs.logs[i].logDetail).KeyValues[j].Key+" : <span calss='color-gray'>"+$.parseJSON(rs.logs[i].logDetail).KeyValues[j].Value+"</span></div>")
+
+				}
+			}
+			/*如果有图片*/
+			if($.parseJSON(rs.logs[i].logDetail).Photos!=null&&$.parseJSON(rs.logs[i].logDetail).Photos.length!=0){
+				$(".log .main-list .item").eq(i).find(".info-list").append("<div class='img-box clearfix'></div>")
+				for(var j=0;j<$.parseJSON(rs.logs[i].logDetail).photos.length;j++){
+					$(".log .main-list .item").eq(i).find(".img-box").append("<img src='"+resourceUrl+"api/Public/DownLoadFile?FileName="+$.parseJSON(rs.logs[i].logDetail).Photos[j]+"' data-preview-src='' data-preview-group='"+$.parseJSON(rs.logs[i].logDetail).photos.length+"' alt='图片'/>")
+				}
+				mui.previewImage();  //图片放大
+			}
+			
+		}
+	}
+	
+}
+
+
+/*下拉刷新,上拉加载*/
+mui.init({
+  pullRefresh : {
+    container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+    down : {
+      auto: false,//可选,默认false.首次加载自动上拉刷新一次
+      callback :pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据； 
+    },
+    up : {
+    	auto:false,//可选,默认false.自动上拉加载一次
+    	contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+      	contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+    	callback :OnPull
+    }
+  }
+});
+
+/*下拉刷新*/
+function pullfresh(){
+	AjaxState=0;
+	EquipmentList();	
+}
+
+/*上拉加载*/
+function OnPull(){
+	AjaxState=1;
+	limit=limit+number;
+	setTimeout("EquipmentList()",1000)	
+
+}
+//var alarmid ="XHPB00000017"
+function EquipmentList(){  //XHPB00000017
+	commonAjax ("","api/Device/GetMonitorSignalDevicePageList?sequenceNumber="+alarmid+"&status="+level+"&limit="+limit+"",list,"get") 
+	function list(rs){
+		mui('#refreshContainer').pullRefresh().refresh(true);
+		console.log(rs)
+		total=rs.total;
+		if(total==0){
+			if(AjaxState==1){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+			}
+			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+			mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+			$(".screening-tc .mui-table-view").empty().append("<div class='none_img'>现在暂时没有数据</div>");
+			$(".screening-tc .mui-pull-caption").hide();
+			$(".back-top").hide();
+		}else{
+			var data='';
+			$(".screening-tc .mui-pull-caption").show();
+			for(var i=0;i<rs.rows.length;i++){
+				if(rs.rows[i].startTime!=null){  //返回null无法切割
+					rs.rows[i].startTime=rs.rows[i].startTime.substring(0,16);
+				}
+				if(rs.rows[i].endTime!=null){
+					rs.rows[i].endTime=rs.rows[i].endTime.substring(0,16)
+				}
+				data+="<div class='item'><div class='item-padding'><div class='item-top'><div class='company-name'>"+rs.rows[i].deviceName+"</div><div class='time'>"+rs.rows[i].areaName+"</div></div><div class='address'>屏蔽起止时间："+rs.rows[i].startTime+" - "+rs.rows[i].endTime+"</div></div></div>"
+			}
+			if(AjaxState==0){
+				$('.screening-tc .mui-table-view-chevron').empty().append(data);
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+				var a;
+				if(total>limit){
+					a=limit
+				}else{
+					a=total
+				}
+				mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+			}else if(AjaxState==1){
+				if(total>limit){
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);//传入false,表示还有数据
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+				}else{
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+					//传入true，表示没有数据，会显示init配置中：contentnomore参数
+				}
+				$('.screening-tc .mui-table-view-chevron').empty().append(data)
+				
+			}else if(AjaxState==2){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+				$('.screening-tc .mui-table-view-chevron').empty().append(data);
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+			}
+			ItemHeight=$(".screening-tc .item").height()+parseInt($('.item').css("paddingTop"));
+			BoxHeight=$("#refreshContainer").height();
+			boxTop=$("#refreshContainer").offset().top;
+			$(".back-top").show();
+		}
+		// 滚动显示当前显示的个数 A 可视滚动区域高度  b 滚动区域离上放的距离 c滑动区域的id或者class d 总数 e卡片的高度
+		scrollHeight(BoxHeight,boxTop,".screening-tc .company-list",total,ItemHeight)
+		
+	}
+}
+
+
+
+
+</script>
+</html>

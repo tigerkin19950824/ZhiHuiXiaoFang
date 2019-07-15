@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>我的社区</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <style>
+        .wrap {
+            position: relative;
+            font-size: .28rem;
+            display: inline-block;
+            width: 6.58rem;
+            margin-top: .21rem;
+            margin-left: .31rem;
+            background-color: #fff;
+            box-shadow:0px 3px 9px 0px rgba(160,160,160,0.33);
+            border-radius: .1rem;
+        }
+        .main-scroll{
+            background-color: #F0F0F0;
+        }
+        .text_first{
+            margin: .3rem 0 .18rem 0;
+        }
+        .text_first i{
+            display: inline-block;
+            width: .08rem;
+            height: .32rem;
+            background-color: #68BDFF;
+            border-radius: .04rem;
+            margin-left: .2rem;
+            margin-bottom: -.06rem;
+            margin-right: .13rem;
+        }
+        .text_two{
+            box-sizing: border-box;
+            padding-left: .41rem;
+            color:#999999;
+            font-size: .22rem;
+            padding-bottom: .3rem;
+            margin-left: .06rem;
+            width: 6.09rem;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        .text_three{
+            margin: .22rem 0 .2rem .21rem;
+            font-weight: bold;
+        }
+        .text_three .text_three_span{
+            float: right;
+            margin-right: .25rem;
+            font-size: .24rem;
+            color:#666666;
+            font-weight: normal;
+        }
+        .text_three .text_three_span>img{
+            vertical-align: middle;
+            width: .3rem;
+            height: .3rem;
+            margin-right: .13rem;
+        }
+        .list>li{
+            height: .7rem;
+            line-height: .7rem;
+            border-bottom: 1px solid #D2D2D2;
+            margin-left: .25rem;
+            margin-right: .06rem;
+            color:#666666;
+            background: url('../../../icon/jiantou_right_icon.png') 5.8rem 0.22rem no-repeat;
+            background-size: .2rem;
+        }
+        .QRcode{
+            display: inline-block;
+            width: 6.58rem;
+            font-size: .32rem;
+            margin-left: .31rem;
+            color:#333333;
+        }
+        .QRcode .QRcode_first{
+            font-size: .28rem;
+            margin-left: .22rem;
+            margin-top: .49rem;
+            margin-bottom: .41rem;
+            font-weight: bold;
+        }
+        .QRcode_center{
+            background-color: #fff;
+            height: .8rem;
+            line-height: .8rem;
+            border-radius: .08rem;
+            text-align: center;
+            margin-bottom: .27rem;
+            box-shadow:2px 3px 10px 0px rgba(199,199,199,0.47);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav left-arrow title="我的社区" @click-left="retreat">
+                    </head-nav>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <div class="wrap">
+                            <div class="text_first"><i></i>{{datas.name}}</div>
+                            <div class="text_two">{{datas.address}}</div>
+                            <div class="text_three">小区列表<span class="text_three_span" @click="addCommunityTo"><img src="../../../icon/jia.png" alt="">新增小区</span></div>
+                            <ul class="list">
+                                <li v-for="(item,index) in lists" :key="index" @click="EditVillage(item,index)">{{item.name}}</li>
+                            </ul>
+                        </div>
+                        <div class="QRcode">
+                            <div class="QRcode_first">我的二维码</div>
+                            <div class="QRcode_center" @click=" MyQRcodeTo(3)">社区二维码</div>
+                            <div class="QRcode_center" @click=" MyQRcodeTo(4)">家庭守护下载地址</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/vue.min.js"></script>
+    <script src="../../../js/axios.min.js"></script>
+    <script src="../../../js/rem.js"></script>
+    <script src="../../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../../components/components.js"></script>
+    <script src="../../../js/es6-promise.auto.min.js"></script>
+    <script src="../../../js/http.js"></script>
+    <script>
+       (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    datas:[],
+                    lists:[],
+                    communityId:''
+                },
+                mounted() {
+                    var This = this
+                    This.communityId=localStorage.getItem('communityId');
+                    This.listData()
+                    This.housing()
+                },
+                methods: {
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                    },
+                    addCommunityTo:function(){
+                        window.location.href='./addCommunity.html?EditId=1'
+                    },
+                    MyQRcodeTo:function(val){
+                        if(val==3) window.location.href='../MyQRcode/index.html?id=3'
+                        if(val==4) window.location.href='../MyQRcode/index.html?id=4'
+                    },
+                    housing:function(){
+                        var This=this;
+                        This.apiGet('Comminuty/Get',{
+                            id:This.communityId
+                            // id:'454b65c9b7734959a2bd5535c28fe771'
+                        }).then(function(res){
+                            This.datas=res.data.data
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //编辑小区
+                    EditVillage:function(item){
+                        window.location.href='./addCommunity.html?EditId=2&id='+item.id+'&name='+item.name
+                    },
+                    listData:function(){
+                        var This=this;
+                        This.apiGet('Comminuty/plots',{
+                            id:This.communityId
+                            // id:'454b65c9b7734959a2bd5535c28fe771'
+                        }).then(function(res){
+                            This.lists=res.data.data
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    }
+                },
+            })
+        })()
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>联网单位事件数据统计</title>
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../components/components.css">
+    <!-- <script src="../../components/hs-list-load/hs-list-load.js"></script> -->
+    <style>
+        .wrap {
+            position: relative;
+            background-color: #EFEFEF;
+        }
+
+        .clear::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .header {
+            height: 1.06rem;
+            line-height: 1.06rem;
+            font-size: 0.32rem;
+            background-color: #3673BB;
+            color: #fff;
+            text-align: center;
+        }
+
+        .header span:first-child {
+            float: left;
+            margin-left: 0.31rem;
+        }
+
+        .header span:first-child img {
+            width: 0.23rem;
+            vertical-align: middle;
+        }
+
+        #myrame {
+            width: 100%;
+            height: 8rem;
+        }
+
+        .content {
+            border-top: 1px solid transparent;
+        }
+
+        .content .list {
+            width: 6.59rem;
+            box-sizing:border-box;
+            margin: .2rem auto 0;
+            background-color: #fff;
+            padding: 0 .24rem 0;
+            border-radius: .1rem;
+            box-shadow:0px .03rem .09rem 0px rgba(160,160,160,0.33);
+        }
+        .content .list li{
+            position: relative;
+        }
+
+        .content .list li:first-child {
+            display: inline-block;
+            width: 100%;
+            margin-top: .24rem;
+            font-size: .3rem;
+            margin-bottom: .15rem;
+            line-height: .37rem;
+            color:#333333;
+        }
+
+        .content .list li:first-child span {
+            position: absolute;
+            font-size: .4rem;
+            color: #fff;
+            background-color: #E96E5D;
+            border-radius: .38rem;
+            width: 2.16rem;
+            line-height: .74rem;
+            transform: scale(.5);
+            right:-0.52rem;
+            top:-.2rem;
+            text-align: center;
+        }
+
+        .content .list li:nth-child(2),
+        .content .list li:nth-child(3) {
+            color: #666666;
+            font-size: .22rem;
+            padding-bottom: .15rem;
+        }
+        .content .list li:nth-child(3){
+            padding-bottom: .24rem;
+        }
+        .content .list li:nth-child(4) {
+            border-top: 1px solid #E5E5E5;
+            height: .58rem;
+            line-height: .58rem;
+            color: #666666;
+            font-size: .2rem;
+        }
+
+        .content .list li:nth-child(4) span {
+            float: right;
+            width: 1.06rem;
+            height: .35rem;
+            line-height: .35rem;
+            margin-top: .09rem;
+            font-size: .22rem;
+            border:1px solid #4089D7;
+            color:#4089D7;
+            text-align: center;
+            border-radius:.19rem;
+        }
+
+        .main-scroll {
+            background-color: #EFEFEF;
+            height: 100%;
+        }
+
+        .sanxuan {
+            margin-right: .3rem;
+            font-size: .28rem;
+        }
+
+        .sanxuan img {
+            margin-left: .14rem;
+            vertical-align: middle;
+            width: .14rem;
+        }
+
+        .screen {
+            z-index: 9;
+            width: 100%;
+            background-color: #F4F4F4;
+        }
+
+        .condition {
+            width: 100%;
+            background-color: #fff;
+            padding-bottom: .21rem;
+            margin-bottom: .2rem;
+        }
+
+        .condition .topNav {
+            height: .8rem;
+            line-height: .8rem;
+            padding-left: .3rem;
+            font-size: .26rem;
+        }
+        
+        .topNav .sp{
+            float: right;
+            margin-right: .4rem;
+            color:#1A8EE9;
+            font-size: .22rem;
+            font-weight: normal;
+        }
+
+        .condition .leftNav {
+            text-align: left;
+            margin-left: .4rem;
+        }
+
+        .condition .leftNav i {
+            display: inline-block;
+            vertical-align: -.1rem;
+            width: .08rem;
+            height: .38rem;
+            background: rgba(93, 191, 242, 1);
+            border-radius: .4rem;
+            margin-right: .12rem;
+        }
+
+        .condition .option {
+            float: left;
+            width: 1.76rem;
+            border: 1px solid transparent;
+            height: .58rem;
+            line-height: .58rem;
+            border-radius: .08rem;
+            background-color: #F0F0F0;
+            margin-right: .28rem;
+            margin-bottom: .2rem;
+            font-size: .22rem;
+            color: #333333;
+            text-align: center;
+        }
+
+        .condition .option:nth-child(3n) {
+            margin-right: 0;
+        }
+
+        .condition .day {
+            padding-left: .26rem;
+        }
+
+        .condition .active {
+            color: #1A8EE9;
+            border: 1px solid #1A8EE9;
+            background-color: #E1EFFA;
+        }
+
+        .warn_A {
+            color: #fff;
+            background-color: #E96E5D;
+        }
+
+        .warn_B {
+            color: #fff !important;
+            background-color: #F8893e !important;
+        }
+
+        .warn_C {
+            color: #fff !important;
+            background-color: #ECB746 !important;
+        }
+
+        .warn_D {
+            color: #fff !important;
+            background-color: #67BDFF !important;
+        }
+
+        .wran_E {
+            color: #fff !important;
+            background-color: #1D86D1 !important;
+        }
+
+        .wran_F {
+            color: #fff !important;
+            background-color: #999999 !important;
+        }
+        .warn_null{
+            color: #fff !important;
+            background-color: #e5e5e5 !important;
+        }
+        .blur {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0.76rem;
+            left: 0;
+            background-color: #000000;
+            z-index: 2;
+            opacity: 0.6;
+            display: none;
+        }
+        .posion{
+            position: fixed;
+            top:20%;
+            color:red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter search">
+                <div class="header">
+                    <head-nav left-arrow title="事件记录" @click-left="retreat">
+                        <div slot="right" class="sanxuan" @click="hiden">筛选<img src="../../icon/shaxuanIocn.png" alt="">
+                        </div>
+                    </head-nav>
+                    <hs-search v-model="sousuo" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <hs-list-load :width="cont_width" :height="cont_height" v-model="loading"
+                            :immediate-check="false" :offset="1600" :finished="finished" finished-text="没有更多了" 
+                            pull-refresh
+                            @refresh="onRefresh"
+                            @load="getData(page)">
+                            <div class="wrap">
+                                <div class="content">
+                                    <ul class="list shadow-item" v-for='(item,index) in datas' :key='index' @click="eventDetailsTo(item)">
+                                        <li>{{item.deviceName}}
+                                            <span v-if="item.alarmType == 'A'"
+                                                class="warn_A">{{item.alarmType | isdefault}}</span>
+                                            <span v-if="item.alarmType == 'B'"
+                                                class="warn_B">{{item.alarmType | isdefault}}</span>
+                                            <span v-if="item.alarmType == 'C'"
+                                                class="warn_C">{{item.alarmType | isdefault}}</span>
+                                            <span v-if="item.alarmType == 'D'"
+                                                class="warn_D">{{item.alarmType | isdefault}}</span>
+                                            <span v-if="item.alarmType === null"
+                                                class="warn_null">{{item.alarmType | isdefault}}</span>
+                                            <span v-if="item.alarmType == '人员离岗'"
+                                                class="wran_E">{{item.alarmType | isdefault}}</span>
+                                            <span v-if="item.alarmType == '屏蔽备案'"
+                                                class="wran_F">{{item.alarmType | isdefault}}</span>
+                                        </li>
+                                        <li>{{item.unitAddress}}</li>
+                                        <li>{{item.creationTime}}</li>
+                                        <li><span>{{item.statement}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </hs-list-load>
+                        <hs-list-null v-model="show_list_null"></hs-list-null>
+                    </div>
+                </div>
+            </div>
+            <top-filter v-model="screen_show" hide-title  @confirm="commit" @reset="reset">
+                <div slot="filter">
+                    <div class="screen">
+                        <div class="condition">
+                            <div class="topNav">事件类型<span class="sp">{{eventTip}}</span></div>
+                            <div class="day clear">
+                                <div :class="item.status==true?'option active':'option'"
+                                    v-for='(item,index) in eventType' :key='index' ref="event"
+                                    @click="eventClick(item.state,index)">{{item.title}}</div>
+                            </div>
+                        </div>
+                        <div class="condition">
+                            <div class="topNav">设备类型<span class="sp">{{deviceTip}}</span></div>
+                            <div class="day clear">
+                                <div :class="item.status==true?'option active':'option'"
+                                    v-for='(item,index) in deviceType' :key='index' ref="device"
+                                    @click="deviceClick(item.code,index)">{{item.title}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </top-filter>
+            <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .content .list" :list="datas" :total="total"></hs-go-back>
+        </div>
+    </div>
+
+    <script src="../../js/vue.min.js"></script>
+    <script src="../../js/axios.min.js"></script>
+    <script src="../../js/rem.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../components/components.js"></script>
+    <script src="../../js/es6-promise.auto.min.js"></script>
+    <script src="../../js/http.js"></script>
+    <script>
+        (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    total:null,
+                    screen_show: false,
+                    show_list_null:false,
+                    eventTip:'',//事件的显示文字
+                    deviceTip:'',//设备的显示文字
+                    datas: [],
+                    show: true,
+                    sousuo: '',//搜索
+                    cont_width: '375px', // tabs组件宽度
+                    cont_height: '375px', // tabs 组件高度
+                    loading: false, // 是否正在加载
+                    finished: false, // 是否全部加载完成
+                    eventType: [
+                        {title:'A类',status:false,state:'a'},
+                        {title:'B类',status:false,state:'b'},
+                        {title:'C类',status:false,state:'c'},
+                        {title:'D类',status:false,state:'d'},
+                        {title:'离岗',status:false,state:'l'},
+                        {title:'屏蔽备案',status:false,state:'p'}
+                    ],//事件类型
+                    deviceType: [
+                        {title:'消防主机',status:false,code:'A'},
+                        {title:'加装设施',status:false,code:'W'},
+                        {title:'视频系统',status:false,code:'B'}
+                    ],//设备类型
+                    limit: 20,
+                    page: 0,
+                    devicetype: [],//设备类型
+                    uniteventtype:[],//事件类型
+                },
+                mounted:function() {
+                    var This = this
+                    window.onload = function () {
+                        var eMain = document.querySelector('.struc .main')
+                        This.cont_width = eMain.clientWidth + 'px'
+                        This.cont_height = eMain.clientHeight + 'px'
+                    }
+                    This.GetRequest()
+                },
+                methods: {
+                    retreat:function() {
+                        //   window.history.go(-1)
+                        window.location.href='wutos://finish'
+                    },
+                    //跳转详情
+                    eventDetailsTo(item){
+                        if(item.alarmType=='A') {
+                            if(item.status=='L0')   window.location.href='../../home/detailsPage/CategoryAWarning_Tobeconfirmed.html?id='+item.id;
+                            if(item.status=='L1')   window.location.href='../../home/detailsPage/CategoryAWarning_Realfirealarm.html?id='+item.id;
+                            if(item.status=='L2')   window.location.href='../../home/detailsPage/CategoryAWarning_Falsepositives.html?id='+item.id;
+                            if(item.status=='L3')   window.location.href='../../home/detailsPage/CategoryAWarning_AlreadyLnPolice.html?id='+item.id;
+                            if(item.status=='L4')   window.location.href='../../home/detailsPage/CategoryAWarning_Fireextinguished.html?id='+item.id;
+                        }
+                        if(item.alarmType=='B'||item.alarmType=='C'||item.alarmType=='D'){
+                            window.location.href='../../home/details/BCDdetails.html?id='+item.id;
+                        }
+                        if(item.alarmType=='人员离岗'){
+                            window.location.href='../../home/details/StaffLeave.html?id='+item.id;
+                        }
+                        if(item.alarmType=='屏蔽备案'){
+                            window.location.href='../../home/details/ShieldingDetails.html?id='+item.id;
+                        }
+                    },
+                    //事件类型
+                    eventClick:function(state,index) {
+                        if(this.eventType[index].status===true) {
+                            for(var m=0;m<this.uniteventtype.length;m++){
+                                if(this.uniteventtype[m]==state){
+                                    this.uniteventtype.splice(m,1)
+                                    this.eventTip=''
+                                }
+                            }
+                            this.eventType[index].status=false
+                            return false;
+                        }
+                        this.eventType[index].status = true
+                        this.eventTip= this.eventType[index].title
+                        this.uniteventtype.push(state)
+                        console.log(this.uniteventtype)
+                    },
+                    //设备类型
+                    deviceClick:function(code,index) {
+                        if(this.deviceType[index].status===true) {
+                            for(var m=0;m<this.devicetype.length;m++){
+                                if(this.devicetype[m]==code){
+                                    this.devicetype.splice(m,1)
+                                    this.deviceTip=''
+                                }
+                            }
+                            this.deviceType[index].status=false
+                            return false;
+                        }
+                        this.devicetype.push(code)
+                        this.deviceTip= this.deviceType[index].title
+                        this.deviceType[index].status = true;
+                    },
+                    //搜索
+                    onSearch: function () {
+                        this.datas=[]
+                        this.page=0;
+                        this.loading = true;
+                        this.finished = false;
+                        this.GetRequest()
+                    },
+                    hiden:function() {
+                        this.screen_show = !this.screen_show;
+                    },
+                    //确定
+                    commit:function() {
+                        this.datas=[]
+                        this.page=0;
+                        this.loading = true;
+                        this.finished = false;
+                        this.screen_show = !this.screen_show;
+                        this.GetRequest()
+                    },
+                    //重置
+                    reset(){
+                        for (var i = 0; i < this.eventType.length; i++) {
+                            this.eventType[i].status = false
+                        }
+                        for (var i = 0; i < this.deviceType.length; i++) {
+                            this.deviceType[i].status = false
+                        }
+                        this.datas=[]
+                        this.page=0;
+                        this.loading = true;
+                        this.finished = false;
+                        this.uniteventtype=[]
+                        this.devicetype=[]
+                        this.GetRequest()
+                    },
+                    getData: function (page) {
+                        var This = this;
+                        var isUnitevent=This.uniteventtype.join(',')
+                        var isDevice=This.devicetype.join(',')
+                        this.apiGet('Unit/GetUnitAlarmPageList', { 
+                            offset: This.page*This.limit, 
+                            limit: This.limit, 
+                            keyword:This.sousuo,
+                            uniteventtype:isUnitevent,
+                            devicetype: isDevice
+                        }).then(function (res) {
+                            var data = res.data.rows
+                            This.total = res.data.total;
+
+                            for (var j = 0; j < data.length; j++) {
+                                data[j].creationTime=data[j].creationTime.replace(/-/g,'/')
+                                This.datas.push(data[j])
+                            }
+                            if (data.length === 0) {
+                            This.finished = true
+                            }
+
+                            if (data.length === 0 && This.datas.length === 0) {
+                            // 显示缺省页
+                            This.show_list_null = true
+                            This.finished_text = ''
+                            } else {
+                            This.show_list_null = false
+                            }
+                            This.loading = false;
+
+                        }).catch(function (err) {
+                            console.log(err);
+                            This.loading = false;
+                            This.finished = true;
+                        })
+
+                        this.page++;
+                    },
+                    GetRequest: function () {
+                        var url = location.search;
+                        var id = url.substr(url.indexOf("=") + 1);
+                        this.id = id;
+                        this.getData(this.page);
+                    },
+                    onRefresh: function () {
+                        this.finished = false
+                        this.datas = []
+                        this.page = 0
+
+                        this.show_list_null = false
+                        setTimeout(function () {
+                            this.getData(this.page)
+                        }.bind(this), 1000)
+                    }
+                },
+                filters: {
+                    isdefault: function (value) {
+                        if(value===null) value = '未知状态'
+                        if(value=='A'||value=='B'||value=='C'||value=='D') value += '类告警'
+            　　　　     return value
+            　　　　},
+　　            }
+            })
+        })()
+    </script>
+</body>
+
+</html>

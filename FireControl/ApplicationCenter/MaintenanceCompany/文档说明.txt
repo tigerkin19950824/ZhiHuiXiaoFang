@@ -1,0 +1,8 @@
+内容为：应用中心->维保公司模块  （对应样式表：application-center.css js写在内部）
+负责人：李溪 
+时间：2019-6-21
+
+CompanyList.html ：维保公司列表 
+CompanyDetails.html 维保公司详情
+TaskList.html  维保任务列表
+MaintenanceDetails.html  维保任务列表

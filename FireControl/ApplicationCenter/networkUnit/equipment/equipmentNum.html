@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>联网单位设备统计</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <link rel="stylesheet" href="./equipmentNum.css">
+    <script src="../../../js/rem.js"></script>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter search">
+                <div class="header">
+                    <head-nav left-arrow title="联网单位设备统计" @click-right="clickRight()" @click-left="clickLeft()"
+                        class="head-nav-bar">
+                        <div slot="right">
+                            <div class="headRight">
+                                <span class="title">筛选</span>
+                                <img src="../../../icon/shaxuanIocn.png" alt="" class="rightIcon">
+                            </div>
+                        </div>
+                    </head-nav>
+                    <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <hs-list-load :width="cont_width" :height="cont_height" v-model="loading"
+                            :immediate-check="false" :offset="1200" :finished="finished" :finished-text="finished_text"
+                            @load="getData(page)" pull-refresh @refresh="onRefresh">
+                            <div class="eqd_main">
+                                <div class="eqdAll">
+                                    <div class="eqdItem shadow-item" v-for="item in dataList" :key="item.id"
+                                        @click="toDetail(item.id)">
+                                        <div class="eqd_name">
+                                            <!-- <span class="eqd_name_title">设备名称：</span> -->
+                                            <span class="eqd_name_val">{{item.deviceName}}</span>
+                                            <span class="eqd_ident_normal" v-if="item.status == 3">正常</span>
+                                            <span class="eqd_ident_abnormal" v-else>异常</span>
+                                        </div>
+                                        <div class="eqd_company">
+                                            <span class="eqd_com_title">所属公司：</span>
+                                            <span class="eqd_com_val">{{item.unitName}}</span>
+                                        </div>
+                                        <div class="eqd_num">
+                                            <span class="eqd_num_title">设备位置：</span>
+                                            <span class="eqd_num_val">{{item.areaName}}</span>
+                                        </div>
+                                        <div class="eqd_place">
+                                            <span class="eqd_place_title">设备编号：</span>
+                                            <span class="eqd_place_val">{{item.deviceNum}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </hs-list-load>
+                        <hs-list-null v-model="show_list_null"></hs-list-null>
+                    </div>
+                </div>
+            </div>
+            <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .eqdAll .eqdItem" :list="dataList"
+                :total="total"></hs-go-back>
+            <top-filter v-model="screen_show" hide-title @confirm="getScreenData()" @reset="reset">
+                <div slot="filter">
+                    <div class="screenWrap">
+                        <div class="screen_all">
+                            <div class="typeOne">
+                                <div class="type_title">
+                                    设备类型一级分类
+                                    <div class="type_son_text">{{type_text_arr.one}}</div>
+                                </div>
+                                <div class="type_item">
+                                    <div class="type_item_son" :class="{active:one_status == index}"
+                                        v-for="(item,index) in screenList" :key="index" @click="selectA(item,index)">
+                                        {{item.name}}</div>
+                                </div>
+                            </div>
+                            <div class="typeOne border-top">
+                                <div class="type_title">
+                                    设备类型二级分类
+                                    <div class="type_son_text">{{type_text_arr.two}}</div>
+                                </div>
+                                <div class="type_item">
+                                    <div class="type_item_son" :class="{active:two_status == index}"
+                                        v-for="(item,index) in screenList02" :key="index" @click="selectB(item,index)">
+                                        {{item.name}}</div>
+                                </div>
+                            </div>
+                            <div class="typeOne border-top">
+                                <div class="type_title">
+                                    设备类型三级分类
+                                    <div class="type_son_text">{{type_text_arr.three}}</div>
+                                </div>
+                                <div class="type_item">
+                                    <div class="type_item_son" :class="{active:three_status.indexOf(item.id) !== -1}"
+                                        v-for="(item,index) in screenList03" :key="index" @click="selectC(item,index)">
+                                        {{item.name}}</div>
+                                </div>
+                            </div>
+                            <div class="typeOne border-top">
+                                <div class="type_title">
+                                    单位类型
+                                    <div class="type_son_text">{{type_text_arr.device_text}}</div>
+                                </div>
+                                <div class="type_item">
+                                    <div class="type_item_son" :class="{active:companyType.indexOf('0') !== -1}"
+                                        @click="screenTypeSel('0')">火灾高危单位</div>
+                                    <div class="type_item_son" :class="{active:companyType.indexOf('1') !== -1}"
+                                        @click="screenTypeSel('1')">其他重点单位</div>
+                                    <div class="type_item_son" :class="{active:companyType.indexOf('2') !== -1}"
+                                        @click="screenTypeSel('2')">十小场所</div>
+                                    <div class="type_item_son" :class="{active:companyType.indexOf('3') !== -1}"
+                                        @click="screenTypeSel('3')">其他一般单位</div>
+                                </div>
+                            </div>
+                            <!-- <div class="seleBtn" @click="getScreenData()">
+                                <div class="shureBtn">确定</div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </top-filter>
+        </div>
+    </div>
+</body>
+<script src="../../../js/es6-promise.auto.min.js"></script>
+<script src="../../../js/vue.min.js"></script>
+<script src="../../../js/axios.min.js"></script>
+<script src="../../../js/http.js"></script>
+<script src="../../../components/components.js"></script>
+<script>
+    (function () {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                show_list_null: false,
+                type_text_arr: { one: '', two: '', three: '', device_text: '' },
+                screen_show: false,//控制筛选显示、隐藏
+                screenList: [],//设备筛选总数据
+                screenList02: [], //设备筛选二级数据
+                screenList03: [], //设备筛选三级数据
+                companyType: [],//设备筛选-传递单位类型
+
+                one_status: null, //设备筛选-->一级分类状态
+                two_status: null,  //设备筛选-->二级分类状态
+                three_status: [], //设备筛选-->三级分类选中
+                screenData: [],
+                dataList: [],    //联网设备列表
+
+                cont_width: '375px', // tabs组件宽度
+                cont_height: '375px', // tabs 组件高度
+                loading: false, // 是否正在加载
+                finished: false, // 是否全部加载完成
+                page: 0,
+                search_text: '',
+                screen_status: null,
+                keyword: '',
+                finished_text: '没有更多了',
+
+                total: null,
+            },
+            created: function () {
+                this.getData(this.page);
+            },
+            watch: {
+                search_text(val, oldVal) {
+                    if (val == '') {
+                        this.dataList = [];
+                        this.page = 0;
+                        this.finished = false;
+                        this.keyword = '';
+                        this.getData();
+                    }
+                },
+            },
+            mounted: function () {
+                var This = this
+                window.onload = function () {
+                    var eMain = document.querySelector('.struc .main')
+                    This.cont_width = eMain.clientWidth + 'px'
+                    This.cont_height = eMain.clientHeight + 'px'
+                }
+
+            },
+            methods: {
+                clickLeft() {
+                    window.location.href = 'wutos://finish';
+                },
+                clickRight: function () {
+                    this.screen_show = !this.screen_show;
+                    if (this.screen_show) {
+                        this.getScreenList();
+                    }
+                },
+                //获取设备列表
+                getData: function () {
+                    var devicetype = this.three_status.join();
+                    var companyType;
+                    if (this.companyType.length > 0) {
+                        companyType = this.companyType.join();
+                    } else {
+                        companyType = null;
+                    }
+                    var that = this;
+                    this.apiGet('/Unit/GetUnitDevicePageList', {
+                        keyword: this.keyword,
+                        devicetype: devicetype,	//设备类型
+                        offset: this.page * 20, //当前起始数据
+                        limit: 20, //每页条数
+                        svtype: companyType,//单位类型
+                    }).then(function (res) {
+                        that.total = res.data.total;
+
+                        var data = res.data.rows;
+                        
+                        if (!data) data = [];
+
+                        for (var j = 0; j < data.length; j++) {
+                            that.dataList.push(data[j])
+                        }
+
+                        if (data.length === 0 || !data) {
+                            that.finished = true;
+                        }
+                        if (that.dataList.length === 0 && data.length === 0) {
+                            // 显示缺省页
+                            that.show_list_null = true;
+                            that.finished_text = '';
+                        }else{
+                            that.show_list_null = false;
+                        }
+                        that.loading = false
+                    }).catch(function (err) {
+                        that.loading = false
+                        that.finished = true
+                    })
+                    this.page++;
+                },
+                //跳转设备事件，并传递设备id
+                toDetail: function (val) {
+                    console.log(val);
+                    var id = val;
+                    window.location.href = './equimentEvent.html?id=' + val;
+                },
+                //获取筛选数据列表
+                getScreenList: function () {
+                    var that = this;
+                    this.apiGet('/Device/GetDeviceCategoryList')
+                        .then(function (res) {
+                            that.screenList = res.data;
+                            console.log('筛选', that.screenList);
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                        })
+                },
+                //一级分类
+                selectA: function (item, index) {
+                    this.type_text_arr.one = item.name;
+
+                    this.one_status = index;
+                    this.screenList02 = this.screenList[index].children;
+                    this.two_status = null;
+                    this.screenList03 = [];
+                },
+                //二级分类
+                selectB: function (item, index) {
+                    this.type_text_arr.two = item.name;
+
+                    this.two_status = index;
+                    this.screenList03 = this.screenList02[index].children;
+                    this.three_status = [];
+                },
+                //三级分类
+                selectC: function (item, index) {
+
+                    if (this.three_status.indexOf(item.id) !== -1) {
+                        this.three_status.splice(this.three_status.indexOf(item.id), 1);
+                        this.type_text_arr.three = '';
+                    } else {
+                        this.three_status.push(item.id);
+                        this.type_text_arr.three = item.name;
+                    }
+                    console.log(this.three_status);
+
+                },
+                //单位类型筛选
+                screenTypeSel: function (index) {
+                    console.log(index);
+                    var str = "";
+                    switch (Number(index)) {
+                        case 0:
+                            str = '火灾高危单位';
+                            break;
+                        case 1:
+                            str = "其他重点单位";
+                            break;
+                        case 2:
+                            str = "十小场所";
+                            break;
+                        case 3:
+                            str = "其他一般单位";
+                            break;
+                        default:
+                            str = "";
+                    }
+                    if (this.companyType.indexOf(index) == -1) {
+                        this.companyType.push(index);
+                        this.type_text_arr.device_text = str;
+                    } else {
+                        this.companyType.splice(this.companyType.indexOf(index), 1);
+                        this.type_text_arr.device_text = '';
+                    }
+                },
+                //确定筛选
+                getScreenData: function () {
+                    this.screen_show = false;
+                    this.page = 0;
+                    this.dataList = [];
+                    this.getData();
+                },
+                //重置
+                reset: function () {
+                    this.one_status = null;
+                    this.two_status = null;
+                    this.three_status = [];
+                    this.screenList02 = [];
+                    this.screenList03 = [];
+                    this.screenType_status = -1;
+                    this.companyType = [];
+                    for (var i in this.type_text_arr) {
+                        this.type_text_arr[i] = '';
+                    }
+                },
+                onSearch: function () {
+                    this.loading = false;
+                    this.finished = false;
+                    this.page = 0;
+                    this.dataList = [];
+                    // console.log('搜索',this.dataList);
+                    // for(var i=0;i<data.length;i++){
+                    //     if(data[i].deviceName.indexOf(this.search_text) !== -1){
+                    //         dataList.push(data[i]);
+                    //     }
+                    // }
+                    // this.finished = true;
+                    // this.dataList = dataList;
+                    this.keyword = this.search_text;
+                    this.getData();
+                },
+                onRefresh: function () {
+                    this.finished = false
+                    this.dataList = []
+                    this.page = 0
+
+                    this.show_list_null = false
+                    setTimeout(function () {
+                        this.getData(this.page)
+                    }.bind(this), 1000)
+                }
+            }
+        })
+    })();
+</script>
+
+</html>

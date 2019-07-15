@@ -1,0 +1,92 @@
+.main-scroll{
+    background-color: #EFEFEF;
+}
+
+.superWrap{
+    width: 100%;
+    border-top: 1px solid transparent;
+}
+.superWrap .item{
+    height: 1.14rem;
+    margin: 0 0.3rem;
+    margin-top: 0.2rem;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    border-radius: 0.1rem;
+}
+.superWrap .item .item_l{
+    width: 1.14rem;
+    height: 1.14rem;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    float: left;
+    box-sizing: border-box;
+    text-align: center;
+}
+.superWrap .item .item_l>img{
+    display: block;
+    width: 0.64rem;
+    height: 0.64rem;
+    margin: 0 auto;
+}
+.superWrap .item .item_m{
+    display: inline-block;
+}
+.superWrap .item .item_m .name{
+   font-size: 0.24rem;
+   color: #333333;
+   margin-top: 0.24rem;
+}
+.superWrap .item .item_m .item_m_con{
+    width: 100%;
+    font-size: 0.22rem;
+    margin-top: 0.16rem;
+}
+.superWrap .item .item_m .item_m_con .company_num{
+    display: inline-block;
+    color: #666666;
+}
+
+.superWrap .item .item_m .item_m_con .home_num{
+    color: #666666;
+    display: inline-block;
+    margin-left: 0.46rem;
+}
+.superWrap .item .item_m .item_m_con .num{
+    color: #4089D7; 
+}
+.superWrap .item .item_r{
+    float: right;
+    width: 1.51rem;
+    height: 1.14rem;
+    text-align: left;
+    color: #ffffff;
+}
+.superWrap .item .item_r .grade{
+    width: 100%;
+    font-size: 0.36rem;
+    margin-top: 0.27rem;
+    padding-left: 0.7rem;
+    box-sizing: border-box;
+}
+.superWrap .item .item_r .grade_title{
+    width: 100%;
+    font-size: 0.22rem;
+    margin-top: 0.11rem;
+    padding-left: 0.37rem;
+    box-sizing: border-box;
+}
+
+.superWrap .item .item_r.bg01{ /*60以下*/
+    background:url('../../icon/grade60.png') no-repeat center center; 
+    background-size: 100% 100%;
+}
+.superWrap .item .item_r.bg02{/*80以下*/
+    background:url('../../icon/grade90.png') no-repeat center center;
+    background-size: 100% 100%;
+}
+.superWrap .item .item_r.bg03{/*80以上*/
+    background:url('../../icon/grade100.png') no-repeat center center;
+    background-size: 100% 100%;
+}

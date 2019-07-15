@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>联网单位事件数据统计</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <style>
+    #main{
+      background-color: #EFEFEF;
+      padding-bottom: .2rem;
+    }
+    .clear:after{
+      content:'';
+      display: block;
+      clear:both;
+    }
+    .nav{
+      display: inline-block;
+      width: 6.58rem;
+      height: .92rem;
+      font-size: .28rem;
+      line-height: .92rem;
+      border-radius:.1rem;
+      background-color: #fff;
+      margin-top: .2rem;
+      margin-left: .3rem;
+      box-shadow:0px 3px .09rem 0px rgba(160,160,160,0.33);
+    }
+    .nav img{
+      width: .3rem;
+      margin-left: .24rem;
+      margin-right: .13rem;
+      vertical-align: -.08rem;
+    }
+    .nav .item{
+      float: right;
+      width: 1.17rem;
+      color:#168FE6;
+      font-size: .32rem;
+      background: url('../../icon/jiantou_right_icon.png') .76rem .34rem no-repeat;
+      background-size:.19rem .27rem; 
+    }
+    .statistical{
+      margin-top: .2rem;
+      margin-left: .3rem;
+      background-color: #fff;
+      width: 6.58rem;
+      border-radius:.1rem;
+      padding-bottom: .26rem;
+    }
+    .statisticalTop{
+      padding-top: .24rem;
+      padding-bottom: .24rem;
+      padding-left: .24rem;
+      border-bottom: 1px solid #DCDCDC;
+    }
+    .statisticalTop span{
+      font-size: .28rem;
+    }
+    .statisticalTop>i{
+      display: inline-block;
+      vertical-align: -.1rem;
+      width:.08rem;
+      height:.38rem;
+      background:rgba(93,191,242,1);
+      border-radius:.4rem;
+    }
+    .ranking{
+      width: 6.12rem;
+      margin-left: .24rem;
+      margin-top: .2rem;
+      font-size: .28rem;
+      padding-top: .24rem;
+      border-radius:.08rem;
+      box-shadow:.02rem .03rem .1rem 0 rgba(157,186,218,0.47);
+      border:1px solid rgba(229,229,229,1);
+    }
+    .ranking>i{
+      display: inline-block;
+      vertical-align: -.06rem;
+      margin-left: .24rem;
+      width:.08rem;
+      height:.32rem;
+      background:rgba(93,191,242,1);
+      border-radius:.04rem;
+    }
+    .tabs{
+      display: inline-block;
+      margin-top: .29rem;
+      margin-left: .55rem;
+      border:1px solid #4188D6;
+      border-radius:.06rem;
+    }
+    .tabs div{
+      float: left;
+      font-size: .24rem;
+      text-align: center;
+      width: 1rem;
+      height: .4rem;
+      line-height: .4rem;
+      color:#4188D6;
+      border-right: 1px solid #4188D6;
+      background-repeat: no-repeat;
+    }
+    .tabs div:last-child{
+      border-right: 0;
+    }
+    .tabs .active{
+      background-color: #4188D6;
+      color:#fff;
+    }
+    .istab{
+      margin-top: 0;
+      margin-bottom: .35rem;
+    }
+    .istab div{
+      width: 2.5rem;
+      height: .4rem;
+    }
+    .ranking label{
+      float: right;
+      margin-right: .46rem;
+      font-size: .32rem;
+      color:#168FE6;
+    }
+    .datas{
+      height: 4rem;
+    }
+    .isdatas{
+      margin-top: .15rem;
+      border-top: 1px solid #E5E5E5;
+    }
+    .hada{
+      color:#333333;
+    }
+    #frame {
+      width: 100%;
+      height: 100%;
+      margin-top: .2rem;
+    }
+  </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="struc noFooter">
+            <div class="header">
+                <head-nav left-arrow title="联网单位事件数据统计" @click-left="retreat">
+                </head-nav>
+            </div>
+            <div class="main" id="main">
+                <div class="main-scroll">
+                    <div class="wrap">
+                      <a href="incidentRecord.html" class="hada">
+                          <div class="nav">
+                            <img src="../../icon/network.png" alt="">
+                            <span>事件数量</span>
+                            <span class="item">{{num}}</span>
+                          </div>
+                      </a>
+                      <div class="statistical">
+                          <div class="statisticalTop">
+                              <i></i>
+                              <span>告警统计</span>
+                          </div>
+                          <div class="ranking shadow-item">
+                              <i></i>
+                              <span>7天内单位告警排名</span>
+                              <div class="tabs clear">
+                                  <div :class="{active:alarmType == 'A'}" @click="selectType01('A')">A类</div>
+                                  <div :class="{active:alarmType == 'B'}" @click="selectType01('B')">B类</div>
+                                  <div :class="{active:alarmType == 'C'}" @click="selectType01('C')">C类</div>
+                                  <div :class="{active:alarmType == 'D'}" @click="selectType01('D')">D类</div>
+                                  <div :class="{active:alarmType == '人员离岗'}" @click="selectType01('人员离岗')">离岗</div>
+                              </div>
+                              <div class="datas">
+                                  <iframe v-show="alarmType == 'A'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekUnitAlarmRank?alarmType=A" 
+                                    frameborder="0" width="95%" height="95%" scrolling="no"></iframe>
+                                  <iframe v-show="alarmType == 'B'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekUnitAlarmRank?alarmType=B" 
+                                    frameborder="0" width="95%" height="95%" scrolling="no"></iframe>
+                                  <iframe v-show="alarmType == 'C'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekUnitAlarmRank?alarmType=C" 
+                                    frameborder="0" width="95%" height="95%" scrolling="no"></iframe>
+                                  <iframe v-show="alarmType == 'D'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekUnitAlarmRank?alarmType=C" 
+                                    frameborder="0" width="95%" height="95%" scrolling="no"></iframe>
+                                  <iframe v-show="alarmType == '人员离岗'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekUnitAlarmRank?alarmType='人员离岗'" 
+                                    frameborder="0" width="95%" height="95%" scrolling="no"></iframe>
+                              </div>
+                          </div>
+                          <div class="ranking">
+                              <i></i>
+                              <span>7天内告警趋势</span>
+                              <div class="tabs clear">
+                                  <div :class="{active:alarmType02 == 'A'}" @click="selectType02('A')">A类</div>
+                                  <div :class="{active:alarmType02 == 'B'}" @click="selectType02('B')">B类</div>
+                                  <div :class="{active:alarmType02 == 'C'}" @click="selectType02('C')">C类</div>
+                                  <div :class="{active:alarmType02 == 'D'}" @click="selectType02('D')">D类</div>
+                                  <div :class="{active:alarmType02 == '人员离岗'}" @click="selectType02('人员离岗')">离岗</div>
+                              </div>
+                              <div class="datas">
+                                  <iframe v-show="alarmType02 == 'A'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekAlarmTrend?alarmType='A'" 
+                                  frameborder="0" width="100%" height="95%" scrolling="no"></iframe>
+                                <iframe v-show="alarmType02 == 'B'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekAlarmTrend?alarmType='B'" 
+                                  frameborder="0" width="100%" height="95%" scrolling="no"></iframe>
+                                <iframe v-show="alarmType02 == 'C'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekAlarmTrend?alarmType='C'" 
+                                  frameborder="0"  width="100%" height="95%" scrolling="no"></iframe>
+                                <iframe v-show="alarmType02 == 'D'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekAlarmTrend?alarmType='D'" 
+                                  frameborder="0" width="100%" height="95%" scrolling="no"></iframe>
+                                <iframe v-show="alarmType02 == '人员离岗'" name="myiframe" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/WeekAlarmTrend?alarmType='人员离岗'" 
+                                  frameborder="0" width="100%" height="95%" scrolling="no"></iframe>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="statistical">
+                          <div class="statisticalTop">
+                              <i></i>
+                              <span>屏蔽统计</span>
+                          </div>
+                          <div class="ranking">
+                              <div class="tabs istab clear">
+                                  <div :class="{active:alarmType03 == '当前屏蔽点位数'}" @click="selectType03('当前屏蔽点位数')">当前屏蔽点位数</div>
+                                  <div :class="{active:alarmType03 == '累计屏蔽点位数'}" @click="selectType03('累计屏蔽点位数')">累计屏蔽点位数</div>
+                              </div>
+                              <br/>
+                              <i></i>
+                              <span>当前屏蔽点位数</span>
+                              <label for="">563</label>
+                              <div class="datas isdatas">
+                                  <!-- 当前屏蔽点数 -->
+                                  <iframe name="myiframe" v-show="alarmType03 == '当前屏蔽点位数'" src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/CurShieldPointNum/" frameborder="0" width="100%" height="95%" scrolling="no">
+                                  </iframe>
+                                  <!-- 累计屏蔽点数 -->
+                                  <iframe name="myiframe" v-show="alarmType03 == '累计屏蔽点位数'"  src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/TotalShieldPointNum/" frameborder="0" width="100%" height="95%" scrolling="no">
+                                  </iframe>
+                              </div>
+                          </div>
+                          <div class="ranking">
+                              <i></i>
+                              <span>备案逾期率</span>
+                              <div class="datas">
+                                  <iframe name="myiframe"  src="http://192.168.10.160:8898/thinkReport/board/APP_Alarm/ShieldOverdueRate/" frameborder="0"  width="100%" height="95%" scrolling="no">
+                                </iframe>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/vue.min.js"></script>
+    <script src="../../js/axios.min.js"></script>
+    <script src="../../js/rem.js"></script>
+    <script src="../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../components/components.js"></script>
+    <script src="../../js/es6-promise.auto.min.js"></script>
+    <script src="../../js/http.js"></script>
+<script>
+    (function () {
+    var vm = new Vue({
+      el: '#app',
+      data(){
+        return{
+          num:'',
+          alarmType:'A',
+          alarmType02:'A',
+          alarmType03:'当前屏蔽点位数'
+        }
+      },
+      mounted(){
+        this.NumberEvents()
+      },
+      methods: {
+        retreat:function() {
+          window.location.href='wutos://finish'
+        },
+        NumberEvents:function(){
+          This=this;
+          This.apiGet('Public/GetStatisticsData').then(function(res){
+            This.num=res.data.alarmCount;
+            console.log(res)
+          }).catch(function(error){
+            console.log(error)
+          })
+        },
+        selectType01:function(val){
+            this.alarmType = val;
+        },
+        selectType02:function(val){
+            this.alarmType02 = val;
+        },
+        selectType03:function(val){
+            this.alarmType03 = val;
+        }
+      }
+    })
+  })()
+</script>
+</body>
+</html>

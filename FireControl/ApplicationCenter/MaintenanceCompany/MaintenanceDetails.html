@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>维保详情</title>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/script_px2rem.js"></script>
+	<script src="../../js/mui.min.js"></script>
+	<link rel="stylesheet" href="../../css/imageview.css" />
+	<link rel="stylesheet" href="../../css/mui.imageviewer.css" />
+	<link rel="stylesheet" href="../../css/mui.min.css">
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/application-center.css">
+
+</head>
+<body style="background:#efefef">
+	<div class="maintenance-details">
+		<div class="public-color fixed-top">
+			<div class="header-back public-color">
+				<a  onclick="window.location.href='wutos://finish'" class="back-btn"><i class="back-icon"></i></a>
+				<div class="header-title">维保详情</div>
+				<!-- <div class="screening">筛选<i class="screening-icon"></i></div> -->
+			</div>
+			<div class="search-base public-color">
+				<div class="search-box">
+					<i class="search-icon"></i>
+					<form action="" id="form-search"><input type="search" id="keyword" placeholder="请输入搜索内容"></form>
+					<i class="del-icon"></i>
+				</div>
+			</div>
+		</div>
+		<div class="mui-content mui-scroll-wrapper" >
+			<div class="mui-scroll">
+				<div class="main-list">
+					<!-- <div class="item clearfix">
+						<div class="clearfix">
+							<div class="fl">
+								<i class="state-icon"></i>
+								<div class="data">12-21</div>
+								<div class="time">12:13</div>
+							</div>
+							<div class="fr">
+								<div class="state">维保任务生成</div>
+								<div class="info-list">
+									<div>联网单位: <span class="color-gray">武汉方正科技有限公司</span></div>
+									<div>任务创建人: <span class="color-gray">周红军</span></div>
+									<div>任务开始日期: <span class="color-gray">2018-12-20</span></div>
+									<div>任务结束日期: <span class="color-gray">2018-12-20</span></div>
+									<div>联网单位确认时间: <span class="color-gray">2018-12-20</span></div>
+								</div>
+								<div class="img-box clearfix">
+									<img src="../../images/conpany-img.png" alt="">
+									<img src="../../images/conpany-img.png" alt="">
+									<img src="../../images/conpany-img.png" alt="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="item clearfix">
+						<div class="clearfix">
+							<div class="fl">
+								<i class="state-icon"></i>
+								<div class="data">12-21</div>
+								<div class="time">12:13</div>
+							</div>
+							<div class="fr">
+								<div class="state">维保任务生成</div>
+								<div class="info-list">
+									<div>联网单位: <span class="color-gray">武汉方正科技有限公司</span></div>
+									<div>任务创建人: <span class="color-gray">周红军</span></div>
+									<div>任务开始日期: <span class="color-gray">2018-12-20</span></div>
+									<div>任务结束日期: <span class="color-gray">2018-12-20</span></div>
+									<div>联网单位确认时间: <span class="color-gray">2018-12-20</span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="item clearfix">
+						<div class="clearfix">
+							<div class="fl">
+								<i class="state-icon"></i>
+								<div class="data">12-21</div>
+								<div class="time">12:13</div>
+							</div>
+							<div class="fr">
+								<div class="state">维保任务生成</div>
+								<div class="info-list">
+									<div>维保任务生成: <span class="color-gray">武汉方正科技有限公司</span></div>
+									<div>任务派发人: <span class="color-gray">周红军</span></div>
+								</div>
+							</div>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../js/common.js"></script>
+<!--  图片放大 -->
+<script type="text/javascript" src="../../js/mui.imageViewer.js" ></script>
+<script type="text/javascript" src="../../js/mui.previewimage.js" ></script>
+<script type="text/javascript" src="../../js/mui.zoom.js" ></script>
+
+<script>
+$(".search-box .del-icon").click(function(){
+	$(".search-box input").val('');
+})
+
+var stateArr=['维保任务生成','维保任务委派','维保人员到场','确认维保人员到场','维保任务完成','未确认'];
+/*获取地址栏参数*/
+var id=getQueryVariable().id; //维保任务id
+commonAjax ("","api/Maintenance/GetMaintenanceTaskDetailById?id="+id+"",NewList,"get")
+
+function NewList(rs){
+	console.log(rs)
+	if(rs.taskRecord!=null&&rs.taskRecord!=0){
+		for(var i=0;i<rs.taskRecord.length;i++){
+			var data=rs.taskRecord[i].createdOn.split(" ")[0].substring("5"); //月日
+			var time=rs.taskRecord[i].createdOn.split(" ")[1].substring("0","5"); //时分
+			$(".main-list").append("<div class='item clearfix'><div class='clearfix'><div class='fl'><i class='state-icon'></i><div class='data'>"+data+"</div><div class='time'>"+time+"</div></div><div class='fr'><div class='state'>"+stateArr[rs.taskRecord[i].taskStatus-1]+"</div><div class='info-list'></div></div></div></div>");
+			if(rs.taskRecord[i].taskStatus==1){
+				rs.taskStartTime=rs.taskStartTime.substring("0",'10');
+				rs.taskEndTime=rs.taskStartTime.substring("0",'10');
+				rs.taskRecord[i].createdOn=rs.taskRecord[i].createdOn.substring("0",'16');
+				$(".main-list .item").eq(i).find(".state-icon").addClass("first-icon");
+				$(".main-list .item").eq(i).find(".info-list").append("<div>联网单位：<span class='color-gray'>"+rs.repairCompanyName+"</span></div><div>任务创建人：<span class='color-gray'>"+rs.taskRecord[i].creatorName+"</span></div><div>任务开始时间：<span class='color-gray'>"+rs.taskStartTime+"</span></div><div>任务结束时间：<span class='color-gray'>"+rs.taskEndTime+"</span></div><div>联网单位确认时间：<span class='color-gray'>"+rs.taskRecord[i].createdOn.substring(0,16)+"</span></div>")
+			}else if(rs.taskRecord[i].taskStatus==2){
+				rs.taskRecord[i].createdOn=rs.taskRecord[i].createdOn.substring("0",'4');
+				rs.taskRecord[i-1].createdOn=rs.taskRecord[i-1].createdOn.substring("0",'4');
+				rs.taskRecord[i].createdOn=rs.taskRecord[i].createdOn.substring("0",'16');
+				$(".main-list .item").eq(i).find(".info-list").append("<div>委派人：<span class='color-gray'>"+rs.taskRecord[i].creatorName+"</span></div><div>执行时间：<span class='color-gray'>"+rs.taskRecord[i].createdOn+"</span></div>");
+				if(rs.taskRecord[i-1].createdOn!=rs.taskRecord[i].createdOn){
+					$(".main-list .item").eq(i-1).find(".clearfix").append("<div class='cancel-time'>"+rs.taskRecord[i-1].createdOn+"</div>")
+				}
+			}else if(rs.taskRecord[i].taskStatus==3){
+				rs.taskRecord[i].createdOn=rs.taskRecord[i].createdOn.substring("0",'4');
+				rs.taskRecord[i-1].createdOn=rs.taskRecord[i-1].createdOn.substring("0",'4');
+				$(".main-list .item").eq(i).find(".info-list").append("<div>任务执行人：<span class='color-gray'>"+rs.taskRecord[i].creatorName+"</span></div>");
+				if(rs.taskRecord[i-1].createdOn!=rs.taskRecord[i].createdOn){
+					$(".main-list .item").eq(i-1).find(".clearfix").append("<div class='cancel-time'>"+rs.taskRecord[i-1].createdOn+"</div>")
+				}
+			}else if(rs.taskRecord[i].taskStatus==4){
+				rs.taskRecord[i].createdOn=rs.taskRecord[i].createdOn.substring("0",'4');
+				rs.taskRecord[i-1].createdOn=rs.taskRecord[i-1].createdOn.substring("0",'4');
+				$(".main-list .item").eq(i).find(".info-list").append("<div>确认人：<span class='color-gray'>"+rs.taskRecord[i].creatorName+"</span></div>");
+				if(rs.taskRecord[i-1].createdOn!=rs.taskRecord[i].createdOn){
+					$(".main-list .item").eq(i-1).find(".clearfix").append("<div class='cancel-time'>"+rs.taskRecord[i-1].createdOn+"</div>")
+				}
+			}else if(rs.taskRecord[i].taskStatus==5){
+				$(".main-list .item").eq(i).find(".clearfix").addClass("none-line");
+				$(".main-list .item").eq(i).find(".state-icon").addClass("end-icon");
+				$(".main-list .item").eq(i).find(".info-list").append("<div>执行人：<span class='color-gray'>"+rs.taskRecord[i].creatorName+"</span></div><div>维保检测报告编号：<span class='color-gray'>x0001(暂无)</span></div>");
+				if(rs.taskRecord[i].files!=null&&rs.taskRecord[i].files.length!=0){
+					console.log(JSON.parse(rs.taskRecord[i].files))
+					for(var j=0;j<JSON.parse(rs.taskRecord[i].files).length;j++){
+						$(".main-list .item").eq(i).find(".info-list").append("<div class='img-box clearfix'><img src='"+resourceUrl+"api/Public/DownLoadFile?FileName="+JSON.parse(rs.taskRecord[i].files)[j].FileName+"' data-preview-src='' data-preview-group='"+JSON.parse(rs.taskRecord[i].files).length+"' alt='图片'' /></div>")
+					}
+					
+				}
+			}else if(rs.taskRecord[i].taskStatus==6){
+				$(".main-list .item").eq(i).find(".clearfix").addClass("none-line");
+				$(".main-list .item").eq(i).find(".fr").css({"background":"none","box-shadow":"none"})
+				//rs.taskRecord[i].createdOn=rs.taskRecord[i].createdOn.substring("0",'4');
+				$(".main-list .item").eq(i).find(".fr").html("<div class='task-cancel'>此任务已撤销</div>")
+			}
+		}
+		
+	}else{
+		$(".main-list").append("<div class='none_img'>现在暂时没有数据</div>");
+	}
+}
+mui.previewImage();//图片放大
+</script>
+</html>

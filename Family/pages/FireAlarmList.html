@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>火警告警</title>
+	<script src="../js/jquery-3.2.1.min.js"></script>
+	<script src="../js/script_px2rem.js"></script>
+	<script src="../js/mui.min.js"></script>
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<link rel="stylesheet" href="../css/base.css">
+</head>
+<body style="background: #e5e5e5">
+	<div class="fire-alarm">
+		<div class="public-color fixed-top">
+			<div class="header-back public-color">
+				<a onclick="window.location.href='wutos://finish'" class="back-btn"><i class="back-icon"></i></a>
+				<div class="header-title">火警告警</div>
+				<!-- <div class="screening">筛选<i class="screening-icon"></i></div> -->
+			</div>
+			<div class="search-base public-color">
+				<div class="search-box">
+					<i class="search-icon"></i>
+					<form action="" id="form-search"><input type="search" id="keyword" placeholder="请输入搜索内容"></form>
+					<i class="del-icon"></i>
+				</div>
+			</div>
+		</div>
+		<div class="fire-list">
+			<div class="main-list mui-content mui-scroll-wrapper" id="refreshContainer">
+				<div class="mui-scroll">
+					<ul class="mui-table-view mui-table-view-chevron">
+						<!-- <div class="item">
+							<div class="title">无线烟感-客厅<div class="state">待确定</div></div>
+							<div class="address color-gray">XX小区X栋X单元XXX</div>
+							<div class="time color-gray">2019/06/15 17:30</div>
+						</div> -->
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 返回顶部 -->
+		<div class="back-top">
+			<div class="data-num">
+				<p class="now-num">5</p>
+				<p class="all-num">32</p>
+			</div>
+			<i class="back-top-icon"></i>
+		</div>
+	</div>
+</body>
+<script src="../js/common.js"></script>
+<script>
+var ScreeningState=false;  //弹窗状态
+var level='';  //等级
+var InputVal=''; //关键字
+var total //总数
+var offset=1 //页码
+var limit= 20 //每页数量
+var number=20; //每次上拉加载的数量
+var index=''; //当前等级
+var startX;  //开始触碰屏幕的左距离
+var moveEndX; //手指离开屏幕的左距离
+var ScreeningConditi=true; //筛选条件显示状态
+var AjaxState=0;
+var ItemHeight;  //面板的高度
+var BoxHeight; //滑动可视区域的高度
+var boxTop; //滑动区域离上方的距离
+var stateArr=["待确认","已灭火","误报"] //火警状态
+
+
+ 
+$(".search-box .del-icon").click(function(){
+	$(".search-box input").val('');
+	InputVal='';
+	limit=number;
+	AjaxState=2;
+	Ajaxs();
+})
+
+$("#keyword").on("keypress",function(e){
+	var keycode = e.keyCode;  
+    var searchName = $(this).val();  
+    if(keycode=='13') {  
+        e.preventDefault();    
+        //请求搜索接口 
+		InputVal=$(this).val();
+		limit=number;
+		AjaxState=2;
+		Ajaxs();  
+    }  
+})
+
+
+/*上拉刷新，下拉加载*/
+mui.init({
+  pullRefresh : {
+    container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+    down : {
+      auto: true,//可选,默认false.首次加载自动上拉刷新一次
+      callback :pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据； 
+    },
+    up : {
+    	auto:false,//可选,默认false.自动上拉加载一次
+    	contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	    contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+    	callback :OnPull
+    }
+  }
+
+});
+/*下拉刷新*/
+function pullfresh(){
+	AjaxState=0;
+	Ajaxs()
+
+}
+/*上拉下载*/
+function OnPull(){
+	AjaxState=1;
+	limit=limit+number;
+	setTimeout("Ajaxs()",1000)
+}
+var storage=window.localStorage; //获取用户信息
+var familyId=storage.familyId //家庭id
+var communityId=storage.communityId //社区id
+var plotId=storage.plotId   //小区id
+var role=storage.role //用户类型
+var userType=storage.userType;
+var id='';
+if(role==0){
+	id=communityId;
+	if(userType==1){
+		id=plotId;
+	}
+}else{
+	id=familyId;
+	userType=2;
+}
+//var id="454b65c9b7734959a2bd5535c28fe771";
+//var userType=0;
+function Ajaxs(){
+	FamilyAjax ("","api/Family/GetEvents?offset=0&limit="+limit+"&keyword="+InputVal+"&id="+id+"&usertype="+userType,NewList,"get") //获取接口
+	function NewList(rs){  //渲染列表
+		console.log(rs)	
+		mui('#refreshContainer').pullRefresh().refresh(true);
+		total=rs.data.item1
+		if(total==0){
+			if(AjaxState==1){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+			}
+			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+			mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+			$('.mui-table-view-chevron').empty().append("<div class='none_img'>现在暂时没有数据</div>");
+			$(".mui-pull-caption").hide();
+			$(".back-top").hide();
+		}else{
+			$(".mui-table-view").html('');
+			$(".mui-pull-caption").show();
+			var data='';
+
+			for(var i=0;i<rs.data.item2.length;i++){
+				rs.data.item2[i].createdOn=rs.data.item2[i].createdOn.substring(0,10)+" "+rs.data.item2[i].createdOn.substring(11,16);
+				data+="<div class='item' eventId="+rs.data.item2[i].eventId+" state="+rs.data.item2[i].state+" familyId="+rs.data.item2[i].familyId+"><div class='title'>"+rs.data.item2[i].name+"<div class='state'>"+stateArr[rs.data.item2[i].state]+"</div></div><div class='address color-gray'>"+rs.data.item2[i].address+"</div><div class='time color-gray'>"+rs.data.item2[i].createdOn+"</div></div>";
+			}
+			if(AjaxState==0){
+				$('.mui-table-view-chevron').empty().append(data)
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+				var a
+				if(total>limit){
+					a=limit
+				}else{
+					a=total
+				}
+				mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+				
+			}else if(AjaxState==1){
+				if(total>limit){
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);//传入false,表示还有数据
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+				}else{
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+				//传入true，表示没有数据，会显示init配置中：contentnomore参数
+				}
+				$('.mui-table-view-chevron').empty().append(data)
+			}else if(AjaxState==2){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+				$('.mui-table-view-chevron').empty().append(data);
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+			}
+			ItemHeight=$(".item").height()+parseInt($('.item').css("marginTop"));
+			BoxHeight=$("#refreshContainer").height();
+			boxTop=$("#refreshContainer").offset().top;
+			$(".back-top").show();
+		}
+		scrollHeight(BoxHeight,boxTop,".mui-scroll",total,ItemHeight);
+	}
+}
+/*跳转详情页*/
+mui("#refreshContainer").on("tap",".item",function(){
+	window.location.href = "FireAlarmDetails.html?eventId="+$(this).attr("eventId")+"&state="+$(this).attr("state")+"&familyId="+$(this).attr("familyId");	
+});
+</script>
+</html>

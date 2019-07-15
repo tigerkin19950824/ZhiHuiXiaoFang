@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>监控中心</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <script src="../../js/rem.js"></script>
+  <style>
+    .main-scroll {
+      background-color: #efefef;
+    }
+
+    .network-num {
+      width: 6.6rem;
+      height: .92rem;
+      margin: 0 auto;
+      border-radius: .1rem;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .network-num .icon-left {
+      margin-left: .24rem;
+      width: .3rem;
+      height: .36rem;
+    }
+
+    .network-num .title {
+      margin-left: .13rem;
+      width: 1.7rem;
+      font-size: .28rem;
+      color: #333;
+      line-height: .30rem;
+    }
+
+    .network-num .num {
+      flex: 1 1 auto;
+      margin-right: .25rem;
+      text-align: right;
+      width: .55rem;
+      height: .24rem;
+      font-size: .32rem;
+      color: #168FE6;
+      line-height: .24rem;
+    }
+
+    .network-num .icon-right {
+      width: .23rem;
+      height: .23rem;
+      margin-right: .24rem;
+    }
+
+    .chart {
+      width: 6.6rem;
+      /*height: 3.39rem;*/
+      margin: .2rem auto 0;
+      background: rgba(255, 255, 255, 1);
+      border: 1px solid rgba(247, 247, 247, 1);
+      border-radius: .1rem;
+      padding-top: 0.24rem;
+      padding-bottom: 0.24rem;
+    }
+
+    .chart .name {
+      margin: 0 .24rem;
+      /* height: .56rem; */
+      display: flex;
+      align-items: center;
+    }
+
+    .chart .name i {
+      display: inline-block;
+      width: .08rem;
+      height: .32rem;
+      background: rgba(104, 189, 255, 1);
+      border-radius: .04rem;
+    }
+
+    .chart .name span.text {
+      flex: 1 1 auto;
+      margin-left: .12rem;
+      font-size: .28rem;
+      line-height: .3rem;
+      color: #333;
+    }
+
+    .chart .name .look {
+      font-size: .24rem;
+      line-height: .32rem;
+      color: #999;
+    }
+
+    .chart .data {
+      margin: 0 .09rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.36rem;
+    }
+
+    .chart .data > div {
+      flex: 1 1 33.33%;
+    }
+
+    .chart .data > .dd-1, .chart .data > .dd-2 {
+      border-right: 1px solid #eee;
+    }
+
+    .chart .data > div span {
+      display: block;
+      text-align: center;
+    }
+
+    .chart .data > div span.num {
+      height: .36rem;
+      font-size: .36rem;
+      line-height: .36rem;
+      color: #666;
+    }
+
+    .chart .data > div span.txt {
+      margin-top: .2rem;
+      font-size: .2rem;
+      line-height: .2rem;
+      color: rgba(153, 153, 153, 1);
+    }
+
+    .chart .duty {
+      margin: .2rem .14rem;
+      height: 1.2rem;
+      border: 1px solid #eee;
+      border-radius: 0.08rem;
+    }
+
+    .chart .duty .top {
+      height: .6rem;
+      padding: 0 .24rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .chart .duty .top .user-name {
+      font-size: .28rem;
+      line-height: .3rem;
+      color: #666;
+    }
+
+    .chart .duty .top .state {
+      width: 1.16rem;
+      height: .6rem;
+      line-height: 0.6rem;
+      text-align: center;
+      padding: 0.02rem 0.05rem;
+      margin-left: .2rem;
+      border-radius: 0.3rem;
+      /*background: #45C7F2;*/
+      font-size: .4rem;
+      color: #fff;
+      transform: scale(0.5);
+      transform-origin: 0 50%; 
+    }
+
+    .chart .duty .top .state-0 {
+      background: #999;
+    }
+
+    .chart .duty .top .state-1 {
+      background: #45C7F2;
+    }
+
+    .chart .duty .top .state-2 {
+      background: #D66E56;
+    }
+
+
+    .chart .duty .bottom {
+      height: .6rem;
+      padding: 0 .24rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .24rem;
+      color: #666;
+    }
+
+    .chart .duty .bottom .ycl {
+      line-height: .3rem;
+    }
+
+    .chart .duty .bottom .clz {
+      line-height: .3rem;
+    }
+
+    .chart .chart-frame {
+      width: 6.18rem;
+      height: 4.8rem;
+      margin: .2rem auto;
+    }
+    .chart .iframe_tab{
+      width: 5rem;
+      margin: 0 auto;
+      display: flex;
+      font-size: 0.24rem;
+      height: 0.4rem;
+      line-height: 0.4rem;
+      margin-top: 0.23rem;
+      color: #4188D6;
+      border: 1px solid #4188D6;
+    }
+    .chart .iframe_tab>div{
+      flex: 1;
+      text-align: center;
+    }
+    .chart .iframe_tab .active{
+      background-color: #4188D6;
+      color: #fff;
+    }
+    .chart .iframe_tab .border-right{
+      border-right: 1px solid #4188D6;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="struc noFooter">
+    <div class="header">
+      <head-nav left-arrow title="监控中心" @click-left="onClickLeft"></head-nav>
+    </div>
+    <div class="main">
+      <div class="main-scroll">
+        <div style="height: .2rem;"></div>
+        <a class="network-num shadow-item" href="./staffList.html">
+          <img class="icon-left" src="../../icon/network.png" alt="">
+          <div class="title">监控中心详情</div>
+          <div class="num"></div>
+          <img class="icon-right" src="../../icon/jiantou_right_icon.png" alt="">
+        </a>
+        <div class="chart shadow-item">
+          <div class="name"><i></i><span class="text">当前待处理告警</span></div>
+          <div class="data">
+            <div class="dd-1">
+              <span class="num" v-if="wait_data[0]">{{wait_data[0].number}}</span>
+              <span class="txt">真实火警</span>
+            </div>
+            <div class="dd-2">
+              <span class="num" v-if="wait_data[1]">{{wait_data[1].number}}</span>
+              <span class="txt">B类告警</span>
+            </div>
+            <div class="dd-3">
+              <span class="num" v-if="wait_data[2]">{{wait_data[2].number}}</span>
+              <span class="txt">人员离岗</span>
+            </div>
+          </div>
+
+          <div style="height: .3rem;"></div>
+          <div class="name" style="margin-top: 0.62rem"><i></i><span class="text">今日已处理告警</span></div>
+          <div class="data">
+            <div class="dd-1">
+              <span class="num">{{ycl_data[0]}}</span>
+              <span class="txt">真实火警</span>
+            </div>
+            <div class="dd-2">
+              <span class="num">{{ycl_data[1]}}</span>
+              <span class="txt">B类告警</span>
+            </div>
+            <div class="dd-3">
+              <span class="num">{{ycl_data[2]}}</span>
+              <span class="txt">人员离岗</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart shadow-item">
+          <div class="name"><i></i><span class="text">值班坐席</span></div>
+          <div class="duty" v-for="(item, index) in duty_list">
+            <div class="top">
+              <span class="user-name">{{item.name}}</span>
+              <em class="state state-0" v-if="item.state==0">离线</em>
+              <em class="state state-1" v-if="item.state==1">空闲</em>
+              <em class="state state-2" v-if="item.state==2">忙碌</em>
+            </div>
+            <div class="bottom">
+              <span class="ycl">今日已处理：{{item.ycl}}</span>
+              <em class="clz">处理中：{{item.clz}}</em>
+            </div>
+          </div>
+          <!--<div class="duty">
+            <div class="top"><span class="user-name">谢娜</span><em class="state state-1">忙碌</em></div>
+            <div class="bottom"><span class="ycl">今日已处理：123</span><em class="clz">处理中：1</em></div>
+          </div>
+          <div class="duty">
+            <div class="top"><span class="user-name">谢娜</span><em class="state">空闲</em></div>
+            <div class="bottom"><span class="ycl">今日已处理：123</span><em class="clz">处理中：1</em></div>
+          </div>-->
+        </div>
+        <div class="chart shadow-item">
+          <div class="name"><i></i><span class="text">有效处置率</span></div>
+          <div class="iframe_tab">
+            <div class="border-right" :class="{active:alarmType == 'A'}" @click="seletType('A')">火警</div>
+            <div class="border-right" :class="{active:alarmType == 'B'}" @click="seletType('B')">B类</div>
+            <div  :class="{active:alarmType == '人员离岗'}" @click="seletType('人员离岗')">人员离岗</div>
+          </div>
+          <div class="chart-frame">
+            <iframe v-show="alarmType == 'A'" src="http://192.168.10.160:8898/thinkReport/board/APP_MonitorCenter/AlarmFalseReportRate?alarmType=A" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe v-show="alarmType == 'B'" src="http://192.168.10.160:8898/thinkReport/board/APP_MonitorCenter/AlarmFalseReportRate?alarmType=B" width="100%" height="100%" frameborder="0"></iframe>
+            <iframe v-show="alarmType == '人员离岗'" src="http://192.168.10.160:8898/thinkReport/board/APP_MonitorCenter/AlarmFalseReportRate?alarmType=人员离岗" width="100%" height="100%" frameborder="0"></iframe>
+          </div>
+        </div>
+        <div style="height: .4rem;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/es6-promise.auto.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/axios.min.js"></script>
+<script src="../../js/http.js"></script>
+<script src="../../components/components.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        num: '',
+        wait_data: [{"number":'0'},{"number":'0'},{"number":'0'}], // 待处理
+        ycl_data: [0, 0, 0], // 今日已处理
+        duty_list: [], // 值班人员
+        alarmType:"A",
+      },
+      mounted: function () {
+        this.getWait()
+        this.getDuty()
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        // 待处理告警
+        getWait: function () {
+          var This = this
+
+          this.apiPost('/Superviser/GetUnHandleAlarm').then(function (res) {
+            this.wait_data = res.data.data.rows
+          }.bind(this)).catch(function (reason) {
+            console.log(reason);
+          })
+        },
+        // 值班坐席
+        getDuty: function () {
+          var This = this;
+          this.apiGet('/Superviser/GetRecordList').then(function (res) {
+            var data = res.data.data.rows
+            // 0:离线
+            // 1:fireDoing+faultDoing+userAbsencesDoing>0 忙碌
+            // 1:fireDoing+faultDoing+userAbsencesDoing=0 空闲
+
+            for (var i = 0; i < data.length; i++) {
+              var datum = data[i];
+
+              if (!datum.fireDoing) datum.fireDoing = 0
+              if (!datum.faultDoing) datum.faultDoing = 0
+              if (!datum.userAbsencesDoing) datum.userAbsencesDoing = 0
+              if (!datum.fireDone) datum.fireDone = 0
+              if (!datum.faultDone) datum.faultDone = 0
+              if (!datum.userAbsencesDone) datum.userAbsencesDone = 0
+
+              datum.fireDoing = Number(datum.fireDoing)
+              datum.faultDoing = Number(datum.faultDoing)
+              datum.userAbsencesDoing = Number(datum.userAbsencesDoing)
+              datum.fireDone = Number(datum.fireDone)
+              datum.faultDone = Number(datum.faultDone)
+              datum.userAbsencesDone = Number(datum.userAbsencesDone)
+
+              this.ycl_data[0] += Number(datum.fireDone)
+              this.ycl_data[1] += Number(datum.faultDone)
+              this.ycl_data[2] += Number(datum.userAbsencesDone)
+
+              if (datum.status === '0') {
+                datum.state = 0
+              } else {
+                if (datum.fireDoing + datum.faultDoing + datum.userAbsencesDoing > 0) {
+                  datum.state = 2
+                } else {
+                  datum.state = 1
+                }
+              }
+
+              datum.clz = Number(datum.fireDoing) + Number(datum.faultDoing) + Number(datum.userAbsencesDoing)
+              datum.ycl = Number(datum.fireDone) + Number(datum.faultDone) + Number(datum.userAbsencesDone)
+
+              this.duty_list.push(datum)
+            }
+          }.bind(this)).catch(function (err) {
+
+          })
+        },
+        seletType:function(val){
+          this.alarmType = val;
+        }
+      }
+    });
+
+    // iframe 会加载较慢，影响页面打开速度，需要延迟加载
+    // var srcArr = [
+    //   'http://192.168.10.37:8898/thinkReport/board/dataCenter/superviseUnitCategory/',
+    // ]
+    // var eChart = document.querySelectorAll('.main-scroll .chart-frame')
+
+    // for (var i = 0; i < eChart.length; i++) {
+    //   var eIframe = document.createElement('iframe')
+    //   eIframe.className = 'frame'
+    //   eIframe.src = srcArr[i]
+    //   eIframe.frameborder = 0
+
+    //   eChart[i].appendChild(eIframe)
+    // }
+  })();
+</script>
+</body>
+</html>

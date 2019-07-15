@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>我的社区</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <style>
+        .wrap {
+            position: relative;
+            font-size: .28rem;
+            display: inline-block;
+            width: 6.58rem;
+            margin-top: .21rem;
+            margin-left: .31rem;
+            background-color: #fff;
+            box-shadow:0px 3px 9px 0px rgba(160,160,160,0.33);
+            border-radius: .1rem;
+        }
+        .wrap>div.item{
+            height: .72rem;
+            line-height: .72rem;
+            margin-left: .25rem;
+            margin-right: .05rem;
+            border-top: 1px solid #D2D2D2;
+        }
+        .wrap>div.item input{
+            height: .7rem;
+            line-height: .7rem;
+            width: 4.7rem;
+            margin-left: .2rem;
+            font-size: .24rem;
+            outline: none;
+            color:#999999;
+            background-color: transparent;
+            border:none;
+            vertical-align: top;
+        }
+        .text_title{
+            height: .77rem;
+            line-height: .77rem;
+            color:#333333;
+            font-size: .28rem;
+            margin-left: .25rem;
+            background: url('../../../icon/jiantou_right_icon.png') 5.8rem 0.23rem no-repeat;
+<<<<<<< HEAD
+            background-size: .23rem;
+=======
+            background-size: .2rem;
+>>>>>>> 44d5eb233ff8da9a5dbfc97817a12dcd1310b7b0
+        }
+        .list{
+            margin-left: .6rem;
+        }
+        .list>li{
+            margin-bottom: .24rem;
+            color:#999999;
+            font-size: .28rem;
+        }
+        .list>li:last-child{
+            margin-bottom: .3rem;
+        }
+        .main-scroll{
+            background-color: #F0F0F0;
+        }
+        .right{
+            font-size: .32rem;
+            margin-right: .31rem;
+        }
+        /* 选择地址样式 */
+        .address_header{
+            text-align: center;
+            font-size: .32rem;
+            margin-top: .21rem;
+            margin-bottom: .71rem;
+        }
+        .address_header span{
+            float: right;
+            margin-right: .43rem;
+        }
+        .address_header span img{
+            width: .27rem;
+        }
+        .content{
+            margin-left: .41rem;
+            border-bottom: 1px solid #D2D2D2;
+            padding-bottom: .14rem;
+            font-size: .26rem;
+        }
+        .content>span.hiden{
+            color:#1A8EE9;
+            font-weight: bold;
+            position: relative;
+        }
+        .active{
+            color:#1A8EE9;
+            font-weight: bold;
+            position: relative;
+        }
+        .content>span{
+            margin-right: .3rem;
+            font-weight: bold;
+        }
+        .content>:last-child i{
+            position: absolute;
+            height: .03rem;
+            width: .6rem;
+            background-color: #1A8EE9;
+            bottom: -.11rem;
+            left:13%;
+        }
+        .address_list{
+            margin-left: .49rem;
+            font-size: .24rem;
+        }
+        .address_list>div{
+            line-height: .72rem;
+            color:#333333;
+        }
+        .address_list>div>span{
+            margin-left: .1rem;
+        }
+        .address_list img{
+            width: .24rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav left-arrow title="编辑家庭" @click-left="retreat">
+                        <div slot="right" class="right" @click="accomplish">完成</div>
+                    </head-nav>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <div class="wrap">
+                            <div class="text_title" @click="addressTo">所在地区</div>
+                            <ul class="list">
+                                <li v-for="(item,index) in header" :key="index">{{item}}</li>
+                            </ul>
+                            <div class="item"><label for="text">小区名称</label><input type="text" id="text" placeholder="请填写小区名称" v-model="building"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <top-filter v-model="screen_show" hide-title :check='false'>
+                <div slot="filter">
+                  <div class="address_header">所在地区<span><img src="../../../icon/cuo.png" alt=""></span></div>
+                  <div class="content"><span v-for="(item,index) in nav" :key="index" @click="selectivity(index)" ref="had">{{item}}<i></i></span><span v-show="hiden" class="active" ref="hads">请选择<i></i></span></div>
+                  <div class="address_list">
+                      <div v-for="(item,index) in city" :key="index" @click="isselect(item,index)">{{item.name}}<span v-if="item.code"><img src="../../../icon/dui.png" alt=""></span></div>
+                  </div>
+                </div>
+            </top-filter>
+        </div>
+    </div>
+    <script src="../../../js/vue.min.js"></script>
+    <script src="../../../js/axios.min.js"></script>
+    <script src="../../../js/rem.js"></script>
+    <script src="../../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../../components/components.js"></script>
+    <script src="../../../js/es6-promise.auto.min.js"></script>
+    <script src="../../../js/http.js"></script>
+    <script>
+       (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    screen_show:false,
+                    hiden:true,
+                    isAddress:'',
+                    navOneAddress:[],
+                    navTwoAddress:[],
+                    navThreeAddress:[],
+                    navForrAddress:[],
+                    building:'',//楼栋
+                    address:[],
+                    header:[],
+                    nav:[],
+                    city:[],
+                    lists:[],
+                    nums:0,
+                    familyId:''
+                },
+                mounted() {
+                    var This = this
+                    This.getAddress()
+                    This.header=getQueryVariable().val.split(',');
+                    This.building=This.header[This.header.length-1]
+                    This.header.splice(This.header.length-1,1)
+                    This.familyId=localStorage.getItem('familyId');
+                },
+                methods: {
+                    //选择地址
+                    addressTo:function(){
+                        this.screen_show=true
+                    },
+                    //点击导航选择地址
+                    selectivity:function(index){
+                        var This=this;
+                        for(var i=0;i<This.$refs.had.length;i++){
+                            This.$refs.had[i].className=''
+                        }
+                        This.$refs.hads.className='yh'
+                        if(index==0){
+                            This.city=This.navForrAddress
+                            This.nums=0
+                            This.$refs.had[0].className='active'
+                        }
+                        if(index==1){
+                            This.city=This.navOneAddress
+                            This.nums=1
+                            This.$refs.had[1].className='active'
+                        }
+                        if(index==2){
+                            This.city=This.navTwoAddress
+                            This.nums=2
+                            This.$refs.had[2].className='active'
+                        }
+                        if(index==3){
+                            This.city=This.navThreeAddress
+                            This.nums=3
+                            This.$refs.had[3].className='active'
+                        }
+                    },
+                    //保存编辑
+                    accomplish:function(){
+                        var This=this;
+                        if(This.header.length==0||This.building==''){
+                            return false
+                        }
+                        var addAddrass=''
+                        for(var i=0;i<This.header.length;i++){
+                            addAddrass+=This.header[i]+'-'
+                        }
+                        addAddrass=addAddrass+This.building
+                        This.apiPost('Family/Edit',{
+                            address:addAddrass,
+                            // id:'ca1d3ecc62a9459588a63e83ba926038',
+                            id:This.familyId
+                        }).then(function(res){
+                           if(res.data.data=='ok'){
+                               window.location.href="'wutos://close'"
+                           }
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //点击地址
+                    isselect:function(item,index){
+                        var This=this;
+                        if(This.nums>3) {
+                            setTimeout(function(){
+                                This.screen_show=false
+                            },400)
+                        }
+                        for(var i=0;i<This.nav.length;i++){
+                            This.$refs.had[i].className=''
+                        }
+                        This.$refs.hads.className='active'
+                        for(var i=0;i<This.city.length;i++){
+                            This.city[i].code=false
+                        }
+                        This.city[index].code=true
+                        if(This.nav.length<4){
+                            // This.header.push(item.name)
+                        }
+                        if(This.nums==0){
+                            for(var i=0;i<item.rows.length;i++){
+                            item.rows[i].code=false;
+                            }
+                            This.nav.splice(0,This.nav.length)
+                            This.nav.push(item.name)
+                            This.city=item.rows
+                            This.navOneAddress=item.rows
+                            for(var i=0;i<This.city.length;i++){
+                                This.city[i].code=false;
+                            }
+                        }
+                        if(This.nums==1){
+                            for(var i=0;i<item.communitys.length;i++){
+                            This.$set(item.communitys[i],'code',false)
+                            }
+                            This.nav.splice(1,This.nav.length-1)
+                            This.nav.push(item.name)
+                            This.city=item.communitys
+                            This.navTwoAddress=item.communitys
+                        }
+                        if(This.nums==2){
+                            for(var i=0;i<item.plots.length;i++){
+                            This.$set(item.plots[i],'code',false)
+                            }
+                            This.nav.splice(2,This.nav.length-2)
+                            This.nav.push(item.name)
+                            This.city=item.plots
+                            This.navThreeAddress=item.plots
+                        }
+                        if(This.nums==3){
+                            This.nav.splice(3,This.nav.length-3)
+                            This.nav.push(item.name)
+                            This.hiden=false;
+                            setTimeout(function(){
+                                This.screen_show=false
+                                This.header=This.nav
+                            },400)
+                        }
+                        This.nums++
+                    },
+                    //获取地址
+                    getAddress:function(){
+                        var This=this;
+                        This.apiGet('user/getDistrict').then(function(res){
+                            This.lists=res.data.data
+                            for(var i=0;i<This.lists.length;i++){
+                                This.$set(This.lists[i].district,'code',false)
+                                This.city.push(This.lists[i].district)
+                            }
+                            This.navForrAddress=This.city
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                    },
+                },
+                watch:{
+                    nav:{
+                        handler:function(val){
+                            if(val.length>=4){
+                                this.hiden=false;
+                            }else{
+                                this.hiden=true;
+                            }
+                        }
+                    }
+                }
+            })
+        })()
+    </script>
+</body>
+
+</html>

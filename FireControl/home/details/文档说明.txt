@@ -1,0 +1,8 @@
+首页报警详情
+
+四个页面对应样式表： css/pageCS/DetailsPageBCD.css (头部样式在base.css公共样式表里)
+
+BCDdetails.html ： B/C/D类报警详情
+Bdetails.html  ： B类严重报警详情
+ShieldingDetails.html  屏蔽备案详情
+StaffLeave.html  人员离岗详情

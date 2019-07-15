@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设备列表</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <script src="../../js/rem.js"></script>
+</head>
+<style>
+    .main-scroll{
+        background-color: #EFEFEF;
+    }
+    .headRight{
+      padding-right: 0.31rem;
+    }
+    .headRight>.title{
+        margin-right: 0.14rem;
+        color: #FEFEFE;
+        font-size: 0.32rem;
+    }
+    .headRight>.rightIcon{
+        width: 0.14rem;
+        height: 0.08rem;
+        vertical-align: middle;
+    }
+    .deviceWrap{
+        width: 100%;
+        border-top: 1px solid transparent;
+    }
+    .deviceWrap .community{
+        margin: 0 0.3rem;
+        margin-top: 0.2rem;
+        background-color: #ffffff;
+        border-radius: 0.1rem;
+        box-sizing: border-box;
+        padding-bottom: 0.24rem;
+    }
+    .deviceWrap .community .community_place{
+      width: 100%;
+      font-size: 0.22rem;
+      color: #666666;
+      padding-left: 0.15rem;
+      box-sizing: border-box;
+    }
+    .deviceWrap .community .com_title_wrap{
+      width: 100%;
+      padding: 0.24rem;
+      box-sizing: border-box;
+      border-bottom: 1px solid #E5E5E5;
+      padding-top: 0.15rem;
+    }
+    .deviceWrap .community .com_title{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        height: 0.6rem;
+    }
+    .deviceWrap .community .com_title .com_title_l{
+        font-size: 0.28rem;
+        color: #333333;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        display: inline-block;
+    }
+    .deviceWrap .community .com_title .com_title_l .l_icon{
+        display: inline-block;
+        width: 0.08rem;
+        height: 0.33rem;
+        border-radius: 0.04rem;
+        background-color: #5DBFF2;
+        vertical-align: middle;
+    }
+    .deviceWrap .community .com_title .com_title_l .l_text{
+        display: inline-block;
+        vertical-align: middle;
+        height: 0.33rem;
+        line-height: 0.33rem;
+    }
+    .deviceWrap .community .com_title .com_title_r{
+        font-size: 0.22rem;
+        color: #333333;
+    }
+    .deviceWrap .community .com_title .com_title_r .r_msg_box{
+        float: left;
+        height: 0.3rem;
+        line-height: 0.3rem;
+        margin-right: 0.2rem;
+    }
+    .deviceWrap .community .com_title .com_title_r .r_msg_box .num{
+      line-height: 0.6rem;
+      font-size: 0.22rem;
+      color: #666666;
+    }
+    .deviceWrap .community .com_title .com_title_r .r_icon{
+        float: right;
+        width: 0.4rem;
+        height: 0.6rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .deviceWrap .community .com_title .com_title_r .r_icon img{
+        width: 0.23rem;
+        height: 0.23rem;
+    } 
+    .villageWrap{
+        border:1px solid #E5E5E5;
+        border-radius: 0.1rem;
+        margin: 0 0.24rem;
+        margin-top: 0.2rem;
+        box-sizing: border-box;
+    }
+    .villageWrap .itemWrap{
+       margin: 0 0.24rem;
+    }
+    .villageWrap .itemWrap .item{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0.24rem 0;
+        border-bottom: 1px solid #E5E5E5;
+    }
+    /* .villageWrap .itemWrap .item .item_l{
+       overflow-x: hidden;
+    } */
+    .villageWrap .itemWrap .item .item_l .item_l_title{
+        width: 100%;
+        height: 0.3rem;
+        line-height: 0.3rem;
+        font-size: 0.28rem;
+        color: #333333;
+    }
+    .villageWrap .itemWrap .item .item_l .item_l_place{
+        width: 100%;
+        height: 0.3rem;
+        line-height: 0.3rem;
+        font-size: 0.24rem;
+        color: #666666;
+        margin-top: 0.16rem;
+    }
+    .villageWrap .itemWrap .item .item_r{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 0.15rem;
+    }
+    .villageWrap .itemWrap .item .item_r .item_r_flag{
+        width: 1.16rem;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        text-align: center;
+        font-size: 0.4rem;
+        background-color: #45C7F2;
+        border-radius: 0.3rem;
+        color: #ffffff;
+        display: inline-block;
+        vertical-align: middle;
+        transform: scale(0.5);
+        transform-origin: 100% 50%;
+        padding: 0.02rem 0.05rem;
+    }
+    .villageWrap .com_title.village .com_title_l .num{
+        font-weight: normal;
+        font-size: 0.24rem;
+        margin-left: 0.3rem;
+    }
+    .border-bottom-none{
+      border-bottom: none !important;
+    }
+    .flag_color01{
+      background-color: #45C7F2 !important;
+    }
+    .flag_color02{
+      background-color: #D66E56 !important;
+    }
+    .flag_color03{
+      background-color: #999999 !important;
+    }
+</style>
+<body>
+  <div id="app">
+    <div class="page-all" v-cloak>
+      <div class="struc noFooter search">
+        <div class="header">
+          <head-nav left-arrow title="设备列表" @click-left="onClickLeft" @click-right="onClickRight">
+            <div slot="right">
+              <div class="headRight">
+                  <span class="title">筛选</span>
+                  <img src="../../icon/shaxuanIocn.png" alt="" class="rightIcon">
+              </div>
+          </div>
+          </head-nav>
+          <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+        </div>
+        <div class="main">
+          <div class="main-scroll">
+            <hs-list-load :width="cont_width" :height="cont_height" v-model="loading" :immediate-check="false"
+              :offset="1200" :finished="finished" :finished-text="finished_text" @load="getData(page)" pull-refresh
+              @refresh="onRefresh">
+                <div class="deviceWrap">
+                    <div class="community shadow-item" v-for="(item,index) in list" :key="index">
+                      <div class="com_title_wrap"  @click="closeMethod(true)" :class="{'border-bottom-none':!close_status01}">
+                          <div class="com_title" >
+                              <div class="com_title_l">
+                                  <span class="l_icon"></span>
+                                  <span class="l_text">{{item.communityName}}</span>
+                              </div>
+                              <div class="com_title_r">
+                                  <div class="r_msg_box">
+                                      <div class="num">联网设备数：{{item.deviceCount}}</div>
+                                  </div>
+                                  <div class="r_icon">
+                                      <img src="../../icon/jiantou_bottom_icon.png" alt="">
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="community_place">
+                            {{item.communityAddress}}
+                          </div>
+                      </div>
+                        <div class="villageWrap shadow-item" v-for="(item_two,index_two) in item.plots" :key="index_two" v-show="close_status01">
+                            <div class="com_title_wrap"  @click="closeMethod(false)">
+                              <div class="com_title village">
+                                  <div class="com_title_l">
+                                      <span class="l_text">{{item_two.plotName}}</span>
+                                  </div>
+                                  <div class="com_title_r">
+                                      <div class="r_msg_box">
+                                          <div class="num">联网设备数：{{item_two.deviceCount}}</div>
+                                      </div>
+                                      <div class="r_icon">
+                                          <img src="../../icon/jiantou_bottom_icon.png" alt="">
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="itemWrap" v-show="close_status02">
+                                <div class="item" v-for="(item_three,index_three) in item_two.familyDevices" @click="toEvent(item_three)" :key="index_three" 
+                                :class="{'border-bottom-none':index_three >= item_two.familyDevices.length-1}">
+                                    <div class="item_l">
+                                        <div class="item_l_title">{{item_three.name}}</div>
+                                        <div class="item_l_place">{{item_three.familyAddress}}</div>
+                                    </div>
+                                    <div class="item_r">
+                                        <div class="item_r_flag flag_color01" v-show="item_three.state == 0">正常</div>
+                                        <div class="item_r_flag flag_color02" v-show="item_three.state == 1">故障</div>
+                                        <div class="item_r_flag flag_color03" v-show="item_three.state == 2">离线</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </hs-list-load>
+            <hs-list-null v-model="show_list_null"></hs-list-null>
+            <div style="height: .4rem;"></div>
+          </div>
+        </div>
+      </div>
+      <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .parmentWrap .item" :list="list" :total="list.length"></hs-go-back>
+      <top-filter v-model="screen_show" hide-title @confirm="getScreenData()" @reset="reset">
+        <div slot="filter">
+            <div class="screenWrap">
+                <div class="screen_all">
+                    <div class="typeOne">
+                        <div class="type_title">
+                            设备状态
+                            <div class="type_son_text" v-if="type_info_text.indexOf('0') !== -1">完好</div>
+                            <div class="type_son_text" v-if="type_info_text.indexOf('1') !== -1">故障</div>
+                            <div class="type_son_text" v-if="type_info_text.indexOf('2') !== -1">离线</div>
+                        </div>
+                        <div class="type_item">
+                            <div class="type_item_son" :class="{active:companyType.indexOf('0') !== -1}"
+                                @click="screenTypeSel('0')">完好</div>
+                            <div class="type_item_son" :class="{active:companyType.indexOf('1') !== -1}"
+                                @click="screenTypeSel('1')">故障</div>
+                            <div class="type_item_son" :class="{active:companyType.indexOf('2') !== -1}"
+                                @click="screenTypeSel('2')">离线</div>
+                        </div>
+                    </div>
+                    <!-- <div class="seleBtn" @click="getScreenData()">
+                        <div class="shureBtn">确定</div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </top-filter>
+    </div>
+  </div>
+
+  <script src="../../js/es6-promise.auto.min.js"></script>
+  <script src="../../js/vue.min.js"></script>
+  <script src="../../js/axios.min.js"></script>
+  <!-- <script src="../../js/http.js"></script> -->
+  <script src="../../js/http02.js"></script>
+  <script src="../../components/components.js"></script>
+  <script>
+    (function () {
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          search_text: '',
+          page: 0,
+          list: [],
+          total:null,
+          screen_show:false,
+
+          finished_text: '没有更多了',
+          show_list_null: false,
+          cont_width: '375px', // tabs组件宽度
+          cont_height: '375px', // tabs 组件高度
+          loading: false, // 是否正在加载
+          finished: false, // 是否全部加载完成
+
+          companyType: [],//设备筛选
+          type_info_text:'',//显示文字
+
+          close_status01:true,//折叠
+          close_status02:true,//折叠
+        },
+        created: function () {
+          this.getData();
+        },
+        watch: {
+            search_text(oldVal) {
+                if (oldVal == '') {
+                    this.list = [];
+                    this.page = 0;
+                    this.finished = false;
+                    this.getData();
+                }
+            },
+        },
+        mounted: function () {
+          var This = this;
+          window.onload = function () {
+            var eMain = document.querySelector('.struc .main')
+            This.cont_width = eMain.clientWidth + 'px'
+            This.cont_height = eMain.clientHeight + 'px'
+          }
+        },
+        methods: {
+          onClickLeft: function () {
+            window.location.href = 'wutos://finish';
+          },
+          getData: function () {
+            var This = this;
+            this.apiGet('Family/GetCommunityDevice', {
+              keyword: this.search_text, //搜索
+              states: this.companyType.join(), //筛选
+            }).then(function (res) {
+              var data = res.data.data;
+              This.list = data;
+              
+              This.companyType = [];
+
+              if (!data) {
+                data = [];
+              }
+
+              // for (var i = 0; i < data.length; i++) {
+              //   This.list.push(data[i]);
+              // }
+
+              // if (data.length === 0) {
+              //   This.finished = true;
+              // }
+
+              if (This.list.length === 0 && data.length === 0) {
+                // 显示缺省页
+                This.show_list_null = true;
+                This.finished_text = '';
+              } else {
+                This.show_list_null = false;
+              }
+
+              This.loading = false;
+              This.finished = true;
+            }).catch(function (reason) {
+              This.loading = false;
+              This.finished = true;
+            })
+            this.page++;
+          },
+          onSearch() {
+            this.loading = false;
+            this.finished = false;
+            this.list = [];
+            this.getData();
+          },
+          onRefresh: function () {
+            this.finished = false
+            this.list = []
+            this.page = 0
+
+            this.show_list_null = false
+            setTimeout(function () {
+              this.getData(this.page)
+            }.bind(this), 1000)
+          },
+          reset:function(){
+            this.loading = false;
+            this.finished = false;
+            this.list = [];
+            this.companyType = [];
+            this.getData();
+          },
+          toList(id) {
+            window.location.href = './supervisorList.html?id=' + id;
+          },
+          getScreenData(){
+            this.loading = false;
+            this.finished = false;
+            this.list = [];
+            this.getData();
+            this.screen_show = false;
+          },
+          //选择筛选选项
+          screenTypeSel:function(index){
+          
+            if(this.companyType.indexOf(index) == -1){
+              this.companyType.push(index);
+            }else{
+              this.companyType.splice(this.companyType.indexOf(index), 1);
+            }
+            if(this.companyType.length>0){
+              this.type_info_text = this.companyType[this.companyType.length-1]; 
+            }else{
+              this.type_info_text = '';
+            }
+          },
+          //筛选显示
+          onClickRight:function(){
+            this.screen_show = !this.screen_show;
+          },
+          closeMethod:function(val){
+            if(val){
+              this.close_status01 = !this.close_status01;
+            }else{
+              this.close_status02 = !this.close_status02;
+            }
+          },
+          toEvent:function(item){
+            window.location.href = './familyDeviceEvent.html?id='+item.id;
+          }
+        }
+      })
+    })();
+  </script>
+</body>
+
+</html>

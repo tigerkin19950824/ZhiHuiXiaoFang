@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>联网家庭设备数据统计</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <link rel="stylesheet" href="./familyDevice.css">
+  <script src="../../js/rem.js"></script>
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <div class="struc noFooter">
+      <div class="header">
+        <head-nav left-arrow title="联网家庭设备数据统计" @click-left="onClickLeft"></head-nav>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <div style="height: .2rem;"></div>
+          <a class="network-num shadow-item" href="./familyDeviceList.html">
+            <img class="icon-left" src="../../icon/network.png" alt="">
+            <div class="title">联网设备数量</div>
+            <div class="num">{{num}}</div>
+            <img class="icon-right" src="../../icon/jiantou_right_icon.png" alt="">
+          </a>
+          <div class="chart shadow-item">
+            <div class="name">
+              <i></i><span>社区设备数量排名</span>
+            </div>
+            <iframe class="frame" id="fram01" frameborder="0"></iframe>
+          </div>
+          <div class="chart shadow-item">
+            <div class="name">
+              <i></i><span>设备完好率</span>
+            </div>
+            <iframe class="frame" id="fram02" frameborder="0"></iframe>
+          </div>
+          <div class="chart shadow-item">
+            <div class="name">
+              <i></i><span>设备异常分类</span>
+              <div class="right_info"><span>异常数量：{{num02}}</span></div>
+            </div>
+            <iframe class="frame" id="fram03" frameborder="0"></iframe>
+          </div>
+          <div style="height: .4rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/es6-promise.auto.min.js"></script>
+  <script src="../../js/vue.min.js"></script>
+  <script src="../../js/axios.min.js"></script>
+  <!-- <script src="../../js/http.js"></script> -->
+  <script src="../../js/http02.js"></script>
+  <script src="../../components/components.js"></script>
+  <script>
+    (function () {
+      var frame01 = document.getElementById('fram01');
+      // frame01.setAttribute('src', 'http://192.168.10.37:8898/thinkReport/board/dataCenter/deviceType/');
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          line01_show: true,
+          line02_show: true,
+          num:'',
+          tab_status:0,
+          num02:'',
+        },
+        mounted:function(){
+          this.getNum();
+          this.getNum02();
+        },
+        methods: {
+          onClickLeft: function () {
+            window.location.href = 'wutos://finish';
+          },
+          getNum: function () {
+          var This = this
+          this.apiGet('/Family/GetDeviceCount').then(function (res) {
+
+              This.num = res.data.data;
+
+            }).catch(function (reason) {
+              setTimeout(function () {
+                This.getNum()
+              }, 3000)
+            })
+          },
+          getNum02: function () {
+          var This = this
+          this.apiGet('/Family/GetDeviceCount',{
+            states:'1,2',
+          }).then(function (res) {
+
+              This.num02 = res.data.data;
+
+            }).catch(function (reason) {
+              setTimeout(function () {
+                This.getNum02()
+              }, 3000)
+            })
+          },
+          selectTab(val){
+            this.tab_status = val;
+          }
+        }
+      })
+    })();
+  </script>
+</body>
+
+</html>

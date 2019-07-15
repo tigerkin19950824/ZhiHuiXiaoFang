@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>联网单位</title>
+  <link rel="stylesheet" href="../../../css/reset.css">
+  <link rel="stylesheet" href="../../../css/common.css">
+  <link rel="stylesheet" href="../../../components/components.css">
+  <script src="../../../js/rem.js"></script>
+  <style>
+
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .list {
+      margin-top: .2rem;
+    }
+
+    .list .item {
+      width: 6.6rem;
+      height: 1.14rem;
+      margin: 0 auto .2rem;
+      border-radius: .1rem;
+      background-color: #fff;
+    }
+
+    .list .item a {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .list .item .score {
+      position: relative;
+      width: 1.32rem;
+      height: 1.14rem;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      line-height: .68rem;
+      text-align: center;
+    }
+
+    .list .item .score-1 {
+      background-image: url("../../../icon/zhpf-1.png");
+    }
+
+    .list .item .score-2 {
+      background-image: url("../../../icon/zhpf-2.png");
+    }
+
+    .list .item .score-3 {
+      background-image: url("../../../icon/zhpf-3.png");
+    }
+
+    .list .item .score .num {
+      padding-right: .1rem;
+      height: .7rem;
+      font-size: .36rem;
+      line-height: .7rem;
+      color: #fff;
+    }
+
+    .list .item .score .zhpf {
+      position: absolute;
+      top: .7rem;
+      left: .16rem;
+      height: .3rem;
+      font-size: .22rem;
+      line-height: .3rem;
+      color: #fff;
+    }
+
+    .list .item .info {
+      flex: 1 1 auto;
+      margin-left: .25rem;
+    }
+
+    .list .item .info .name {
+      width: 5rem;
+      font-size: .28rem;
+      line-height: .38rem;
+      color: #333333;
+    }
+
+    .list .item .info .position {
+      width: 5rem;
+      word-break: break-word;
+      font-size: .24rem;
+      line-height: .32rem;
+      color: #999999;
+      margin-top: 0.1rem;
+    }
+
+    .hs-top-filter .typeOne .name{
+      width: 100%;
+      box-sizing: border-box;
+      border-bottom: 1px solid #E5E5E5;
+      margin: 0;
+      height: 0.8rem;
+      line-height: 0.8rem;
+      padding-left: 0.24rem;
+      padding-right: 0.24rem;
+    }
+    .hs-top-filter .typeOne .type_title .last_text, .hs-top-filter .typeOne .name .last_text{
+      height: 0.8rem;
+      line-height: 0.8rem;
+      
+    }
+    .select_icon{
+      width: 0.23rem;
+      height: 0.23rem;
+      vertical-align: top;
+      margin-top: 0.02rem;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page-all" v-cloak>
+    <div class="struc noFooter search">
+      <div class="header">
+        <head-nav left-arrow title="联网单位" @click-left="onClickLeft">
+          <div slot="right" class="saixuan" @click="onClickRight"><span>筛选</span></div>
+        </head-nav>
+        <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <hs-list-load
+            :width="cont_width"
+            :height="cont_height"
+
+            v-model="loading"
+            :offset="1200"
+            :finished="finished"
+            :finished-text="finished_text"
+            @load="onLoad(page)"
+
+            pull-refresh
+            @refresh="onRefresh"
+          >
+            <ul class="list">
+              <template v-for="(item, index) in list">
+                <li class="item shadow-item">
+                  <a :href="'../patrolData/index.html?id=' + item.id + '&name=' + encodeURI(item.unitName)"
+                     :key="index">
+                    <div
+                      class="score"
+                      :class="{
+                        'score-1': item.score < 60,
+                        'score-2': item.score >= 60 && item.score < 80,
+                        'score-3': item.score >= 80
+                      }"
+                    >
+                      <span class="num">{{item.score}}</span>
+                      <span class="zhpf">综合评分</span>
+                    </div>
+                    <div class="info">
+                      <div class="name">{{item.unitName}}</div>
+                      <div class="position">{{item.unitAddress}}</div>
+                    </div>
+                  </a>
+                </li>
+              </template>
+            </ul>
+          </hs-list-load>
+          <hs-list-null v-model="show_list_null"></hs-list-null>
+        </div>
+      </div>
+    </div>
+
+    <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .list .item" :list="list" :total="total"></hs-go-back>
+    <top-filter v-model="screen_show" hide-title @reset="resetSelect" @confirm="confirm">
+      <div slot="filter">
+        <div class="screenWrap">
+            <div class="screen_all">
+                <div class="typeOne">
+                    <div class="type_title">
+                        单位类型
+                        <div class="type_son_text" v-if="companyType[companyType.length-1] == '0'">火灾高危单位</div>
+                        <div class="type_son_text" v-if="companyType[companyType.length-1] == '1'">其他重点单位</div>
+                        <div class="type_son_text" v-if="companyType[companyType.length-1] == '2'">十小场所</div>
+                        <div class="type_son_text" v-if="companyType[companyType.length-1] == '3'">其他一般单位</div>
+                    </div>
+                    <div class="type_item">
+                        <div class="type_item_son" 
+                            @click="screenTypeSel(0)" :class="{active:companyType.indexOf(0) !==-1}">火灾高危单位</div>
+                        <div class="type_item_son" 
+                            @click="screenTypeSel(1)" :class="{active:companyType.indexOf(1) != -1}">其他重点单位</div>
+                        <div class="type_item_son" 
+                            @click="screenTypeSel(2)" :class="{active:companyType.indexOf(2) != -1}">十小场所</div>
+                        <div class="type_item_son"
+                            @click="screenTypeSel(3)" :class="{active:companyType.indexOf(3) != -1}">其他一般单位</div>
+                    </div>
+                </div>
+                <div class="typeOne border-top">
+                    <div class="type_title">
+                        消防大队
+                        <div class="type_son_text" @click="closeSelectItem(0)">{{select_text01}} <img src="../../../icon/jiantou_bottom_icon.png" alt="" class="select_icon"></div>
+                    </div>
+                    <div class="type_item" v-show="item_pull_show01">
+                        <div class="type_item_son" :class="{active: item.text == select_text01}" @click="selectOptions(select[1].options,item,index)"
+                            v-for="(item,index) in select[1].options" :key="index">
+                            {{item.text}}</div>
+                    </div>
+                </div>
+                <div class="typeOne border-top">
+                    <div class="type_title">
+                        所属管段
+                        <div class="type_son_text"  @click="closeSelectItem(1)">{{select_text02[select_id02.length-1]}} <img src="../../../icon/jiantou_bottom_icon.png" alt="" class="select_icon"></div>
+                    </div>
+                    <div class="type_item" v-show="item_pull_show02">
+                        <div class="type_item_son"
+                            v-for="(item,index) in select[2].options" :key="index" :class="{active: select_id02.indexOf(item.id) !== -1}" @click="selectOptions02(select[2].options,item,index)">
+                            {{item.text}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</top-filter>
+  </div>
+</div>
+
+<script src="../../../js/es6-promise.auto.min.js"></script>
+<script src="../../../js/vue.min.js"></script>
+<script src="../../../js/axios.min.js"></script>
+<script src="../../../js/http.js"></script>
+<script src="../../../components/components.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        show_list_null: false,
+        finished_text: '没有更多了',
+
+        screen_show: false,
+        choice: { // 筛选
+          svtype: '', // 监管类型
+          svunit: '', // 所属管辖大队
+          svuser: '', // 管段
+        },
+        companyType:[],// 单位类型
+        search_text: '',
+
+        select_text01:'',
+        select_text02:[],
+        select_id02:[],
+
+        item_pull_show01:true,
+        item_pull_show02:true,
+        select: [
+          {
+            title: '单位类型', // title
+            last_text: '', // 最后一次点击的选项的文本
+            options: [ // -1：全部；0：火灾高危单位；1：其他重点单位；2：十小场所；3：其他一般单位
+              {text: '火灾危险单位', active: false, id: 0},
+              {text: '其他重点单位', active: false, id: 1},
+              {text: '十小场所', active: false, id: 2},
+              {text: '其他一般单位', active: false, id: 3}
+            ]
+          },
+          {
+            //title: '消防管段', // title
+            name: '消防大队', // 二级 title
+            last_text: '', // 最后一次点击的选项的文本
+            options: []
+          },
+          {
+            name: '所属管段', // 二级 title
+            last_text: '', // 最后一次点击的选项的文本
+            options: []
+          },
+        ],
+
+        cont_width: '375px', // 组件宽度
+        cont_height: '375px', // 组件高度
+        loading: false, // 是否正在加载
+        finished: false, // 是否全部加载完成
+        page: 0,
+        list: [],
+        total: 0
+      },
+      mounted: function () {
+        window.onload = function (ev) {
+          var eMain = document.querySelector('#app .struc .main')
+          this.cont_width = eMain.clientWidth + 'px'
+          this.cont_height = eMain.clientHeight + 'px'
+        }.bind(this)
+
+        this.getBrigade()
+        // this.getSupervisorUser()
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        // 筛选
+        onClickRight: function () {
+          this.screen_show = !this.screen_show
+        },
+        // 修改筛选选项时触发, index 对应 select 数组的索引
+        changeOptions: function (data, index, option) {
+          // 单位类型选项是固定的，只需要通过消防大队获取所属管段
+          if (index === 1) {
+            // 消防大队只能单选，这里要做处理
+            console.log(data[1]);
+            for (var i = 0; i < data[index].options.length; i++) {
+              if (data[index].options[i].id !== option.id) {
+                data[index].options[i].active = false
+              }
+            }
+            this.setChoice(data)
+            this.getSupervisorUser(this.choice.svunit)
+          }
+        },
+        // 获取 消防管辖大队
+        getBrigade: function () {
+          // api文档上的 level 参数不用传
+          this.apiGet('/Public/GetBrigade').then(function (res) {
+            // console.log(res);
+            var data = res.data
+            this.select[1].options = []
+
+            for (var i = 0; i < data.length; i++) {
+              var datum = data[i];
+              this.select[1].options.push({
+                text: datum.label,
+                id: datum.id,
+                // active: false
+              })
+            }
+          }.bind(this)).catch(function (err) {
+            setTimeout(function () {
+              this.getBrigade()
+            }.bind(this), 3000)
+          }.bind(this))
+        },
+        // 获取消防管段
+        getSupervisorUser: function (id) {
+          this.apiGet('/Public/GetSupervisorUser', {
+            unitid: id
+          }).then(function (res) {
+            var data = res.data
+            this.select[2].options = []
+
+            for (var i = 0; i < data.length; i++) {
+              var datum = data[i];
+              this.select[2].options.push({
+                text: datum.label,
+                id: datum.id,
+                // active: false
+              })
+            }
+          }.bind(this)).catch(function (err) {
+            this.getSupervisorUser()
+          }.bind(this))
+        },
+        // 从 select 中获取选中项，并拼接在 choice
+        setChoice: function (data) {
+          var svtype = '' // 单位类型
+          var svunit = '' // 所属大队
+          var svuser = '' // 管段
+
+          for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            for (var j = 0; j < item.options.length; j++) {
+              var option = item.options[j];
+              if (option.active) {
+                switch (i) {
+                  case 0:
+                    svtype += ',' + option.id
+                    break;
+                  case 1:
+                    svunit += ',' + option.id
+                    break;
+                  case 2:
+                    svuser += ',' + option.id
+                    break;
+                }
+              }
+            }
+          }
+          this.choice.svtype = svtype.replace(/^,/, '')
+          this.choice.svunit = svunit.replace(/^,/, '')
+          this.choice.svuser = svuser.replace(/^,/, '')
+        },
+        // 重置的时候，清空管段
+        resetSelect() {
+          this.select[2].options = [];
+          this.select_text01 = '';
+          this.select_text02 = [];
+          this.select_id02 = [];
+
+          this.loading = false;
+          this.finished = false;
+          this.list = [];
+          this.page = 0;
+
+          this.choice.svtype = '';
+          this.choice.svunit = '';
+          this.choice.svuser = '';
+          
+          this.companyType = [];
+          this.onLoad();
+        },
+        // 确认筛选
+        confirm: function (data) {
+          // this.setChoice(data)
+
+          this.loading = false
+          this.finished = false
+          this.list = []
+          this.page = 0
+
+          this.onClickRight()
+          this.onLoad(this.page)
+        },
+        // 搜索
+        onSearch: function () {
+          // console.log('search');
+          this.loading = false
+          this.finished = false
+          this.page = 0
+          this.list = []
+
+          this.onLoad()
+        },
+        // 加载数据
+        onLoad: function (index) {
+          var This = this
+
+          this.apiGet('/Unit/GetUnitPageList', {
+            limit: 20, // 每页条数	是
+            offset: this.page * 20, // 当其显示起始数据	是
+            svtype: this.choice.svtype, // 监管类型	否
+            svunit: this.choice.svunit, // 所属管辖大队	否
+            svuser: this.choice.svuser, // 管段	否
+            // svtype: encodeURI(this.choice.svtype), // 监管类型	否
+            // svunit: encodeURI(this.choice.svunit), // 所属管辖大队	否
+            // svuser: encodeURI(this.choice.svuser), // 管段	否
+            keyword: this.search_text, // 模糊匹配	否
+          }).then(function (res) {
+            var data = res.data.rows
+            This.total = res.data.total
+            if (!data) data = []
+
+            for (var j = 0; j < data.length; j++) {
+              This.list.push(data[j])
+            }
+
+            if (data.length === 0) {
+              This.finished = true
+            }
+
+            if (data.length === 0 && This.list.length === 0) {
+              // 显示缺省页
+              This.show_list_null = true
+              This.finished_text = ''
+            } else {
+              This.show_list_null = false
+            }
+
+            This.loading = false
+          }).catch(function (reason) {
+            This.loading = false
+            This.finished = true
+          })
+
+          this.page++
+        },
+        // 下拉刷新
+        onRefresh: function () {
+          this.finished = false
+          this.list = []
+          this.page = 0
+
+          this.show_list_null = false
+          setTimeout(function () {
+            this.onLoad(this.page)
+          }.bind(this), 1000)
+        },
+        //选择消防大队
+        selectOptions: function (sel, item, index) {
+          
+          if(this.select_text01 == item.text){
+            this.select_text01 = '';
+            this.choice.svunit = '';
+            this.choice.svuser = '';
+            this.select[2].options = [];
+          }else{
+            this.choice.svunit = item.id;
+            this.getSupervisorUser(item.id);
+            this.select_text01 = item.text;
+          }
+        },
+        //选择所属管段
+        selectOptions02: function (sel, item, index) {
+
+          if(this.select_text02.indexOf(item.text) == -1){
+            this.select_text02.push(item.text);
+          }else{
+            this.select_text02.splice(this.select_text02.indexOf(item.text),1);
+          }
+
+          if(this.select_id02.indexOf(item.id) == -1){
+            this.select_id02.push(item.id);
+          }else{
+            this.select_id02.splice(this.select_id02.indexOf(item.id),1);
+          }
+          this.choice.svuser = this.select_id02.join();
+        },
+        //选择单位类型
+        screenTypeSel:function(val){
+          if(this.companyType.indexOf(val) == -1){
+            this.companyType.push(val);
+          }else{
+            this.companyType.splice(this.companyType.indexOf(val),1);
+          }
+          this.choice.svtype = this.companyType.join();
+        },
+        closeSelectItem:function(index){
+          if(index == 0){
+            this.item_pull_show01 = !this.item_pull_show01;
+          }
+          if(index == 1){
+            this.item_pull_show02 = !this.item_pull_show02;
+          }
+        }
+      }
+    })
+  })();
+</script>
+</body>
+</html>

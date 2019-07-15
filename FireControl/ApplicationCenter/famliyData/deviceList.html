@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>社区列表</title>
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../components/components.css">
+    <!-- <script src="../../components/hs-list-load/hs-list-load.js"></script> -->
+    <style>
+        .wrap {
+            position: relative;
+            background-color: #EFEFEF;
+        }
+        .main-scroll{
+            background-color: #EFEFEF;
+        }
+        .clear::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        .content{
+            width: 6.6rem;
+            background-color: #fff;
+            margin-top: .19rem;
+            margin-left: .3rem;
+            display: inline-block;
+            box-shadow:2px 3px 10px 0px rgba(208,208,208,0.47);
+            border-radius: .1rem;
+        }
+        .span_text{
+            display: inline-block;
+            width: 49.2%;
+            height: 1.02rem;
+            text-align: center;
+            color:#666666;
+            font-size: .24rem;
+        }
+        .span_max{
+            border-top:1px solid#E5E5E5;
+        }
+        .div_One{
+            margin-top: .2rem;
+            margin-bottom: .15rem;
+        }
+        .titles{
+            display: inline-block;
+            width: 100%;
+            font-size: .28rem;
+            color:#333333;
+            margin-left: .24rem;
+            margin-top: .24rem;
+            margin-bottom: .2rem;
+        }
+        .title_text{
+            font-size: .24rem;
+            color:#666666;
+            margin-left: .24rem;
+            margin-bottom: .19rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter search">
+                <div class="header">
+                    <head-nav left-arrow title="社区列表" @click-left="retreat">
+                    </head-nav>
+                    <hs-search v-model="sousuo" placeholder="请输入搜索关键词" @search="Search"></hs-search>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <div class="wrap">
+                            <div class="content" v-for="(item,index) in deviveList" :key="index" @click="DetailsCommunity(item.communityID)">
+                                <div class="titles">{{item.communityName}}</div>
+                                <div class="title_text">{{item.communityAddress}}</div>
+                                <div class="span_max">
+                                    <span class="span_text">
+                                        <div class="div_One">{{item.plotCount}}</div>
+                                        <div>小区数</div>
+                                    </span>
+                                    <span class="span_text">
+                                        <div class="div_One">{{item.familyCount}}</div>
+                                        <div>家庭数</div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/vue.min.js"></script>
+    <script src="../../js/axios.min.js"></script>
+    <script src="../../js/rem.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../components/components.js"></script>
+    <script src="../../js/es6-promise.auto.min.js"></script>
+    <script src="../../js/http02.js"></script>
+    <script>
+        (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    sousuo:'',
+                    deviveList:[]
+                },
+                mounted:function() {
+                    var This = this
+                    This.getList()
+                },
+                methods: {
+                    //返回
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                    },
+                    //获取社区列表
+                    getList:function(){
+                        var This=this;
+                        This.apiGet('Family/GetCommunityList',{
+                            keyword:This.sousuo
+                        }).then(function(res){
+                            This.deviveList=res.data.data;
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //搜索
+                    Search:function(){
+                        this.getList();
+                    },
+                    //进入详情页
+                    DetailsCommunity:function(id){
+                        window.location.href='./detailsCommunity.html?id='+id
+                    }
+                },
+            })
+        })()
+    </script>
+</body>
+
+</html>

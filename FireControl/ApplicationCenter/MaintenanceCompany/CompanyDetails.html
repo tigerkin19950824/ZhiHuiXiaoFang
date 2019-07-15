@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>维保公司详情</title>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/script_px2rem.js"></script> <!-- rem.js -->
+	<script src="../../js/mui.min.js"></script>
+	<link rel="stylesheet" href="../../css/mui.min.css">
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/application-center.css"> <!-- 维保公司模块样式表 -->
+</head>
+<body style="background: #efefef">
+	<div class="company-details">
+		<div class="public-color fixed-top">
+			<div class="header-back public-color">
+				<a href="wutos://finish" class="back-btn"><i class="back-icon"></i></a>
+				<div class="header-title"></div>
+				<div class="screening">筛选<i class="screening-icon"></i></div> 
+			</div>
+			<div class="search-base public-color">
+				<div class="search-box">
+					<i class="search-icon"></i>
+					<form action=""><input type="search" id="keyword" placeholder="请输入搜索内容"></form>
+					<i class="del-icon"></i>
+				</div>
+			</div>
+			<div class="switch-btn">
+				<div class="fl active">维保公司详情</div>
+				<div class="fr">维保任务列表</div>
+			</div>
+		</div>
+		<div class="main-list mui-content mui-scroll-wrapper" >
+			<div class="mui-scroll">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<div class="switch-box">
+						<div class="switch-one">
+							<div class="basis-info">
+								<div class="title"><i class="left-icon"></i>基础信息</div>
+								<div class="info-img">
+									<div class="clearfix">
+										<div class="fl">单位名称：</div>	
+										<div class="fr"></div>
+									</div>
+									<div  class="clearfix">
+										<div class="fl">单位等级：</div>	
+										<div class="fr"></div>
+									</div>
+									<div  class="clearfix">
+										<div class="fl">单位地址：</div>	
+										<div class="fr"></div>
+									</div>
+								</div>
+							</div>
+							<div class="people-info">
+								<div class="title"><i class="left-icon"></i>人员信息<i class="right-icon"></i></div>
+								<div class="people-list">
+									<!-- <div class="people-item clearfix">
+										<img src="../../images/people.png" alt="">
+										<div class="info-right fl">
+											<div class="name">姓名： <span class="color-gray">周江</span></div>
+											<div class="info-list clearfix">
+												<div>性别： <span class="color-gray">男</span></div>
+												<div>角色组： <span class="color-blue"></span></div>
+												<div>电话： <span class="color-gray">181406145*</span></div>
+												<div>完成维保任务数： <span class="color-blue">122</span></div>
+											</div>
+										</div>
+									</div>
+									<div class="people-item clearfix">
+										<img src="../../images/people.png" alt="">
+										<div class="info-right fl">
+											<div class="name">姓名： <span class="color-gray">周江</span></div>
+											<div class="info-list clearfix">
+												<div>性别： <span class="color-gray">男</span></div>
+												<div>角色组： <span class="color-blue"></span></div>
+												<div>电话： <span class="color-gray">181406145*</span></div>
+												<div>完成维保任务数： <span class="color-blue">122</span></div>
+											</div>
+										</div>
+									</div>  -->
+								</div>
+							</div>
+						</div>
+						<div class="switch-two">
+							<div class="generated mui-content mui-scroll-wrapper" id="refreshContainer">
+								<div class="company-list mui-scroll">
+									<ul class="mui-table-view mui-table-view-chevron">
+										<!-- <div class="item">
+											<a href="">
+												<div class="item-top">
+													<div class="company-name">武汉普天科技有限公司例行维保</div>
+															<div class="time">创建时间： 2019-05-26 17：45</div>
+															</div>
+												<div class="address"><span class="state">已完成</span></div>
+											</a>
+										</div> -->
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ul>
+			</div>
+		</div>
+
+		<!-- 返回顶部 -->
+		<div class="back-top">
+			<div class="data-num">
+				<p class="now-num">5</p>
+				<p class="all-num">32</p>
+			</div>
+			<i class="back-top-icon"></i>
+		</div>
+		<!-- 筛选 -->
+		<div class="screening-tc">
+			<div class="tc-center">
+				<div class="screening-icon">
+					<div class="title">任务类型 <div class="checked-text"></div></div>
+					<div class="level-list clearfix">
+						<div>待指派</div>
+						<div>未开始</div>
+						<div>未确认</div>
+						<div>进行中</div>
+						<div>已完成</div>
+						<div>被取消</div>
+					</div>
+				</div>
+				<div class="confirm-btn">
+					<a href="javascript:;" class="reset fl">重置</a>
+					<a href="javascript:;" class="confirm fr">确定</a>
+				</div>
+			</div>
+			<div class="shadow-box"></div>
+		</div>
+	</div>
+</body>
+<script src="../../js/common.js"></script> <!-- ajax获取数据公共方法 -->
+<script>
+
+var ScreeningState=false; //弹窗状态
+var level='';  //转态
+var stateAny=['待指派','未开始','未确认','进行中','已完成',"被取消"];
+var InputVal=''; //关键字
+var total //总数
+var offset=1 //页码
+var limit= 20 //每页数量
+var number=20; //单页个数
+var index=''; //当前状态
+var startX;  //开始触碰屏幕的左距离
+var moveEndX; //手指离开屏幕的左距离
+var ScreeningConditi=true; //筛选条件显示状态
+var type=0; //搜索对应的接口 默认为公司人员搜索
+var AjaxState=0; //获取ajax事件类型
+
+var ItemHeight; 
+var BoxHeight;
+var boxTop;
+
+var SwitchIndex=false;
+
+
+/*获取地址栏参数*/
+var keyword=getQueryVariable().keyword; //公司id
+var tenantId=getQueryVariable().tenantId; //查找公司人员唯一属性
+console.log(tenantId)
+
+/*搜索*/
+/*$(".search-base input").change(function(){
+	InputVal=$(this).val();
+	console.log(type)
+	if(type==0){
+		console.log(InputVal)
+		PeopleList();
+	}else{
+		limit=number;
+		AjaxState=2;
+		Ajax();
+	}
+})*/
+
+
+$("#keyword").on("keypress",function(e){
+	var keycode = e.keyCode;  
+    if(keycode=='13') {  
+        e.preventDefault();    
+        //请求搜索接口 
+		InputVal=$(this).val();
+		console.log(type)
+		if(type==0){
+			console.log(InputVal)
+			PeopleList();
+		}else{
+			limit=number;
+			AjaxState=2;
+			console.log(InputVal)
+			Ajax();
+		} 
+    } 
+})
+$(".search-box .del-icon").click(function(){
+	$(".search-box input").val('');
+	InputVal='';
+	if(type==0){
+		PeopleList();
+	}else{
+		limit=number;
+		AjaxState=2;
+		Ajax();
+	} 
+})
+PeopleList();
+/*筛选*/
+$(".level-list div").click(function(){
+	if($(this).hasClass("active")){
+		$(this).removeClass("active");
+		$(this).parent().parent().find(".checked-text").text("")
+	}else{
+		$(this).addClass("active");
+		$(this).parent().parent().find(".checked-text").text($(this).text())
+	}
+})
+
+$(".checked-text").click(function(){
+	if(ScreeningConditi){
+		$(this).addClass("active").parents(".screening-icon").find(".level-list").hide();
+		ScreeningConditi=!ScreeningConditi;
+	}else{
+		$(this).removeClass("active").parents(".screening-icon").find(".level-list").show();
+		ScreeningConditi=!ScreeningConditi;
+	}
+	
+})
+
+$(".screening").click(function(){
+	$(".level-list div").removeClass("active")
+	$(".screening-tc").show().find(".tc-center").animate({"left":".7rem"},300);
+	ScreeningState=!ScreeningState;
+	if(index===''){
+		$(".level-list div").removeClass("active");
+		$(".checked-text").text('');
+	}else{
+		for(var i=0;i<index.length;i++){
+			$(".level-list div").eq(index[i]).addClass("active");
+			$(".checked-text").text($(".level-list div").eq(index[i]).text())
+			
+		}
+	}
+})
+
+/*点击左侧阴影部分隐藏弹窗*/
+$(".shadow-box").click(function(){
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	ScreeningState=!ScreeningState
+})
+
+/*筛选确认按钮*/
+$(".confirm-btn .confirm").click(function(){
+	level='';
+	index='';
+	limit=number;
+	AjaxState=2;
+	for(var i=0;i<$(".level-list div").length;i++){
+		if($(".level-list div").eq(i).hasClass("active")==true){
+			level=level+(i+1)+",";
+			index=index+i;
+		}
+	}
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	level=level.slice(0,level.length-1);
+	Ajax();
+	ScreeningState=!ScreeningState
+})
+
+/*筛选重置*/
+$(".reset").click(function(){
+	$(".tc-center").find(".active").removeClass("active");
+	$(".tc-center").find(".checked-text").text("");
+	level='';
+	index='';
+	limit=number;
+	AjaxState=2;
+	Ajax();
+})
+
+/*滑动隐藏筛选弹窗*/
+$(".screening-tc").on("touchstart", function(e) {
+   startX = e.originalEvent.changedTouches[0].pageX;
+   
+});
+$(".screening-tc").on("touchend", function(e) {
+   moveEndX = e.originalEvent.changedTouches[0].pageX;
+   if(moveEndX>startX+50){
+   		$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+   		ScreeningState=!ScreeningState;
+   }
+});
+
+/*维保公司详情*/
+
+$(".switch-btn div").click(function(){
+	$(".search-box input").val('');
+	InputVal='';
+	if($(this).index()==1){
+		$(".screening").show();
+		$(".back-top").show();
+		type=1;
+		SwitchIndex=true;
+		TaskList();
+	}else{
+		type=0
+		$(".screening").hide();
+		$(".back-top").hide();
+		PeopleList();
+	}
+	$(this).addClass("active").siblings().removeClass("active");
+	$(".switch-box>div").eq($(this).index()).show().siblings().hide();
+})
+
+
+
+commonAjax ("","api/Maintenance/GetMaintenanceCompanyDetailById?id="+keyword+"",CompanyInfo,"get") //维保公司
+
+function CompanyInfo(rs){
+	console.log(rs)
+	$(".header-title").text(rs.name)
+	$(".info-img").html("<div class='clearfix'><div class='fl'>单位名称：</div><div class='fr'>"+rs.name+"</div></div><div  class='clearfix'><div class='fl'>单位等级：</div><div class=fr>"+rs.level+"级</span></div><div class='clearfix'><div class='fl'>单位地址：</div> <div class='fr'>"+rs.address+"</div></div>");
+}
+function PeopleList(){
+	commonAjax ("","api/Maintenance/GetMaintenancePersonPageList?offset=0&limit=20&keyword="+InputVal+"&tenant="+tenantId+"",people,"get") //维保公司人员
+	function people(rs){
+		console.log(rs)
+		$(".people-list").html('');
+		if(rs.rows!=null&&rs.rows.length!=0){
+			for(var i=0;i<rs.rows.length;i++){
+				if(rs.rows[i].pictureBase64==null||rs.rows[i].pictureBase64==''){
+					rs.rows[i].pictureBase64="../../images/defaut.png"
+				}
+				$(".people-list").append("<div class='people-item clearfix'><img src='"+rs.rows[i].pictureBase64+"' alt=''><div class='info-right fl'><div class='name'>姓名：<span class='color-gray'>"+rs.rows[i].name+"</span></div><div class='info-list clearfix'><div>性别： <span class='color-gray'>暂无</span></div><div>角色组： <span class='color-gray'>"+rs.rows[i].roleNames+"</span></div><div>电话： <span class='color-gray'>"+rs.rows[i].phoneNumber+"</span></div><div>完成维保任务数： <span class='color-blue'>"+rs.rows[i].completeTaskCount+"</span></div></div></div></div>")
+			}
+		}
+		
+	}
+}
+
+
+/*维保任务列表*/
+function TaskList(){
+	/*上拉刷新，下拉加载*/
+	mui.init({
+	  pullRefresh : {
+	    container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+	    down : {
+	      auto: true,//可选,默认false.首次加载自动上拉刷新一次
+	      callback :pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据； 
+	    },
+	    up : {
+	    	auto:false,//可选,默认false.自动上拉加载一次
+	    	contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	      	contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+	    	callback :OnPull
+	    }
+	  }
+
+	});
+	function pullfresh(){
+		limit=number;
+		AjaxState=0;
+		Ajax();
+		mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+	}
+	function OnPull(){
+		AjaxState=1;
+		limit=limit+number;
+		setTimeout("Ajax()",1000)
+	    
+	}
+	/*跳转详情页*/
+	mui("#refreshContainer").on("tap","a",function(){
+		window.location.href = "MaintenanceDetails.html?id="+$(this).attr("id")+"";
+
+			
+	});
+}
+
+/*维保任务列表渲染*/
+function Ajax(){
+	commonAjax ("","api/Maintenance/GetMaintenanceTaskPageList?offset=0&limit="+limit+"&keyword="+InputVal+"&company="+keyword+"&status="+level+"",NewList,"get")
+	function NewList(rs){  //渲染数据
+		var total=rs.total;
+		mui('#refreshContainer').pullRefresh().refresh(true);
+		console.log(rs)
+		if(total==0){ //无数据，添加类名
+			if(AjaxState==1){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+			}
+			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+			mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+			$(".switch-two .mui-table-view").empty().append("<div class='none_img'>现在暂时没有数据</div>");
+			$(".switch-two .mui-pull-caption").hide();	
+			$(".back-top").hide();	
+		}else{
+
+			$(".switch-two .mui-pull-caption").show();
+			console.log(total)
+			var data='';
+		   	for(var i=0;i<rs.rows.length;i++){
+		   		rs.rows[i].taskStartTime=rs.rows[i].taskStartTime.replace("T"," ");
+				data+="<div class='item'><a href='' id='"+rs.rows[i].id+"'><div class='item-top'><div class='company-name'>"+rs.rows[i].repairCompanyName+"</div><div class='time'>创建时间："+rs.rows[i].taskStartTime.substring(0,16)+"</div></div><div class='address'><span class='state'>"+stateAny[rs.rows[i].currentStatus-1]+"</span></div></a></div>"
+			}
+			if(AjaxState==0){
+				$(".switch-two .mui-table-view").empty().append(data);
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+				var a
+				if(total>limit){
+					a=limit
+				}else{
+					a=total
+				}
+				mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+				
+				
+			}else if(AjaxState==1){
+				if(total>limit){
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);//传入false,表示还有数据
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+				}else{
+					
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+					//传入true，表示没有数据，会显示init配置中：contentnomore参数
+				}
+				$(".switch-two .mui-table-view").empty().append(data);
+			}else if(AjaxState==2){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+				$(".switch-two .mui-table-view").empty().append(data);
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);			
+			}
+			ItemHeight=$(".item").height()+parseInt($('.item').css("paddingTop"));
+			BoxHeight=$(".switch-two").height();
+			boxTop=$("#refreshContainer").offset().top;	
+			$(".back-top").show();	
+		}
+		scrollHeight(BoxHeight,boxTop,".switch-two .company-list",total,ItemHeight);
+	}
+}
+	
+//A 可视滚动区域高度 B滑动区域离顶部的距离  C 滑动区域的id或者class d 总数 e可视区域容器的类名或id f卡片的高度
+ /*function scrollHeight(A,B,c,d,e,f){
+ 	var MoveHeight;
+ 	var timeout = null;
+ 	$(c).scroll(function(){
+	 	if(timeout != null){
+	     window.clearTimeout(timeout);//取消延迟滚动
+		  }
+		  $('.data-num').show()
+		  $('.back-top-icon').hide()
+		  //500ms后，假定认为停止滚动
+		  timeout = window.setTimeout(function(){
+		   $('.data-num').hide()
+		   $('.back-top-icon').show()
+		  },1000);
+		  MoveHeight=$(c).offset().top;
+		  $(".all-num").text(d);
+	 	if(B!=undefined){
+	 		//$(".back-top-icon").hide();
+	 		$(".back-top p").show();
+	 		if(MoveHeight>0){
+	 			console.log(B-MoveHeight+A)
+	 			console.log(f)
+		 		$(".now-num").text(Math.ceil((B-MoveHeight+A)/f))
+		 	}else{
+		 		MoveHeight=Math.abs(MoveHeight)+B;
+		 		if(Math.ceil((MoveHeight+A)/f)>total){
+		 			Math.ceil((MoveHeight+A)/f)=total
+		 		}
+		 		$(".now-num").text(Math.ceil((MoveHeight+A)/f))
+		 	}
+	 	}
+ 	})
+ }
+ */
+
+/* $(".switch-two .company-list").scroll(function(e){
+ 	var timeout = null;
+ 	if(timeout != null){
+     window.clearTimeout(timeout);//取消延迟滚动
+	  }
+	  $('.data-num').show()
+	  $('.back-top-icon').hide()
+	  //500ms后，假定认为停止滚动
+	  timeout = window.setTimeout(function(){
+	   $('.data-num').hide()
+	   $('.back-top-icon').show()
+	  },1000);
+	  MoveHeight=$(".switch-two .mui-table-view").offset().top;
+	  $(".all-num").text(total);
+ 	if(Top!=undefined){
+ 		//$(".back-top-icon").hide();
+ 		$(".back-top p").show();
+ 		if(MoveHeight>0){
+ 			console.log(MoveHeight)
+ 			console.log(Top-MoveHeight+BoxHeight)
+ 			console.log((Top-MoveHeight+BoxHeight)/ItemHeight)
+ 			//console.log(Top-MoveHeight+BoxHeight)
+	 		$(".now-num").text(Math.ceil((Top-MoveHeight+BoxHeight)/ItemHeight))
+	 	}else{
+	 		//Top=132.28750610351562; //加载更多 后 这个值改变了
+	 		//console.log(Math.abs(MoveHeight))
+	 		//console.log(Top-MoveHeight+BoxHeight)
+	 		MoveHeight=Math.abs(MoveHeight)+Top;
+	 		if(parseInt((MoveHeight+BoxHeight)/ItemHeight)>total){
+	 			parseInt((MoveHeight+BoxHeight)/ItemHeight)=total
+	 		}
+	 		$(".now-num").text(parseInt((MoveHeight+BoxHeight)/ItemHeight))
+	 	}
+ 	}
+ })*/
+
+</script>
+
+</html>

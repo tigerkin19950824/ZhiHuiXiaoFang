@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>详情页</title>
+	<script src="../js/jquery-3.2.1.min.js"></script>
+	<script src="../js/script_px2rem.js"></script>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=14dac39f1c65b8c4396b143a7a50de01"></script> 
+	<link rel="stylesheet" href="../css/imageview.css" />
+	<link rel="stylesheet" href="../css/mui.imageviewer.css" />
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<link rel="stylesheet" href="../css/base.css">
+</head>
+<body style="background: #e5e5e5">
+	<div class="fire-alarm-details">
+		<div class="public-color fixed-top">
+			<div class="header-back public-color">
+				<a onclick="window.location.href='wutos://finish'" class="back-btn"><i class="back-icon"></i></a>
+				<div class="header-title">火警告警</div>
+				<!-- <div class="screening">筛选<i class="screening-icon"></i></div> -->
+			</div>
+			<!-- <div class="search-base public-color">
+				<div class="search-box">
+					<i class="search-icon"></i>
+					<form action="" id="form-search"><input type="search" id="keyword" placeholder="请输入搜索内容"></form>
+					<i class="del-icon"></i>
+				</div>
+			</div> -->
+		</div>
+		<div class="main">
+			<div class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view mui-table-view-chevron">
+						<div class="ajax-box">
+							<div class="card address">
+								<div class="title"><i></i>地址</div>
+								<div class="map"><div id="container"></div> </div>
+							</div>
+						</div>
+						<!-- <div class="card family">
+							<div class="title"><i></i>家庭成员 </div>
+							<div class="phone-list">
+								<div class="clearfix">
+									<div class="fl">
+										<img src="../images/people.png" alt="">
+										<div class="text-info">
+											<div class="name">李XX</div>
+											<div class="telephone-number">134XXXXXXXX</div>
+										</div>
+									</div>
+									<div class="fr"><i></i></div>
+								</div>
+								<div class="clearfix">
+									<div class="fl">
+										<img src="../images/people.png" alt="">
+										<div class="text-info">
+											<div class="name">李XX</div>
+											<div class="telephone-number">134XXXXXXXX</div>
+										</div>
+									</div>
+									<div class="fr"><i></i></div>
+								</div>
+							</div>
+						</div>
+						<div class="card community">
+							<div class="title"><i></i>社区人员 </div>
+							<div class="admin-people">
+								<div class="phone-list">
+									<div class="clearfix">
+										<div class="fl">
+											<img src="../images/people.png" alt="">
+											<div class="text-info">
+												<div class="name">李XX<span class="post">社区管理员</span></div>
+												<div class="telephone-number">134XXXXXXXX</div>
+											</div>
+										</div>
+										<div class="fr"><i></i></div>
+									</div>
+									<div class="clearfix">
+										<div class="fl">
+											<img src="../images/people.png" alt="">
+											<div class="text-info">
+												<div class="name">李XX<span class="post">社区消防队长</span></div>
+												<div class="telephone-number">134XXXXXXXX</div>
+											</div>
+										</div>
+										<div class="fr"><i></i></div>
+									</div>
+									<div class="clearfix">
+										<div class="fl">
+											<img src="../images/people.png" alt="">
+											<div class="text-info">
+												<div class="name">李XX<span class="post">社区消防队员</span></div>
+												<div class="telephone-number">134XXXXXXXX</div>
+											</div>
+										</div>
+										<div class="fr"><i></i></div>
+									</div>
+								</div>
+							</div>
+							<div class="community-people">
+								<div class="community-title">XXXXX小区</div>
+								<div class="phone-list">
+									<div class="clearfix">
+										<div class="fl">
+											<img src="../images/people.png" alt="">
+											<div class="text-info">
+												<div class="name">李XX</div>
+												<div class="telephone-number">134XXXXXXXX</div>
+											</div>
+										</div>
+										<div class="fr"><i></i></div>
+									</div>
+									<div class="clearfix">
+										<div class="fl">
+											<img src="../images/people.png" alt="">
+											<div class="text-info">
+												<div class="name">李XX</div>
+												<div class="telephone-number">134XXXXXXXX</div>
+											</div>
+										</div>
+										<div class="fr"><i></i></div>
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<div class="logs">
+							<div class="title"><i></i>警告日志 </div>
+							<div class="main-list">
+								<!-- <div class="item clearfix">
+									<div class="clearfix">
+										<div class="fl">
+											<i class="state-icon"></i>
+											<div class="data">12-21</div>
+											<div class="time">12:13</div>
+										</div>
+										<div class="fr">
+											<div class="state">维保任务生成</div>
+											<div class="info-list">
+												<div>联网单位: <span class="color-gray">武汉方正科技有限公司</span></div>
+												<div>任务创建人: <span class="color-gray">周红军</span></div>
+												<div>任务开始日期: <span class="color-gray">2018-12-20</span></div>
+												<div>任务结束日期: <span class="color-gray">2018-12-20</span></div>
+												<div>联网单位确认时间: <span class="color-gray">2018-12-20</span></div>
+											</div>
+											<div class="img-box clearfix">
+												<img src="../images/conpany-img.png" alt="">
+												<img src="../images/conpany-img.png" alt="">
+												<img src="../images/conpany-img.png" alt="">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="item clearfix">
+									<div class="clearfix">
+										<div class="fl">
+											<i class="state-icon"></i>
+											<div class="data">12-21</div>
+											<div class="time">12:13</div>
+										</div>
+										<div class="fr">
+											<div class="state">维保任务生成</div>
+											<div class="info-list">
+												<div>联网单位: <span class="color-gray">武汉方正科技有限公司</span></div>
+												<div>任务创建人: <span class="color-gray">周红军</span></div>
+												<div>任务开始日期: <span class="color-gray">2018-12-20</span></div>
+												<div>任务结束日期: <span class="color-gray">2018-12-20</span></div>
+												<div>联网单位确认时间: <span class="color-gray">2018-12-20</span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="item clearfix">
+									<div class="clearfix">
+										<div class="fl">
+											<i class="state-icon"></i>
+											<div class="data">12-21</div>
+											<div class="time">12:13</div>
+										</div>
+										<div class="fr">
+											<div class="state">维保任务生成</div>
+											<div class="info-list">
+												<div>维保任务生成: <span class="color-gray">武汉方正科技有限公司</span></div>
+												<div>任务派发人: <span class="color-gray">周红军</span></div>
+											</div>
+										</div>
+									</div>
+								</div> -->
+							</div>
+						</div>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../js/common.js"></script>
+<!--  图片放大 -->
+<script type="text/javascript" src="../js/mui.imageViewer.js" ></script>
+<script type="text/javascript" src="../js/mui.previewimage.js" ></script>
+<script type="text/javascript" src="../js/mui.zoom.js" ></script>
+<script>
+mui(".mui-scroll").on('tap','.phone-list .clearfix',function(){
+    let Phone = $(this).find("a").text(); 
+    window.location.href="tel:"+Phone
+})
+
+var map = new AMap.Map('container', {
+        zoom:14,//级别
+        center: [114.293583,30.631148],//中心点坐标
+        viewMode:'3D'//使用3D视图
+    });
+var marker = new AMap.Marker({
+        position:[114.293583,30.631148]//位置
+    })
+    map.add(marker);//添加到地图
+
+/*获取地址栏参数*/
+var familyId=getQueryVariable().familyId; //家庭id
+var state=getQueryVariable().state; //状态
+var eventID=getQueryVariable().eventId; //事件id
+//var familyId="ca1d3ecc62a9459588a63e83ba926038"
+//var state=0;
+var roleId={"43":"社区管理员","55":"社区消防站长","56":"社区消防站长","57":"小区工作人员","58":"社区消防队员"}
+
+FamilyAjax("","api/Family/users?id="+familyId,FamilyList,"get") //家庭成员
+function FamilyList(rs){
+	console.log(rs)
+	if(rs.data!=null&&rs.data.length!=0){
+		$(".address .title").html("<i></i>"+rs.data[0].familyAddress)
+		if(state!=1){
+			$(".address").after("<div class='card family'><div class='title'><i></i>家庭成员</div><div class='phone-list'></div></div>")
+			for(var i=0;i<rs.data.length;i++){
+				if(rs.data[i].profileUrl==null||rs.data[i].profileUrl==''){
+					rs.data[i].profileUrl="../images/defaut.png";
+				}
+				$(".family").find(".phone-list").append("<div class='clearfix'><div class='fl'><img src='"+rs.data[i].profileUrl+"' /><div class='text-info'><div class='name'>"+rs.data[i].userName+"</div><a class='telephone-number'>"+rs.data[i].phoneNumber+"</a></div></div><div class='fr'><i></i></div></div>")
+			}
+		}
+	}
+	setTimeout(function(){FamilyAjax("","api/Comminuty/cpusers?fid="+familyId,ComminutyList,"get")},100)
+	function ComminutyList(rs){
+		console.log(rs)
+		if(rs.data!=null&&rs.data.length!=0){
+			if(state!=1){
+				if(rs.data[0].communityUsers!=null&&rs.data[0].communityUsers.length!=0){
+					$(".family").after("<div class='card community'><div class='title'><i></i>社区人员 </div><div class='admin-people'><div class='phone-list'></div></div></div>")
+					for(var i=0;i<rs.data[0].communityUsers.length;i++){
+						if(rs.data[0].communityUsers[i].profileUrl==null||rs.data[0].communityUsers[i].profileUrl==''){
+							rs.data[0].communityUsers[i].profileUrl="../images/defaut.png"
+						}
+						$(".admin-people").find(".phone-list").append("<div class='clearfix'><div class='fl'><img src='"+rs.data[0].communityUsers[i].profileUrl+"' /><div class='text-info'><div class='name'>"+rs.data[0].communityUsers[i].userName+"<span class='post'>"+roleId[rs.data[0].communityUsers[i].roleId]+"</span></div><a class='telephone-number'>"+rs.data[0].communityUsers[i].phoneNumber+"</a></div></div><div class='fr'><i></i></div></div>")
+					}
+				}
+			}
+			if(rs.data[1].communityUsers!=null&&rs.data[1].communityUsers.length!=0){
+				$(".admin-people").after("<div class='community-people'><div class='community-title'>"+rs.data[1].plotName+"</div><div class='phone-list'></div></div>")
+				for(var i=0;i<rs.data[1].communityUsers.length;i++){
+					if(rs.data[1].communityUsers[i].profileUrl==null||rs.data[1].communityUsers[i].profileUrl==''){
+						rs.data[1].communityUsers[i].profileUrl="../images/defaut.png"
+					}
+					$(".community-people").find(".phone-list").append("<div class='clearfix'><div class='fl'><img src='"+rs.data[1].communityUsers[i].profileUrl+"' /><div class='text-info'><div class='name'>"+rs.data[1].communityUsers[i].userName+"</div><a class='telephone-number'>"+rs.data[1].communityUsers[i].phoneNumber+"</a></div></div><div class='fr'><i></i></div></div>")
+				}
+			}
+		}
+	}
+	
+}
+
+/*日志渲染*/
+FamilyAjax("","api/Family/GetEventLog?eventid="+eventID,logs,"get")
+function logs(rs){
+	console.log(rs)
+	if(rs.data!=null||rs.data.length!=0){
+		for(var i=0;i<rs.data.length;i++){
+			var data=rs.data[i].createdOn.split(" ")[0].substring("5"); //月日
+ 			var time=rs.data[i].createdOn.split(" ")[1].substring("0","5"); //时分
+ 			if(i>0&&i<rs.data.length&&rs.data[i].createdOn.substring("0",'4')!=rs.data[i-1].createdOn.substring("0",'4')){
+				$(".logs .main-list .item").eq(i-1).find(".clearfix").append("<div class='cancel-time'>"+rs.data[i-1].createdOn.substring("0",'4')+"</div>");
+			}
+ 			$(".main-list").append("<div class='item clearfix'><div class='clearfix'><div class='fl'><i class='state-icon'></i><div class='data'>"+data+"</div><div class='time'>"+time+"</div></div><div class='fr'><div class='state'>"+rs.data[i].description+"</div></div></div></div>")
+		}
+	}
+}
+
+/*获取地址栏参数*/
+// var alarmid=getQueryVariable().id; //告警id
+// var alarmid="908ea01516234c8a911b1d68c8cff2f3";
+
+// commonAjax ("","api/Event/GetAlarmInfoById?alarmid="+alarmid+"",fn,"get") //接口和A类告警详情一样
+// function fn(rs){
+	
+// 	console.log(rs)
+// 	/*日志渲染*/
+// 	if(rs.logs!=null&&rs.logs.length!=0){
+// 		for(var i=0;i<rs.logs.length;i++){
+// 			console.log($.parseJSON(rs.logs[i].logDetail).keyValues)
+// 			var data=rs.logs[i].logDate.split(" ")[0].substring("5"); //月日
+// 			var time=rs.logs[i].logDate.split(" ")[1].substring("0","5"); //时分
+// 			$(".logs .main-list").append("<div class='item clearfix'><div class='clearfix'><div class='fl'><i class='state-icon'></i><div class='data'>"+data+"</div><div class='time'>"+time+"</div></div><div class=fr><div class='state'>"+$.parseJSON(rs.logs[i].logDetail).logType+"</div><div class='info-list'></div></div></div></div>");
+			
+// 			if(i>0&&i<rs.logs.length&&rs.logs[i].logDate.substring("0",'4')!=rs.logs[i-1].logDate.substring("0",'4')){
+// 				$(".logs .main-list .item").eq(i-1).find(".clearfix").append("<div class='cancel-time'>"+rs.logs[i-1].logDate.substring("0",'4')+"</div>");
+// 			}
+
+// 			if($.parseJSON(rs.logs[i].logDetail).keyValues!=null&&$.parseJSON(rs.logs[i].logDetail).keyValues.length!=0){
+// 				for(var j=0;j<$.parseJSON(rs.logs[i].logDetail).keyValues.length;j++){
+// 					$(".logs .main-list .item").eq(i).find(".info-list").append("<div>"+$.parseJSON(rs.logs[i].logDetail).keyValues[j].key+" :<span>"+$.parseJSON(rs.logs[i].logDetail).keyValues[j].value+"</span></div>")
+// 				}
+// 			}
+			
+
+// 			if($.parseJSON(rs.logs[i].logDetail).photos!=null&&$.parseJSON(rs.logs[i].logDetail).photos.length!=0){
+// 				$(".logs .main-list .item").eq(i).find(".info-list").append("<div class='img-box clearfix'></div>")
+// 				for(var j=0;j<$.parseJSON(rs.logs[i].logDetail).photos.length;j++){
+// 					$(".log .main-list .item").eq(i).find(".img-box").append("<img src='"+resourceUrl+"api/Public/DownLoadFile?FileName="+$.parseJSON(rs.logs[i].logDetail).photos[j]+"' data-preview-src='' data-preview-group='"+$.parseJSON(rs.logs[i].logDetail).photos.length+"'/>")
+// 				}
+// 				mui.previewImage();  //图片放大
+				
+// 			}
+// 		}
+// 	}
+// }
+
+</script>
+</html>

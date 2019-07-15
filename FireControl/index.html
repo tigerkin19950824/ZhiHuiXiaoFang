@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>模板</title>
+  <link rel="stylesheet" href="./css/reset.css">
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./components/components.css">
+  <script src="./js/rem.js"></script>
+  <style>
+  .button {
+    display: block;
+    width: 6rem;
+    margin: .3rem auto;
+    height: .6rem;
+    font-size: .32rem;
+  }
+
+  a {
+    display: block;
+    width: 6rem;
+    margin: .3rem auto;
+    height: .6rem;
+    font-size: .32rem;
+    text-align: center;
+    line-height: .6rem;
+    border: 1px solid #1a7dd3;
+  }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page-all">
+    <div class="struc noFooter search">
+      <div class="header">
+        <head-nav left-arrow title="模板" @click-left="onClickLeft">
+          <div slot="right" class="saixuan" @click="onClickRight"><span>筛选</span></div>
+        </head-nav>
+        <form action="/" @submit.prevent>
+          <hs-search v-model="search_text" placeholder="请输入搜索关键词" @focus="onFocus" @blur="onBlur" @search="onSearch"></hs-search>
+        </form>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <button class="button" @click="getAjax">get请求</button>
+          <button class="button" @click="getAjax">get请求</button>
+          <button class="button" @click="getAjax">get请求</button>
+          <button class="button">搜索次数 {{num}} 状态 {{search_state}}</button>
+          <a href="./ApplicationCenter/networkUnit/company/index.html">联网单位数据统计</a>
+          <a href="./ApplicationCenter/networkUnit/equipment/equimentList.html">联网单位设备数据统计</a>
+          <a href="./ApplicationCenter/UnitEvent/incident.html">联网单位事件数据统计</a>
+          <a href="./ApplicationCenter/monitorControl/index.html">监控中心</a>
+        </div>
+      </div>
+    </div>
+
+    <!--<top-filter v-model="screen_show" hide-title title="视频监控" tip="电量" @reset="reset" @confirm="confirm">-->
+    <top-filter v-model="screen_show" hide-title title="视频监控" tip="电量" @reset="reset" @confirm="confirm">
+      <div slot="filter">
+        <div class="typeOne">
+          <div class="type_title">信号类型</div>
+          <div class="type_item">
+            <div class="type_item_son active">设备离线</div>
+            <div class="type_item_son active">电量过低</div>
+            <div class="type_item_son"> 设备故障</div>
+            <div class="type_item_son">设备在线</div>
+            <div class="type_item_son">设备在线</div>
+          </div>
+
+          <div class="name"><i></i><span class="text">单位大类统计</span></div>
+          <div class="type_item">
+            <div class="type_item_son active">设备离线</div>
+            <div class="type_item_son active">电量过低</div>
+            <div class="type_item_son"> 设备故障</div>
+            <div class="type_item_son">设备在线</div>
+            <div class="type_item_son">设备在线</div>
+          </div>
+          <div class="name"><i></i><span class="text">单位大类统计</span></div>
+          <div class="type_item">
+            <div class="type_item_son active">设备离线</div>
+            <div class="type_item_son active">电量过低</div>
+            <div class="type_item_son"> 设备故障</div>
+            <div class="type_item_son">设备在线</div>
+            <div class="type_item_son">设备在线</div>
+          </div>
+          <div class="name"><i></i><span class="text">单位大类统计</span></div>
+          <div class="type_item">
+            <div class="type_item_son active">设备离线</div>
+            <div class="type_item_son active">电量过低</div>
+            <div class="type_item_son"> 设备故障</div>
+            <div class="type_item_son">设备在线</div>
+            <div class="type_item_son">设备在线</div>
+          </div>
+          <div class="name"><i></i><span class="text">单位大类统计</span></div>
+          <div class="type_item">
+            <div class="type_item_son active">设备离线</div>
+            <div class="type_item_son active">电量过低</div>
+            <div class="type_item_son"> 设备故障</div>
+            <div class="type_item_son">设备在线</div>
+            <div class="type_item_son">设备在线</div>
+          </div>
+        </div>
+      </div>
+    </top-filter>
+  </div>
+
+</div>
+
+
+<script src="./js/es6-promise.auto.min.js"></script>
+<script src="./js/vue.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/http.js"></script>
+<script src="./js/getQueryVariable.js"></script>
+<script src="./components/components.js"></script>
+<script>
+(function () {
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      screen_show: false,
+      search_text: '',
+      num: 0,
+      search_state: ''
+    },
+    watch: {
+      search_text: function (val) {
+        console.log(val);
+      }
+    },
+    mounted: function () {
+      var href_value = getQueryVariable()
+      console.log(href_value);
+    },
+    methods: {
+      onClickLeft: function () {
+        window.location.href = 'wutos://finish'
+      },
+      onClickRight: function () {
+        this.screen_show = !this.screen_show
+      },
+      onFocus: function() {
+        this.search_state = 'focus'
+      },
+      onBlur: function() {
+        this.search_state = 'blur'
+      },
+      onSearch: function () {
+        this.num++
+        this.search_state = 'search'
+      },
+      getAjax: function () {
+        this.apiGet('/Maintenance/GetMaintenanceCompanyPageList', {
+          offset: 0,
+          limit: 30
+        }).then(function (res) {
+          console.log(res);
+        }).catch(function (err) {
+          console.log(err);
+        })
+      },
+      reset: function () {
+        console.log('重置选择');
+      },
+      confirm: function () {
+        console.log('确定');
+      }
+    }
+  })
+})();
+</script>
+</body>
+</html>

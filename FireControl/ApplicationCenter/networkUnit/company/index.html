@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>联网单位数据统计</title>
+  <link rel="stylesheet" href="../../../css/reset.css">
+  <link rel="stylesheet" href="../../../css/common.css">
+  <link rel="stylesheet" href="../../../components/components.css">
+  <script src="../../../js/rem.js"></script>
+  <style>
+    .main-scroll {
+      background-color: #efefef;
+    }
+
+    .network-num {
+      width: 6.6rem;
+      height: .92rem;
+      margin: 0 auto;
+      border-radius: .1rem;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .network-num .icon-left {
+      margin-left: .24rem;
+      width: .3rem;
+      height: .36rem;
+    }
+
+    .network-num .title {
+      margin-left: .13rem;
+      width: 1.7rem;
+      height: .27rem;
+      font-size: .28rem;
+      color: #333;
+      line-height: .24rem;
+    }
+
+    .network-num .num {
+      flex: 1 1 auto;
+      margin-right: .25rem;
+      text-align: right;
+      width: .55rem;
+      height: .24rem;
+      font-size: .32rem;
+      color: #168FE6;
+      line-height: .24rem;
+    }
+
+    .network-num .icon-right {
+      width: .23rem;
+      height: .23rem;
+      margin-right: .24rem;
+    }
+
+    .chart {
+      width: 6.18rem;
+      /*height: 3.39rem;*/
+      margin: .2rem auto 0;
+      padding: .24rem .2rem .2rem;
+      background: rgba(255, 255, 255, 1);
+      border: 1px solid rgba(247, 247, 247, 1);
+      border-radius: .1rem;
+    }
+    .chart .name i {
+      display: inline-block;
+      width: .08rem;
+      height: .32rem;
+      background: rgba(104, 189, 255, 1);
+      border-radius: .04rem;
+      vertical-align: top;
+    }
+
+    .chart .name span {
+      display: inline-block;
+      margin-left: .12rem;
+      font-size: .3rem;
+      line-height: .3rem;
+      color: #333;
+      vertical-align: top;
+      margin-top: 0.01rem;
+    }
+
+    .chart .frame {
+      /*width: 100%;*/
+      width: 6.18rem;
+      height: 2.8rem;
+      margin-top: .2rem;
+    }
+  </style>
+</head>
+<body>
+<div id="app" v-cloak>
+  <div class="struc noFooter">
+    <div class="header">
+      <head-nav left-arrow title="联网单位数据统计" @click-left="onClickLeft"></head-nav>
+    </div>
+    <div class="main">
+      <div class="main-scroll">
+        <div style="height: .2rem;"></div>
+        <a class="network-num shadow-item" href="../companyList/index.html">
+          <img class="icon-left" src="../../../icon/network.png" alt="">
+          <div class="title">联网单位数量</div>
+          <div class="num">{{num}}</div>
+          <img class="icon-right" src="../../../icon/jiantou_right_icon.png" alt="">
+        </a>
+        <div class="chart shadow-item">
+          <div class="name"><i></i><span>单位大类统计</span></div>
+          <!--<iframe class="frame" src="http://192.168.10.37:8898/thinkReport/board/dataCenter/superviseUnitCategory/" frameborder="0"></iframe>-->
+        </div>
+        <div class="chart shadow-item">
+          <div class="name"><i></i><span>单位类别统计</span></div>
+          <!-- <iframe class="frame" src="http://192.168.10.37:8898/thinkReport/board/dataCenter/eachUnitNum/" frameborder="0"></iframe> -->
+        </div>
+        <div class="chart shadow-item">
+          <div class="name"><i></i><span>联网单位分数分布</span></div>
+          <!--<iframe class="frame" src="http://192.168.10.37:8898/thinkReport/board/dataCenter/superviseUnitCategory/" frameborder="0"></iframe>-->
+        </div>
+        <div style="height: .4rem;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../../js/es6-promise.auto.min.js"></script>
+<script src="../../../js/vue.min.js"></script>
+<script src="../../../js/axios.min.js"></script>
+<script src="../../../js/http.js"></script>
+<script src="../../../components/components.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        num: ''
+      },
+      mounted: function() {
+        this.getNum()
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        getNum: function () {
+          var This = this
+          this.apiGet('/Public/GetStatisticsData').then(function (res) {
+            // unitCount 单位数量
+            // deviceCount 设备数量
+            // alarmCount 告警数量
+
+            This.num = res.data.unitCount
+
+          }).catch(function (reason) {
+            setTimeout(function () {
+              this.getNum()
+            }, 3000)
+          })
+        }
+      }
+    });
+
+    // iframe 会加载较慢，影响页面打开速度，需要延迟加载
+    var srcArr = [
+      'http://192.168.10.37:8898/thinkReport/board/dataCenter/superviseUnitCategory/',
+      'http://192.168.10.37:8898/thinkReport/board/dataCenter/eachUnitNum/',
+      'http://192.168.10.37:8898/thinkReport/board/dataCenter/superviseUnitCategory/'
+    ]
+    var eChart = document.querySelectorAll('.main-scroll .chart')
+
+    for (var i = 0; i < eChart.length; i++) {
+      var eIframe = document.createElement('iframe')
+      eIframe.className = 'frame'
+      eIframe.src = srcArr[i]
+      eIframe.frameborder = 0
+
+      eChart[i].appendChild(eIframe)
+    }
+
+  })();
+</script>
+</body>
+</html>

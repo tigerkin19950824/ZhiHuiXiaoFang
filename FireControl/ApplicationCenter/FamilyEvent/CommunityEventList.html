@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>社区事件</title>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/script_px2rem.js"></script>
+	<script src="../../js/mui.min.js"></script>
+	<link rel="stylesheet" href="../../css/mui.min.css">
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/application-center.css">
+</head>
+<body style="background: #efefef;">
+	<div class="community-event-list">
+		<div class="public-color fixed-top">
+			<div class="header-back public-color">
+				<a href="wutos://finish" class="back-btn"><i class="back-icon"></i></a>
+				<div class="header-title">社区事件</div>
+				<div class="screening">筛选<i class="screening-icon"></i></div>
+			</div>
+			<div class="search-base public-color">
+				<div class="search-box">
+					<i class="search-icon"></i>
+					<form action="" id="form-search"><input type="search" id="keyword" placeholder="请输入搜索内容"></form>
+					<i class="del-icon"></i>
+				</div>
+			</div>
+		</div>
+		<div class="main-list mui-content mui-scroll-wrapper" id="refreshContainer">
+			<div class="mui-scroll">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<!-- <div class="item">
+						<a href="">
+							<div class="community-name">xx社区xx小区</div>
+							<div class="device gray">烟雾感应器火警</div>
+							<div class="family-address gray">x栋x单元xxx</div>
+							<div class="time gray">2019/06/15 17:30</div>
+							<div class="state"><span>已灭火</span></div>
+							<span class="alarm-type">A类告警</span>
+						</a>
+					</div> -->
+				</ul>
+			</div>
+		</div>
+		<!-- 筛选 -->
+		<div class="screening-tc">
+			<div class="tc-center">
+				<div class="screening-icon">
+					<div class="title">信号类型 <div class="checked-text"></div></div>
+					<div class="level-list clearfix">
+						<div>待确认</div>
+						<div>已灭火</div>
+						<div>误报</div>
+					</div>
+				</div>
+				<div class="confirm-btn">
+					<a href="javascript:;" class="reset fl">重置</a>
+					<a href="javascript:;" class="confirm fr">确定</a>
+				</div>
+			</div>
+			<div class="shadow-box"></div>
+		</div>
+		<!-- 返回顶部 -->
+		<div class="back-top">
+			<div class="data-num">
+				<p class="now-num">0</p>
+				<p class="all-num">0</p>
+			</div>
+			<i class="back-top-icon"></i>
+		</div>
+	</div>
+</body>
+<script src="../../js/common.js"></script>
+<script>
+var ScreeningState=false;  //弹窗状态
+var level='';  //等级
+var InputVal=''; //关键字
+var total //总数
+var offset=1 //页码
+var limit= 20 //每页数量
+var number=20; //每次上拉加载的数量
+var index=''; //当前等级
+var startX;  //开始触碰屏幕的左距离
+var moveEndX; //手指离开屏幕的左距离
+var ScreeningConditi=true; //筛选条件显示状态
+var AjaxState=0;
+var ItemHeight;  //面板的高度
+var BoxHeight; //滑动可视区域的高度
+var boxTop; //滑动区域离上方的距离
+var stateArr=["待确认","已灭火","误报"] //火警状态
+/*搜索*/
+/*$(".search-base input").change(function(){
+	InputVal=$(this).val();
+	limit=number;
+	AjaxState=2;
+	Ajaxs();
+})*/
+$(".search-box .del-icon").click(function(){
+	$(".search-box input").val('');
+	InputVal='';
+	limit=number;
+	AjaxState=2;
+	Ajaxs();
+})
+
+$("#keyword").on("keypress",function(e){
+	var keycode = e.keyCode;  
+    var searchName = $(this).val();  
+    if(keycode=='13') {  
+        e.preventDefault();    
+        //请求搜索接口 
+		InputVal=$(this).val();
+		limit=number;
+		AjaxState=2;
+		Ajaxs();  
+    }  
+})
+
+/*筛选*/
+$(".level-list div").click(function(){
+	if($(this).hasClass("active")){
+		$(this).removeClass("active");
+		$(this).parent().parent().find(".checked-text").text("")
+	}else{
+		$(this).addClass("active");
+		$(this).parent().parent().find(".checked-text").text($(this).text())
+	}
+})
+
+$(".checked-text").click(function(){
+	if(ScreeningConditi){
+		$(this).addClass("active").parents(".screening-icon").find(".level-list").hide();
+		ScreeningConditi=!ScreeningConditi;
+	}else{
+		$(this).removeClass("active").parents(".screening-icon").find(".level-list").show();
+		ScreeningConditi=!ScreeningConditi;
+	}
+	
+})
+
+$(".screening").click(function(){
+	$(".level-list div").removeClass("active")
+	$(".screening-tc").show().find(".tc-center").animate({"left":".7rem"},300);
+	ScreeningState=!ScreeningState;
+	if(index===''){
+		$(".level-list div").removeClass("active");
+		$(".checked-text").text('');
+	}else{
+		for(var i=0;i<index.length;i++){
+			$(".level-list div").eq(index[i]).addClass("active");
+			$(".checked-text").text($(".level-list div").eq(index[i]).text())
+			
+		}
+	}
+	
+})
+
+/*点击左侧阴影部分隐藏弹窗*/
+$(".shadow-box").click(function(){
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	ScreeningState=!ScreeningState
+})
+
+/*筛选确认按钮*/
+$(".confirm-btn .confirm").click(function(){
+	level='';
+	index='';
+	limit=number;
+	AjaxState=2;
+	for(var i=0;i<$(".level-list div").length;i++){
+		if($(".level-list div").eq(i).hasClass("active")==true){
+			level=level+i+",";
+			index=index+i;
+		}
+	}
+	$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+	level=level.slice(0,level.length-1);
+	console.log(level)
+	Ajaxs();
+	ScreeningState=!ScreeningState;
+})
+
+/*筛选重置*/
+$(".reset").click(function(){
+	$(".tc-center").find(".active").removeClass("active");
+	$(".tc-center").find(".checked-text").text("");
+	/*带功能*/
+	level='';
+	index='';
+	limit=number;
+	AjaxState=2;
+	Ajaxs();
+
+})
+
+/*滑动隐藏筛选弹窗*/
+$(".screening-tc").on("touchstart", function(e) {
+   startX = e.originalEvent.changedTouches[0].pageX;
+   
+});
+$(".screening-tc").on("touchend", function(e) {
+   moveEndX = e.originalEvent.changedTouches[0].pageX;
+   if(moveEndX>startX+50){
+   		$(".screening-tc").find(".tc-center").animate({"left":"100%"},300,function(){$(".screening-tc").hide()});
+   		ScreeningState=!ScreeningState;
+   }
+});
+
+/*上拉刷新，下拉加载*/
+mui.init({
+  pullRefresh : {
+    container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+    down : {
+      auto: true,//可选,默认false.首次加载自动上拉刷新一次
+      callback :pullfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据； 
+    },
+    up : {
+    	auto:false,//可选,默认false.自动上拉加载一次
+    	contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	    contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+    	callback :OnPull
+    }
+  }
+
+});
+/*下拉刷新*/
+function pullfresh(){
+	AjaxState=0;
+	Ajaxs()
+
+}
+/*上拉下载*/
+function OnPull(){
+	AjaxState=1;
+	limit=limit+number;
+	setTimeout("Ajaxs()",1000)
+}
+function Ajaxs(){
+	FamilyAjax("","api/Family/getevents?offset=0&limit="+limit+"&states="+level+"&keyword="+InputVal,NewList,"get") //获取接口
+	function NewList(rs){  //渲染列表
+		console.log(rs)
+		total=rs.data.item1;
+		mui('#refreshContainer').pullRefresh().refresh(true);
+		if(total==0){
+			if(AjaxState==1){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+			}
+			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+			mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+			$('.mui-table-view-chevron').empty().append("<div class='none_img'>现在暂时没有数据</div>");
+			$(".mui-pull-caption").hide();
+			$(".back-top").hide();
+		}else{
+			$(".mui-table-view").html('');
+			$(".mui-pull-caption").show();
+			var data='';
+			for(var i=0;i<rs.data.item2.length;i++){
+				var address=rs.data.item2[i].address.split("-");
+				var family_Adress=address.pop(); //小区地址
+				var community_Adress=address.join("-")  //家庭地址
+				var time=rs.data.item2[i].createdOn.substring(0,16)
+				data+="<div class='item'><a href='javascript:;' eventID='"+rs.data.item2[i].eventID+"' keyword='"+rs.data.item2[i].state+"' tenantId='"+rs.data.item2[i].familyId+"'><div class='community-name'>"+community_Adress+"</div><div class='device gray'>"+rs.data.item2[i].description+"</div><div class='family-address gray'>"+family_Adress+"</div><div class='time gray'>"+time+"</div><div class='state'><span>"+stateArr[rs.data.item2[i].state]+"</span></div><span class='alarm-type'>A类告警</span></a></div>";
+			}
+			if(AjaxState==0){
+				$('.mui-table-view-chevron').empty().append(data)
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+				var a
+				if(total>limit){
+					a=limit
+				}else{
+					a=total
+				}
+				mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+				
+			}else if(AjaxState==1){
+				if(total>limit){
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);//传入false,表示还有数据
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+				}else{
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+				//传入true，表示没有数据，会显示init配置中：contentnomore参数
+				}
+				$('.mui-table-view-chevron').empty().append(data)
+			}else if(AjaxState==2){
+				mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+				$('.mui-table-view-chevron').empty().append(data);
+				mui('#refreshContainer').pullRefresh().scrollTo(0,0);
+			}
+			ItemHeight=$(".item").height()+parseInt($('.item').css("marginTop"));
+			BoxHeight=$(".main-list").height();
+			boxTop=$("#refreshContainer").offset().top;
+			$(".back-top").show();
+		}
+		console.log(ItemHeight)
+		scrollHeight(BoxHeight,boxTop,".mui-scroll",total,ItemHeight);
+	}
+}
+
+
+/*跳转详情页*/
+mui("#refreshContainer").on("tap","a",function(){
+	window.location.href = "FireAlarmDetails.html?eventID="+$(this).attr("eventID")+"&state="+$(this).attr("keyword")+"&familyId="+$(this).attr("tenantId")+"";
+		
+});
+
+
+</script>
+</html>

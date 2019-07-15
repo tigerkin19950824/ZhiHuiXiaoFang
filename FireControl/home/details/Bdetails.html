@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>告警详情-B类严重  页面已淘汰</title>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/script_px2rem.js"></script>
+	<script src="../../js/mui.min.js"></script>
+	<link rel="stylesheet" href="../../css/imageview.css" />
+	<link rel="stylesheet" href="../../css/mui.imageviewer.css" />
+	<link rel="stylesheet" href="../../css/mui.min.css">
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/pageCS/DetailsPageBCD.css">
+</head>
+<body style="background: #efefef">
+	<div class="fire-alarm-false">
+		<div class="header-back public-color fixed-top">
+			<a href="javascript:history.back(-1)" class="back-btn"><i class="back-icon"></i></a>
+			<div class="header-title">告警详情-B类严重</div>
+			<!-- <div class="screening">筛选<i class="screening-icon"></i></div> -->
+		</div>
+		<div class="main-list mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="center">
+					<div class="company-info">
+						<div class="company-address clearfix">
+							<i class="adress-icon"></i>
+							<div class="info">
+								<div class="name"></div>
+								<div class="adress-text"></div>
+							</div>
+						</div>
+						<div class="info-bot">
+							<div class='text-p fireControlJurisdiction'>消防管辖：<span class="color-gray"></span></div>
+						    <div class='text-p supervisorsResponsible'>消防监督员：<span class="color-gray"></span></div>
+						    <div class='text-p unitTypeInfo'>单位类别: <span class="color-gray"></span></div>
+						    <div class='text-p unitAttribute'>单位属性: <span class="color-gray"></span></div>
+						    <div class='text-p totalBuildingArea'>总建筑面积: <span class="color-gray"></span></div>
+						    <div class='text-p fireControlRoomLocationInfo'>消控室位置: <span class="color-gray"></span></div>
+						</div>
+					</div>
+					<div class="mui-row call-phone">
+						<div class="mui-col-sm-12 mui-col-xs-12">
+						    <div class="safetyManager">
+							    <p>消防安全管理人：<span></span></p>
+							    <p><a id="callPhone"></a></p>
+							    <i class="phone-icon"></i>
+						    </div>
+						</div>
+						<div class="mui-col-sm-12 mui-col-xs-12">
+							<div class="safetyManager">
+							    <p>消防安全管理人：<span></span></p>
+							    <p><a id="callPhone"></a></p>
+							    <i class="phone-icon"></i>
+							</div>
+						</div>
+					</div>
+					<div class="basis-info">
+						<div class="title"><i class="left-icon"></i>可视化</div>
+						<div class="address-floor">
+							<!-- <div  class="clearfix">
+								<a href="javascript:;">
+									<div class="fl ">XXXX大楼-2层</div>	
+									<div class="fr jiantou-right"></div>
+								</a>
+							</div> -->
+						</div>
+					</div>
+					<div class="log">
+						<div class="title"><i class="left-icon"></i>告警日志</div>
+						<div class="main-list">
+							<!-- <div class="item clearfix">
+								<div class="clearfix">
+									<div class="fl">
+										<i class="state-icon"></i>
+										<div class="data">12-21</div>
+										<div class="time">12:13</div>
+									</div>
+									<div class="fr">
+										<div class="state">烟雾报警器火警告警</div>
+										<div class="info-list">
+											<div>XX大楼2层资料室</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item clearfix">
+								<div class="clearfix">
+									<div class="fl">
+										<i class="state-icon"></i>
+										<div class="data">12-21</div>
+										<div class="time">12:13</div>
+									</div>
+									<div class="fr">
+										<div class="state">确认误报</div>
+										<div class="info-list">
+											<div>XX有限公司 李XX</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="item clearfix">
+								<div class="clearfix">
+									<div class="fl">
+										<i class="state-icon"></i>
+										<div class="data">12-21</div>
+										<div class="time">12:13</div>
+									</div>
+									<div class="fr">
+										<div class="state">烟雾报警器复位</div>
+										<div class="info-list">
+											<div>XX大楼3层资料室</div>
+										</div>
+									</div>
+								</div>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+<script src="../../js/common.js"></script>
+<!--  图片放大 -->
+<script type="text/javascript" src="../../js/mui.imageViewer.js" ></script>
+<script type="text/javascript" src="../../js/mui.previewimage.js" ></script>
+<script type="text/javascript" src="../../js/mui.zoom.js" ></script>
+<script>
+mui(".call-phone").on('tap','.safetyManager',function(){
+    let Phone = $(this).find("a").text(); 
+    window.location.href="tel:"+Phone
+})
+/*获取地址栏参数*/
+var alarmid=getQueryVariable().id; //告警id
+//var alarmid="908ea01516234c8a911b1d68c8cff2f3";
+commonAjax ("","api/Event/GetAlarmInfoById?alarmid="+alarmid,fn,"get") //接口和A类告警详情一样
+function fn(rs){
+	console.log(rs)
+	$(".header-title").text("告警详情-"+rs.alarmType+"类");
+	$(".company-address .name").text(rs.unitDetail.unitName);
+	$(".company-address .adress-text").text(rs.unitDetail.unitAddress);
+	$(".fireControlJurisdiction span").text(rs.unitDetail.fireControlJurisdiction);
+	$(".supervisorsResponsible span").text(rs.unitDetail.supervisorsResponsible+","+rs.unitDetail.supervisorsComanagement);
+	$(".unitTypeInfo span").text(rs.unitDetail.unitTypeInfo);
+	$(".unitAttribute span").text(rs.unitDetail.unitAttribute);
+	$(".totalBuildingArea span").text(rs.unitDetail.totalBuildingArea);
+	$(".fireControlRoomLocationInfo span").text(rs.unitDetail.fireControlRoomLocationInfo);
+	/*电话号码*/
+	if(rs.unitDetail.safetyPersonList!=null&&rs.unitDetail.safetyPersonList.length!=0){
+		for(var i=0;i<rs.unitDetail.safetyPersonList.length;i++){
+			$(".mui-row .safetyManager").eq(i).find("span").text(rs.unitDetail.safetyPersonList[i].name)
+			$(".mui-row .safetyManager").eq(i).find("a").text(rs.unitDetail.safetyPersonList[i].phone)
+		}
+	}
+	
+	/*可视化*/
+	if(rs.planeMaps!=null&&rs.planeMaps.length!=0){
+		for(var i=0;i<rs.planeMaps.length;i++){
+			$(".address-floor").append("<div class='clearfix'><a href='javascript:;'><div class='fl'>"+rs.planeMaps[i].name+"</div><div class='fr jiantou-right'></div></a></div>")
+		}
+	}
+	
+	/*日志渲染*/
+	if(rs.logs!=null&&rs.logs.length!=0){
+		for(var i=0;i<rs.logs.length;i++){
+			console.log(i)
+			var data=rs.logs[i].logDate.split(" ")[0].substring("5"); //月日
+			var time=rs.logs[i].logDate.split(" ")[1].substring("0","5"); //时分
+			$(".log .main-list").append("<div class='item clearfix'><div class='clearfix'><div class='fl'><i class='state-icon'></i><div class='data'>"+data+"</div><div class='time'>"+time+"</div></div><div class=fr><div class='state'>"+$.parseJSON(rs.logs[i].logDetail).logType+"</div><div class='info-list'></div></div></div></div>");
+			
+			if(i>0&&i<rs.logs.length&&rs.logs[i].logDate.substring("0",'4')!=rs.logs[i-1].logDate.substring("0",'4')){
+				$(".log .main-list .item").eq(i-1).find(".clearfix").append("<div class='cancel-time'>"+rs.logs[i-1].logDate.substring("0",'4')+"</div>");
+			}
+			if($.parseJSON(rs.logs[i].logDetail).keyValues!=null&&$.parseJSON(rs.logs[i].logDetail).keyValues.length!=0){
+				for(var j=0;j<$.parseJSON(rs.logs[i].logDetail).keyValues.length;j++){
+					$(".log .main-list .item").eq(i).find(".info-list").append("<div>"+$.parseJSON(rs.logs[i].logDetail).keyValues[j].key+" :<span>"+$.parseJSON(rs.logs[i].logDetail).keyValues[j].value+"</span></div>")
+				}
+			}
+			
+
+			if($.parseJSON(rs.logs[i].logDetail).photos!=null&&$.parseJSON(rs.logs[i].logDetail).photos.length!=0){
+				$(".log .main-list .item").eq(i).find(".info-list").append("<div class='img-box clearfix'></div>")
+				for(var j=0;j<$.parseJSON(rs.logs[i].logDetail).photos.length;j++){
+					$(".log .main-list .item").eq(i).find(".img-box").append("<img src='"+resourceUrl+"api/Public/DownLoadFile?FileName="+$.parseJSON(rs.logs[i].logDetail).photos[j]+"' data-preview-src='' data-preview-group='"+$.parseJSON(rs.logs[i].logDetail).photos.length+"'/>")
+				}
+				mui.previewImage();  //图片放大
+				
+			}
+		}
+	}
+}
+</script>
+</html>

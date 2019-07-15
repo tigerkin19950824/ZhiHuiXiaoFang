@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>监督员列表</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <script src="../../js/rem.js"></script>
+  <style>
+
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .list {
+      margin-top: .2rem;
+    }
+
+    .item {
+      width: 6.6rem;
+      height: 1.14rem;
+      margin: 0 auto .2rem;
+      border-radius: .1rem;
+      background-color: #fff;
+    }
+
+    .item a {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item .user-img {
+      margin-left: .26rem;
+      width: .84rem;
+      height: .84rem;
+
+    }
+    .item .user-img img{
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+
+    .item .info {
+      flex: 1 1 auto;
+      margin-left: .25rem;
+    }
+
+    .item .info .top {
+      height: .5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item .info .top .user-name {
+      font-size: .28rem;
+      line-height: .3rem;
+      color: #666;
+    }
+
+    .item .info .top .state {
+      width: 1.16rem;
+      height: .6rem;
+      line-height: .6rem;
+      text-align: center;
+      padding: 0.02rem 0.05rem;
+      margin-right: .2rem;
+      border-radius: 0.3rem;
+      font-size: 0.4rem;
+      color: #fff;
+      transform: scale(0.5);
+      transform-origin:100% 50%; 
+    }
+    .item .info .top .state.free {
+      background: #45C7F2;
+    }
+    .item .info .top .state.online {
+      background: #D66E56;
+    }
+    .item .info .top .state.leave {
+      background: #999;
+    }
+
+    .item .info .top .state-1 {
+      background: #D66E56;
+    }
+
+    .item .info .top .state-2 {
+      background: #999999;
+    }
+
+    .item .info .position {
+      font-size: .24rem;
+      line-height: .32rem;
+      color: #666666;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page-all">
+    <div class="struc noFooter search">
+      <div class="header">
+        <head-nav left-arrow title="监督员列表" @click-left="onClickLeft"></head-nav>
+        <hs-search v-model="search_text" placeholder="请输入搜索关键词" @search="onSearch"></hs-search>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <hs-list-load
+            :width="cont_width"
+            :height="cont_height"
+
+            v-model="loading"
+            :offset="1200"
+            :finished="finished"
+            :finished-text="finished_text"
+            @load="onLoad(page)"
+
+            pull-refresh
+            @refresh="onRefresh"
+          >
+            <ul class="list">
+              <template v-for="(item, index) in list">
+                <li class="item shadow-item">
+                  <a :href="'./staffDetail.html?'+ 'id='+item.id + '&name='+item.userName" :key="index">
+                    <div class="user-img"><img :src="item.picture" alt=""></div>
+                    <div class="info">
+                      <div class="top"><span class="user-name">{{item.userName}}</span>
+                        <em class="state leave" v-if="item.statue == 0">离线</em>
+                        <em class="state free" v-if="item.statue == 1">在线</em>
+                        <!-- <em class="state online" v-if="status == 1">忙碌</em> -->
+                      </div>
+                      <div class="position">坐席</div>
+                    </div>
+                  </a>
+                </li>
+              </template>
+            </ul>
+          </hs-list-load>
+          <hs-list-null v-model="show_list_null"></hs-list-null>
+        </div>
+      </div>
+    </div>
+
+    <hs-go-back cont-ele=".struc .main .hs-list-load" item-ele=".struc .main .list .item" :list="list" :total="total"></hs-go-back>
+  </div>
+</div>
+
+<script src="../../js/es6-promise.auto.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/axios.min.js"></script>
+<script src="../../js/http.js"></script>
+<script src="../../components/components.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        show_list_null: false,
+        finished_text: '没有更多了',
+
+        search_text: '',
+
+        cont_width: '375px', // 组件宽度
+        cont_height: '375px', // 组件高度
+        loading: false, // 是否正在加载
+        finished: false, // 是否全部加载完成
+        page: 0,
+        list: [],
+        total: 0
+      },
+      watch:{
+        search_text(val, oldVal) {
+            if (val == '') {
+                this.list = [];
+                this.page = 0;
+                this.finished = false;
+                this.keyword = '';
+                this.onLoad();
+                console.log(this.list)
+            }
+        },
+      },
+      mounted: function () {
+        window.onload = function (ev) {
+          var eMain = document.querySelector('#app .struc .main')
+          this.cont_width = eMain.clientWidth + 'px'
+          this.cont_height = eMain.clientHeight + 'px'
+          this.onLoad();
+        }.bind(this)
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        // 搜索
+        onSearch: function () {
+          this.loading = false
+          this.finished = false
+          this.page = 0;
+          this.list = [];
+          this.onLoad();
+        },
+        // 加载数据
+        onLoad: function (index) {
+          var This = this;
+          
+          this.apiPost('/HandlerRecord/GetHandlerRecordList', {
+            limit: 20, // 每页条数	是
+            offset: this.page * 20, // 当其显示起始数据	是
+            keyword: this.search_text, // 模糊匹配	否
+          }).then(function (res) {
+            var data = res.data.data.rows
+
+            This.total = res.data.data.total
+            if (!data) data = []
+          
+            for (var j = 0; j < data.length; j++) {
+              This.list.push(data[j])
+            }
+          
+            if (data.length === 0) {
+              This.finished = true
+            }
+          
+            if (data.length === 0 && This.list.length === 0) {
+              // 显示缺省页
+              This.show_list_null = true
+              This.finished_text = ''
+            } else {
+              This.show_list_null = false
+            }
+          
+            This.loading = false
+          }).catch(function (reason) {
+            This.loading = false
+            This.finished = true
+          })
+          
+          this.page++
+        },
+
+        // 下拉刷新
+        onRefresh: function () {
+          this.finished = false
+          this.list = []
+          this.page = 0
+
+          this.show_list_null = false
+          setTimeout(function () {
+            this.onLoad(this.page)
+          }.bind(this), 1000)
+        }
+      }
+    })
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>维保公司数据统计</title>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/script_px2rem.js"></script>
+	<script src="../../js/mui.min.js"></script>
+	<link rel="stylesheet" href="../../css/mui.min.css">
+	<link rel="stylesheet" href="../../css/base.css">
+	<link rel="stylesheet" href="../../css/application-center.css">
+	<style>
+	.company-num{margin: .2rem 0;}
+		.network-num {
+      width: 6.6rem;
+      height: .92rem;
+      margin: 0 auto;
+      border-radius: .1rem;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+          box-shadow: 0rem 0.03rem 0.09rem 0rem rgba(160, 160, 160, 0.33);
+    }
+
+    .network-num .icon-left {
+      margin-left: .24rem;
+      width: .3rem;
+      height: .36rem;
+    }
+
+    .network-num .title {
+      margin-left: .13rem;
+      width: 1.7rem;
+      font-size: .28rem;
+      color: #333;
+      line-height: .24rem;
+    }
+
+    .network-num .num {
+      flex: 1 1 auto;
+      margin-right: .25rem;
+      text-align: right;
+      width: .55rem;
+      height: .24rem;
+      font-size: .32rem;
+      color: #168FE6;
+      line-height: .24rem;
+    }
+
+    .network-num .icon-right {
+      width: .23rem;
+      height: .23rem;
+      margin-right: .24rem;
+    }
+    .chart {
+      width: 6.6rem;
+      margin: .2rem auto;
+      padding: .24rem .25rem .2rem .24rem;
+      background: rgba(255, 255, 255, 1);
+      border: 1px solid rgba(247, 247, 247, 1);
+      border-radius: .1rem;
+      box-shadow: 0rem 0.03rem 0.09rem 0rem rgba(160, 160, 160, 0.33);
+    }
+    .chart .name{line-height: 100%;}
+
+    .chart .name i {
+      display: inline-block;
+      width: .08rem;
+      height: .32rem;
+      background: rgba(104, 189, 255, 1);
+      border-radius: .04rem;
+      vertical-align: middle;
+    }
+
+    .chart .name span {
+      display: inline-block;
+      margin-left: .2rem;
+      font-size: .28rem;
+      line-height: .3rem;
+      color: #333;
+      vertical-align: middle;
+    }
+
+    .chart .frame {
+      /*width: 100%;*/
+      width: 6rem;
+      height: 2.8rem;
+      margin-top: .2rem;
+    }
+    .mui-scroll-wrapper{overflow: auto;top: .97rem;}
+    .fixed-top{height: .96rem;}
+   
+	</style>
+</head>
+<body style="background: #efefef;">
+	<div class="company-list">
+		<div class="public-color fixed-top">
+			<div class="header-back public-color">
+				<a href="wutos://finish" class="back-btn"><i class="back-icon"></i></a>
+				<div class="header-title">维保公司数据统计</div>
+				<!-- <div class="screening">筛选<i class="screening-icon"></i></div> -->
+			</div>
+		<!--   <div class="search-base public-color">
+      <div class="search-box">
+        <i class="search-icon"></i>
+        <form action="" id="form-search"><input type="search" id="keyword" placeholder="请输入搜索内容"></form>
+        <i class="del-icon"></i>
+      </div> -->
+			</div>
+		</div>
+		<div class="main-list mui-content mui-scroll-wrapper" id="refreshContainer">
+			<div class="mui-scroll">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<div class="company-num">
+						<a class="network-num shadow-item" href="CompanyList.html">
+				          <img class="icon-left" src="../../icon/network.png" alt="">
+				          <div class="title">维保公司数量</div>
+				          <div class="num"></div>
+				          <img class="icon-right" src="../../icon/jiantou_right_icon.png" alt="">
+				        </a>
+					</div>
+					<div class="chart shadow-item">
+			          <div class="name"><i></i><span>维保公司任务数排名</span></div>
+			          <iframe class="frame" src="http://192.168.10.160:8898/thinkReport/board/App_Unit/UnitAttribute/" frameborder="0" id="ifm" ></iframe>
+			        </div>
+			        <div class="chart shadow-item">
+			          <div class="name"><i></i><span>维保公司资质分布</span></div>
+			          <iframe class="frame" src="http://192.168.10.160:8898/thinkReport/board/App_Unit/UnitAttribute/" frameborder="0"></iframe>
+			        </div>
+			        <div class="chart shadow-item">
+			          <div class="name"><i></i><span>维保任务分布</span></div>
+			         <iframe class="frame" src="http://192.168.10.37:8898/thinkReport/board/dataCenter/superviseUnitCategory/" frameborder="0"></iframe>
+			        </div>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../../js/common.js"></script>
+<script>
+commonAjax ("","api/Maintenance/GetMaintenanceCompanyPageList?offset=0&limit=20",NewList,"get") //获取接口
+function NewList(rs){
+  console.log(rs)
+  $(".num").text(rs.total)
+}
+</script>
+</html>

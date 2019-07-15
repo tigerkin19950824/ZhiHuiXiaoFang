@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>屏蔽备案</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/pageCS/fireAlarm.css"/>
+	</head>
+	<body>
+		<!-- 返回顶部 -->
+		<div class="back-top">
+			<div class="data-num">
+				<p class="now-num">5</p>
+				<p class="all-num">32</p>
+			</div>
+			<i class="back-top-icon"></i>
+		</div>
+		<div class="public-color">
+			<div class="header-back public-color">
+				<a href="wutos://finish" class="icon-back mui-pull-left back-btn"></a>
+				<div class="header-title" alarmType="1">屏蔽备案</div>
+				<div class="screening icon-up">筛选</div>
+			</div>
+			<div class="search-base public-color">
+			<div class="search-box">
+				<i class="search-icon mui-icon"></i>
+				<form><input type="search" id="search" placeholder="搜索内容描述..."></form>
+				<i class="del-icon mui-icon" onclick="removeSearchFn()"></i>
+			   </div>
+			</div>
+		</div>
+		<div class="mui-content">
+			<!--下拉刷新容器-->
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--数据列表-->
+					<ul class="mui-table-view mui-table-view-chevron">
+						<!-- <div class="mui-card"> -->
+								<!--页眉，放置标题-->
+								<!-- <div class="mui-card-header">
+									<div>
+										<p>
+											武汉普天科技有限公司
+											<span class="mui-badge mui-badge-danger filing">屏蔽备案</span>	
+										</p>
+										<p class="typeP">
+											点位屏蔽数：6/11
+										</p>
+									</div>
+								</div> -->
+								<!--内容区-->
+								<!-- <div class="mui-card-content">
+									<div>
+										2019-07-18 17:40:35
+										<span class="mui-badge mui-badge-inverted">屏蔽中</span>
+									</div>
+								</div>
+						</div> -->
+					</ul>
+			</div>
+		</div>
+		<div class="Mask">
+			<div class="screen">
+					<div class="unitType">
+						<p>单位类型 <i></i><span class="selectionSpan unitTypeSpan"></span></p>
+						<div class="mui-row">
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn" svtype="0">火灾高危单位</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn" svtype="1">其他重点单位</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn" svtype="2">十小场所</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn" svtype="3">其他一般单位</button>
+							</div>
+						</div>	
+					</div>
+					<div class="eventStatus">
+						<p>事件状态 <i></i><span class="selectionSpan eventStatusSpan"></span></p>
+						<div class="mui-row">
+							<div class="mui-col-sm-4 mui-col-xs-4">
+								<button type="button" class="mui-btn" status="5">屏蔽中</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+								<button type="button" class="mui-btn" status="7">已逾期</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+								<button type="button" class="mui-btn" status="8">已恢复</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+								<button type="button" class="mui-btn" status="6">逾期恢复</button>
+							</div>
+						</div>
+					</div>
+					<div class="confirm-btn">
+					 <a href="javascript:;" class="reset fl" onclick="okButFn(0)">重置</a>
+					 <a href="javascript:;" class="confirm fr" onclick="okButFn(1)">确定</a>
+					</div>
+				</div>
+		</div>
+		<div class="back-top">
+			 <div class="data-num">
+			  <p class="now-num"></p >
+			  <p class="all-num"></p >
+			 </div>
+			<i class="back-top-icon"></i>
+		</div>
+		<script src="../js/jquery-3.2.1.min.js"></script>
+		<script src="../js/script_px2rem.js"></script>
+		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/pageJS/shieldingFiling.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

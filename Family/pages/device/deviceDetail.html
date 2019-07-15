@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>设备详情</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <script src="../../js/rem.js"></script>
+  <!-- mui -->
+  <link rel="stylesheet" href="../../css/imageview.css"/>
+  <link rel="stylesheet" href="../../css/mui.imageviewer.css"/>
+  <link rel="stylesheet" href="../../css/mui.min.css">
+  <style>
+    .border-bottom-none{
+        border-bottom: none !important;
+    }
+
+    .detailWrap,
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .clear::after {
+      content: '';
+      height: 0;
+      display: block;
+      visibility: hidden;
+      clear: both;
+    }
+
+    .detailWrap {
+      width: 100%;
+      padding: 0 0.4rem;
+      box-sizing: border-box;
+      position: relative;
+      padding-bottom: 0.5rem;
+      padding-top: 0.2rem;
+    }
+
+    .detailWrap .itemWrap {
+      width: 100%;
+      margin-top: 0.36rem;
+    }
+
+    .detailItem {
+      padding-bottom: 0.7rem;
+      position: relative;
+      padding-right: 0.23rem;
+    }
+
+    .line {
+      width: 1px;
+      background-color: #3673BB;
+      position: absolute;
+      left: 0;
+      top: 1.14rem;
+      bottom: -0.13rem;
+      left: 0.5rem;
+    }
+
+    .d_left {
+      display: inline-block;
+      width: 1rem;
+    }
+
+    .d_left .sign {
+      width: 0.4rem;
+      /* height: 0.4rem; */
+      text-align: center;
+      display: block;
+      margin: 0 auto;
+      margin-top: 0.05rem;
+    }
+
+    .d_left .sign > img {
+      width: 0.4rem;
+      height: 0.4rem;
+    }
+
+    .d_left .sign > .sign_pro{
+      width: 0.24rem;
+      height: 0.24rem;
+    }
+
+    .d_left .time_day {
+      width: 100%;
+      font-size: 0.22rem;
+      line-height: 0.3rem;
+      color: #333333;
+      text-align: center;
+    }
+
+    .d_left .time_time {
+      width: 100%;
+      font-size: 0.19rem;
+      line-height: 0.3rem;
+      color: #999999;
+      text-align: center;
+    }
+
+    .d_right {
+      float: right;
+      width: 5rem;
+      background-color: #ffffff;
+      box-sizing: border-box;
+      border-radius: 0.1rem;
+    }
+
+    .d_right > .title {
+      font-size: 0.3rem;
+      color: #666666;
+      padding-left: 0.27rem;
+      padding-top: 0.29rem;
+      padding-bottom: 0.29rem;
+      word-wrap: break-word;
+      padding-right: 0.2rem;
+      box-sizing: border-box;
+    }
+    .infoWrap{
+        background-color: #ffffff;
+        width: 100%;
+        padding-top: 0.23rem;
+        border-radius: 0.08rem;
+    }
+    .infoWrap .info{
+        margin: 0 0.24rem;
+    }
+    .infoWrap .info .img{
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #EFEFEF;
+        padding: 0.29rem 0;
+        border-radius: 0.08rem;
+    }
+    .infoWrap .info .img img{
+        display: block;
+        width: 3.61rem;
+        height: 2.66rem;
+        margin: 0 auto;
+    }
+    .infoWrap .info .msg{
+        width: 100%;
+        font-size: 0.28rem;
+    }
+    .infoWrap .info .msg .msg_item{
+        display: flex;
+        width: 100%;
+        height: 0.9rem;
+        line-height: 0.9rem;
+        border-bottom: 1px solid #D2D2D2;
+    }
+    .infoWrap .info .msg .msg_item .msg_l{
+        flex: 1;
+        color: #333333;
+    }
+    .infoWrap .info .msg .msg_item .msg_r{
+        /* flex: 1; */
+        color: #999999;
+        text-align: right;
+        padding-right: 0.33rem;
+        box-sizing: border-box;
+    }
+    .infoWrap .info .msg .msg_item .msg_r.remark{
+        padding-right: 0;
+        width: 50%;
+    }
+    .infoWrap .info .msg .msg_item .msg_r.remark span{
+      display: inline-block;
+      width: 50%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .infoWrap .info .msg .msg_item .msg_r.remark img{
+        display: inline-block;
+        width: 0.23rem;
+        vertical-align: text-top;
+        margin-left: 0.17rem;
+        vertical-align: top;
+        margin-top: 0.31rem;
+    }
+    .detailWrap .event_title{
+        width: 100%;
+        height: 0.36rem;
+        line-height: 0.36rem;
+        margin-top: 0.24rem;
+
+    }
+    .detailWrap .event_title .l_line{
+        display: inline-block;
+        width: 0.08rem;
+        height: 0.36rem;
+        background-color: #5DBFF2;
+        border-radius: 0.04rem;
+        margin-left: 0.21rem;
+        margin-right: 0.13rem;
+        vertical-align: top;
+    }
+    .detailWrap .event_title .title{
+        display: inline-block;
+        height: 0.36rem;
+        line-height: 0.36rem;
+        font-size: 0.3rem;
+        color: #333333;
+        vertical-align: middle;
+    }
+    .headRight{
+      padding-right: 0.31rem;
+    }
+    .headRight>.title{
+        margin-right: 0.14rem;
+        color: #FEFEFE;
+        font-size: 0.32rem;
+    }
+    .headRight>.rightIcon{
+        width: 0.14rem;
+        height: 0.08rem;
+        vertical-align: middle;
+    }
+    .popBox{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 99;
+    }
+    .popBox .popUp{
+      background-color: #ffffff;
+      border-radius: 0.1rem;
+      margin: 0 0.6rem;
+      margin-top: 4rem;
+      padding: 0.3rem 0.24rem;
+    }
+    .popBox .popUp .title{
+      width: 100%;
+      line-height: 0.3rem;
+      color: #333333;
+      text-align: center;
+      font-size: 0.3rem;
+    } 
+    .popBox .popUp .content{
+      font-size: 0.24rem;
+      color: #666666;
+      /* text-indent: 2em; */
+      line-height: 0.3rem;
+      margin-top: 0.2rem;
+    }
+    .popBox .popUp .content textarea{
+      width: 100%;
+      font-size: 0.24rem;
+      height: 2rem;
+    }
+    .popBox .popUp .btn{
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      margin-top: 0.7rem;
+    }
+    .popBox .popUp .btn .cancel,.popBox .popUp .btn .shure{
+      width: 2rem;
+      margin: 0 auto;
+      color: #ffffff;
+      border-radius: 0.08rem;
+      height: 0.59rem;
+      line-height: 0.59rem;
+      font-size: 0.26rem;
+      text-align: center;
+    }
+    .popBox .popUp .btn .cancel{
+      border:1px solid #BFBFBF;
+      color:#333333;
+    }
+    .popBox .popUp .btn .shure{
+      background-color: #1A8EE9;
+    }
+    .popBox .admin{
+      width: 2.52rem;
+      height: 1.6rem;
+      position: absolute;
+      right: 0.1rem;
+      background: url('../../icon/admin_bg.png') no-repeat center center;
+      background-size: 100% 100%;
+      top: 0.88rem;
+      font-size: 0.28rem;
+      color: #666666;
+    }
+    .popBox .admin img{
+      width: 0.35rem;
+      height: 0.35rem;
+      vertical-align: text-top;
+      margin-left: 0.32rem;
+      margin-right: 0.15rem;
+    }
+    .popBox .admin .change{
+      height: 0.68rem;
+      line-height: 0.68rem;
+      border-bottom: 1px solid #E5E5E5;
+      margin-top: 0.2rem;
+    }
+    .popBox .admin .change span{
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .popBox .admin .relive span{
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .popBox .admin .relive{
+      height: 0.68rem;
+      line-height: 0.68rem;
+    }
+    .noList{
+      width: 100%;
+      text-align: center;
+    }
+    .noList>img{
+      width: 2.6rem;
+      height: auto;
+    }
+    .noList>.text{
+      text-align: center;
+      font-size: 0.28rem;
+      color: #999999;
+      height: 0.4rem;
+      line-height: 0.4rem;
+    }
+  </style>
+</head>
+
+<body>
+<div id="app">
+  <div class="page-all">
+    <div class="struc noFooter">
+      <div class="header">
+        <head-nav left-arrow title="设备详情" @click-left="onClickLeft"  @click-right="onClickRight">
+          <div slot="right">
+            <div class="headRight">
+                <span class="title">管理</span>
+                <img src="../../icon/shaxuanIocn.png" alt="" class="rightIcon">
+            </div>
+        </div>
+        </head-nav>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <div class="detailWrap">
+              <div class="infoWrap shadow-item">
+                <div class="info">
+                    <div class="img">
+                        <img :src="deviceInfo.imageUrl" alt="">
+                    </div>
+                    <div class="msg">
+                        <div class="msg_item">
+                            <div class="msg_l">设备名称</div>
+                            <div class="msg_r">{{deviceInfo.name}}</div>
+                        </div>
+                        <div class="msg_item">
+                            <div class="msg_l">设备型号</div>
+                            <div class="msg_r">{{deviceInfo.model}}</div>
+                        </div>
+                        <div class="msg_item">
+                            <div class="msg_l">设备ID</div>
+                            <div class="msg_r">{{deviceInfo.iotCode}}</div>
+                        </div>
+                        <div class="msg_item" @click="addRemark()">
+                            <div class="msg_l">设备备注</div>
+                            <div class="msg_r remark"><span>{{deviceInfo.remark}}</span><img src="../../icon/jiantou_right_icon.png" alt=""></div>
+                        </div>
+                        <div class="msg_item border-bottom-none">
+                            <div class="msg_l">加装日期</div>
+                            <div class="msg_r">{{deviceInfo.createdOn}}</div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            <div class="event_title">
+                <span class="l_line"></span>
+                <span class="title">
+                    事件记录
+                </span>
+            </div>
+            <div class="itemWrap">
+              <div class="detailItem clear" v-for="(item,index) in list" :key="index">
+                <div class="line" v-if="index !== list.length-1"></div>
+                <div class="d_left">
+                  <div class="sign" v-if="index == 0"><img src="../../icon/alarm_icon.png" alt=""></div>
+                  <div class="sign" v-else-if="index == list.length-1"><img src="../../icon/warn_end.png" alt=""></div>
+                  <div class="sign" v-else><img src="../../icon/warn_middle.png" alt="" class="sign_pro"></div>
+                  <div class="time_day">{{item.createdOn | getTime(true)}}</div>
+                  <div class="time_time">{{item.createdOn |  getTime(false)}}</div>
+                </div>
+                <div class="d_right clear shadow-item">
+                  <div class="title">{{item.description}}</div>
+                </div>
+              </div>
+              <div class="noList" v-if="list.length == 0">
+                <div class="text">暂无数据</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="popBox" v-if="popShow">
+    <div class="popUp">
+      <div class="title">添加备注</div>
+      <div class="content">
+        <textarea name="remark" id="" v-model="deviceInfo.remark"></textarea>
+        
+      </div>
+      <div class="btn">
+        <div><div class="cancel" @click="cancel()">取消</div></div>
+        <div><div class="shure" @click="shure()">确定</div></div> 
+      </div>
+    </div>
+  </div>
+  <div class="popBox" @click="closeAdmin()" v-if="adminShow">
+    <div class="admin" @click.stop>
+        <div class="change" @click="changeDevice()"><img src="../../icon/change_d.png" alt=""><span> 更换设备</span></div>
+        <div class="relive" @click="removeDevice()"><img src="../../icon/relive_d.png" alt=""><span> 解除设备</span></div>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/es6-promise.auto.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/axios.min.js"></script>
+<script src="../../js/http.js"></script>
+<script src="../../js/getQueryVariable.js"></script>
+<script src="../../components/components.js"></script>
+<!-- mui -->
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/mui.imageViewer.js"></script>
+<script src="../../js/mui.previewimage.js"></script>
+<script src="../../js/mui.zoom.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        finished_text:'没有更多了',
+        id: '',
+        search_text: '',
+        list: [],
+        deviceInfo:[],
+        popShow:false,
+        adminShow:false,
+      },
+      created: function () {
+        this.id = getQueryVariable().oldId;
+        this.getInfo();
+        this.getData();
+      },
+      filters:{
+        getTime:function(value,type){
+          if(type){
+           
+            return value.substring(2,10)
+          }else{
+            return value.substring(11,16)
+          }
+        }
+      },
+      mounted: function () {
+  
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        onClickRight:function(){
+          this.adminShow = !this.adminShow; 
+        },
+        //获取数据
+        getInfo() {
+          var This = this;
+          this.apiGet('/Device/Get', {
+            id: this.id //设备id 测试id:8f479c25882e4a308196076abab0a889
+          }).then(function (res) {
+            var data = res.data.data;
+
+            This.deviceInfo = data;
+            if(This.deviceInfo.createdOn){
+              This.deviceInfo.createdOn = This.deviceInfo.createdOn.substring(0,10);
+            }
+          }).catch(function (err) {
+  
+          })
+        },
+        getData() {
+          var This = this;
+          this.apiGet('/Device/Events', {
+            id: this.id //设备id  测试id:8f479c25882e4a308196076abab0a889
+          }).then(function (res) {
+            var data = res.data.data;
+            if(!data) data = [];
+            This.list = data; 
+          }).catch(function (err) {
+  
+          })
+        },
+        //打开添加备注弹窗
+        addRemark:function(){
+          this.popShow = true;
+        },
+        cancel:function(){
+          this.popShow = false;
+        },
+        //添加备注
+        shure:function(){
+          var This = this;
+          this.apiPost('/Device/Edit',{
+            id: this.id, //测试id:8f479c25882e4a308196076abab0a889
+            remark: this.deviceInfo.remark,
+          }).then(function (res) {
+            if(res.data.code == 1){
+              This.popShow = false;
+              This.getInfo();
+            }else{
+              alert('添加失败')
+            }
+          }).catch(function (err) {
+            
+          })
+        },
+        onSearch: function () {
+
+        },
+        changeDevice:function(){
+          //传递当前设备id
+          localStorage.setItem('needChangeDeviceId',this.id);
+          window.location.href = 'wutos://scan';
+        },
+        closeAdmin:function(){
+          this.adminShow = false;
+        },
+        removeDevice:function(){
+          this.apiGet('/device/delete',{
+            id: this.id,
+          })
+          .then(function(res){
+             if(res.data.code == 1){
+              window.location.href = 'wutos://finish';
+             }
+          })
+          .catch(function(err){
+
+          })
+        }
+      }
+    });
+
+    // 图片预览
+    function previewImg() {
+      mui.previewImage();
+    }
+
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>社区详情</title>
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../components/components.css">
+    <!-- <script src="../../components/hs-list-load/hs-list-load.js"></script> -->
+    <style>
+        .wrap {
+            position: relative;
+            background-color: #EFEFEF;
+        }
+        .main-scroll{
+            background-color: #EFEFEF;
+        }
+        .clear::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        .content{
+            width: 6.6rem;
+            background-color: #fff;
+            margin-top: .2rem;
+            margin-left: .3rem;
+            display: inline-block;
+            box-shadow:2px 3px 10px 0px rgba(208,208,208,0.47);
+            border-radius: .1rem;
+        }
+        .tab-cont .hs-search{
+            background-color: #fff;
+        }
+        .list>li{
+            position: relative;
+            height: 1.34rem;
+            line-height: 1.34rem;
+            box-sizing: border-box;
+            border-bottom: 1px solid #D2D2D2;
+            margin-left: .24rem;
+            margin-right: .24rem;
+            color:#666666;
+        }
+        .list>li:last-child{
+            border-bottom: 0;
+        }
+        .list>li>img{
+            vertical-align: -.1rem;
+            margin-right: .23rem;
+            width: .84rem;
+            height: .84rem;
+            border-radius: 50%;
+        }
+        .list>li .dianhua{
+            position: absolute;
+            right:0.14rem;
+            top:.5rem;
+            line-height: 0;
+            padding: .1rem;
+        }
+        .list>li .dianhua img{
+            width: .32rem;
+        }
+        .list>li>span{
+            display: inline-block;
+            line-height: .4rem;
+            padding-top: .3rem;
+            font-size: .28rem;
+            color:#333333;
+            font-weight: 500;
+        }
+        .list>li>span>span.foter{
+            font-size: .24rem;
+            color:#999999;
+        }
+        .list>li>span>span.istest{
+            font-size: .22rem;
+            color:#666666;
+            margin-left: .21rem;
+        }
+        .test{
+            padding: .24rem 0;
+            padding-left: .24rem;
+            font-size: .28rem;
+            border-block-end: 1px solid #E5E5E5;
+            vertical-align: middle;
+        }
+        .headline i,.test i{
+            display: inline-block;
+            width: .08rem;
+            height: .33rem;
+            margin-right: .16rem;
+            vertical-align: -.06rem;
+            background-color: #5DBFF2;
+            border-radius: .04rem;
+        }
+        .test img{
+            float: right;
+            width: .23rem;
+            margin-top: .08rem;
+            margin-right: .22rem;
+            vertical-align: middle;
+        }
+        .headline{
+            margin-left: .24rem;
+            margin-top: .24rem;
+            margin-bottom: .24rem;
+            font-size: .28rem;
+            color:#333333;
+        }
+        .line{
+            margin-left: .45rem;
+            font-size: .24rem;
+            color:#333333;
+            margin-bottom: .2rem;
+        }
+        .line .line_span{
+            color:#999999;
+            margin-right: .24rem;
+        }
+        .hader{
+            border-bottom: 1px solid #E5E5E5;
+            background: url('../../icon/jiantou_bottom_icon.png') 6.1rem .3rem no-repeat;
+            background-size: .23rem auto;
+        }
+        .loudong{
+            margin-top: .25rem;
+            font-size: .24rem;
+            color:#666666;
+            margin-left: .23rem;
+        }
+        .shouji>img{
+            width: .32rem;
+            vertical-align: middle;
+        }
+        .shouji{
+            padding: .1rem;
+            box-sizing: border-box;
+        }
+        .xiaoqu{
+            margin-left: .23rem;
+            margin-right: .25rem;
+        }
+        .xiaoqu>li{
+            border-bottom: 1px solid #E5E5E5;
+            height: .88rem;
+            line-height: .88rem;
+        }
+        .name{
+            display: inline-block;
+            font-size: .28rem;
+            color:#333333;
+            width: 1.57rem;
+        }
+        .haoma{
+            display: inline-block;
+            font-size: .24rem;
+            color:#999999;
+            width: 2.7rem;
+            margin-right: 1.08rem;
+        }
+        .content div:last-child>ul>li:last-child{
+            border-bottom: 0;
+        }
+        .tabs-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .tab-cont {
+            position: absolute;
+            top: .88rem;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow: auto;
+        }
+        .hs-search-0{
+            position: fixed;
+            top:0.88;
+            z-index: 6;
+            width: 100%;
+        }
+        .community,.famliy{
+            display: inline-block;
+            margin-top: .78rem;
+            margin-bottom: .2rem;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"  v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav left-arrow title="XX社区" @click-left="retreat">
+                    </head-nav>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <tabs-nav class="tabs-nav" ref="tabsZj" :tabs="tabs" v-model="tab_index" :swipe-threshold="5" line-width="1.2rem"></tabs-nav>
+                        <div class="tab-cont tab-cont-0 tab-cont-posttion" >
+                        <hs-search class="hs-search-0" v-model="search_text_1" v-show="tab_index===0" @search="onSearch"></hs-search>
+                        <hs-search class="hs-search-0" v-model="search_text_2" v-show="tab_index===1" @search="isgetSearch"></hs-search>
+                        <!-- 社区用户 -->
+                        <div class="community" v-show="tab_index===0" class="tab-cont">
+                            <div class="content" v-for="(item,index) in getCommuityList" :key="index">
+                                <div class="test" @click="ishiden(item)"><i></i>{{item.communityName}}<img src="../../icon/jiantou_bottom_icon.png" alt=""></div>
+                                <ul class="list" v-show="item.state">
+                                    <li  v-for="(items,indexs) in item.communityUsers" :key="indexs" @click="telTo(items.phoneNumber)">
+                                        <img  :src="items.profileUrl" alt="">
+                                        <span>{{items.userName}}<span class="istest">{{items.roleId | managerialRoles}}</span><br/><span class="foter">{{items.phoneNumber}}</span></span>
+                                        <div class="dianhua"><img src="../../icon/callPhone_icon.png" alt=""></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="content" v-for="(item,index) in housing" :key="index">
+                                <div class="test" @click="ishiden(item)"><i></i>{{item.plotName}}<img src="../../icon/jiantou_bottom_icon.png" alt=""></div>
+                                <ul class="list" v-show="item.state">
+                                    <li  v-for="(items,indexs) in item.communityUsers" :key="indexs" @click="telTo(items.phoneNumber)">
+                                        <img  :src="items.profileUrl" alt="">
+                                        <span>{{items.userName}}<span class="istest"></span><br/><span class="foter">{{items.phoneNumber}}</span></span>
+                                        <div class="dianhua"><img src="../../icon/callPhone_icon.png" alt=""></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- 家庭用户 -->
+                        <div class="famliy" v-show="tab_index===1" class="tab-cont">
+                            <div class="content" v-for="(item,index) in xiaoquList" :key="index">
+                                <div class="hader" @click="zhankai(item,index)">
+                                    <div class="headline"><i></i>{{item.plotName}}</div>
+                                    <div class="line"><span>联网家庭数：<span class="line_span">{{item.familyCount}}</span></span><span>家庭用户：<span class="line_span">{{item.familyUserCount}}</span></span></div>
+                                </div>
+                                <div class="maxmax">
+                                    <div class="maxxiaoqu"  v-show="item.state" v-for="(val,i) in userFalimy[index]" :key="i">
+                                        <div class="loudong">{{val.address}}</div>
+                                        <ul class="xiaoqu">
+                                            <li v-for="(name,num) in val.familyUsers" :key="num" @click="telTo(name.phoneNumber)">
+                                                <span class="name">{{name.userName}}</span>
+                                                <span class="haoma">{{name.phoneNumber}}</span>
+                                                <span class="shouji"><img src="../../icon/callPhone_icon.png" alt=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/vue.min.js"></script>
+    <script src="../../js/axios.min.js"></script>
+    <script src="../../js/rem.js"></script>
+    <script src="../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../components/components.js"></script>
+    <script src="../../js/es6-promise.auto.min.js"></script>
+    <script src="../../js/http02.js"></script>
+    <script>
+        (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    getCommuityList:[],//社区
+                    housing:[],//小区
+                    housingData:[],
+                    search_text_1:'',
+                    search_text_2:'',
+                    tab_index: 0,
+                    tabs: ['社区用户', '家庭用户'],
+                    xiaoquList:[],//小区用户
+                    listXq:[],
+                    userFalimy:[],//家庭用户
+                    communityID:'',
+                    nums:0,
+                    map:[],
+                    tmp:[]
+                },
+                mounted:function() {
+                    var This = this
+                    This.communityID=getQueryVariable().id
+                    This.getCommuity()
+                    This.getXiaoqu()
+                },
+                methods: {
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                    },
+                    //获取社区用户列表
+                    getCommuity:function(){
+                        var This=this;
+                        This.apiGet('Family/cpusers',{
+                            id:This.communityID,
+                            fid:''
+                        }).then(function(res){
+                            for(var i=0;i<res.data.data.length;i++){
+                                This.$set(res.data.data[i],'state',true)
+                            }
+                            This.getCommuityList.push(res.data.data[0]);
+                            for(var i=0;i<This.getCommuityList[0].communityUsers.length;i++){
+                                if(This.getCommuityList[0].communityUsers[i].profileUrl==null){
+                                    This.getCommuityList[0].communityUsers[i].profileUrl='../../images/defaut.png'
+                                }
+                            }
+                            res.data.data.splice(0,1)
+                            This.housingData=res.data.data
+                            This.housing=res.data.data
+                            for(var j=0;j<This.housingData.length;j++){
+                                for(var i=0;i<This.housingData[j].communityUsers.length;i++){
+                                    if(This.housingData[j].communityUsers[i].profileUrl==null){
+                                        This.housingData[j].communityUsers[i].profileUrl='../../images/defaut.png'
+                                    }
+                                }
+                            }
+                            console.log(This.housingData)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //打电话
+                    telTo:function(tel){
+                        window.location.href="tel:"+tel
+                    },
+                    //获取小区
+                    getXiaoqu:function(){
+                        var This=this;
+                        This.apiGet('Family/GetPlotFamilyUsers',{
+                            communityId:This.communityID,
+                        }).then(function(res){
+                            for(var i=0;i<res.data.data.length;i++){
+                                This.$set(res.data.data[i],'state',false)
+                            }
+                            This.xiaoquList=res.data.data
+                            This.listXq=res.data.data
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //获取家庭用户
+                    GetFamilyUser:function(id,index){
+                        var This=this;
+                        This.apiGet('Family/GetFamilyList',{
+                            plotid:id,
+                        }).then(function(res){
+                            This.userFalimy.splice(index,1,res.data.data)
+                            console.log(This.userFalimy)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //搜索
+                    onSearch:function(){
+                        var This=this;
+                        if(This.search_text_1==''){
+                            This.housing=This.housingData
+                            return false;
+                        }
+                        for(var i=0;i<This.housingData.length;i++){
+                            if(This.housingData[i].plotName.indexOf(This.search_text_1)!=-1){
+                                This.tmp.push(This.housingData[i])
+                                This.housing=[]
+                                This.housing=This.tmp
+                                This.tmp=[]
+                                console.log(This.housing)
+                                return false;
+                            }
+                            if(This.housingData[i].plotName.indexOf(This.search_text_1)==-1){
+                                This.housing=[]
+                            }
+                        }
+                        
+                    },
+                    //搜索
+                    isgetSearch:function(){
+                        var This=this;
+                        if(This.search_text_2==''){
+                            This.xiaoquList=This.listXq
+                            return false;
+                        }
+                        for(var i=0;i<This.listXq.length;i++){
+                            if(This.listXq[i].plotName.indexOf(This.search_text_2)!=-1){
+                                This.map.push(This.listXq[i])
+                                This.xiaoquList=[]
+                                This.xiaoquList=This.map
+                                This.map=[]
+                                console.log(This.xiaoquList)
+                                return false;
+                            }
+                            if(This.listXq[i].plotName.indexOf(This.search_text_2)==-1){
+                                This.xiaoquList=[]
+                            }
+                        }
+                        
+                    },
+                    //社区展开
+                    ishiden:function(item){
+                        item.state=!item.state
+                    },
+                    //家庭展开
+                    zhankai:function(item,index){
+                        item.state=!item.state
+                        this.GetFamilyUser(item.plotId,index)
+                        this.nums++
+                    }
+                },
+                filters: {
+                    managerialRoles: function (value) {
+                        if(value==43) value = '社区管理员'
+                        if(value==55) value = '社区消防站长'
+                        if(value==56) value = '社区消防队长'
+                        if(value==57) value = '小区工作人员'
+                        if(value==58) value = '社区消防队'
+            　　　　     return value
+            　　　　},
+　　            }
+            })
+        })()
+    </script>
+</body>
+
+</html>

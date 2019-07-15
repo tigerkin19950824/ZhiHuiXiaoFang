@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>退出我的社区</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <style>
+        .wrap {
+            position: relative;
+            font-size: .28rem;
+            display: inline-block;
+            width: 6.58rem;
+            margin-top: .21rem;
+            margin-left: .31rem;
+            background-color: #fff;
+            box-shadow:0px 3px 9px 0px rgba(160,160,160,0.33);
+            border-radius: .1rem;
+        }
+        .main-scroll{
+            background-color: #F0F0F0;
+        }
+        .text_first{
+            margin: .3rem 0 .18rem 0;
+        }
+        .text_first i{
+            display: inline-block;
+            width: .08rem;
+            height: .32rem;
+            background-color: #68BDFF;
+            border-radius: .04rem;
+            margin-left: .2rem;
+            margin-bottom: -.06rem;
+            margin-right: .13rem;
+        }
+        .text_two{
+            box-sizing: border-box;
+            padding-left: .41rem;
+            color:#999999;
+            font-size: .22rem;
+            padding-bottom: .3rem;
+            margin-left: .06rem;
+            width: 6.09rem;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        .text_three{
+            margin: .22rem 0 .2rem .21rem;
+            font-weight: bold;
+        }
+        .list>li{
+            height: .7rem;
+            line-height: .7rem;
+            box-sizing: border-box;
+            padding-left: .64rem;
+            border-bottom: 1px solid #D2D2D2;
+            margin-left: .25rem;
+            margin-right: .06rem;
+            color:#666666;
+        }
+        .list>li>img{
+            float: right;
+            margin-right: .26rem;
+            width: .3rem;
+            height: .3rem;
+            margin-top: .21rem;
+        }
+        .text_title{
+            height: .7rem;
+            line-height: .7rem;
+            margin-left: .25rem;
+            margin-right: .06rem;
+            color:#3673BB;
+            font-weight: bold;
+            border-bottom: 1px solid #D2D2D2;
+        }
+        .text_title>img{
+            float: right;
+            margin-right: .26rem;
+            width: .3rem;
+            height: .3rem;
+            margin-top: .21rem;
+        }
+        .QRcode{
+            display: inline-block;
+            width: 6.58rem;
+            font-size: .32rem;
+            margin-left: .31rem;
+            color:#333333;
+        }
+        .QRcode .QRcode_first{
+            font-size: .28rem;
+            margin-left: .22rem;
+            margin-top: .49rem;
+            margin-bottom: .41rem;
+            font-weight: bold;
+        }
+        .QRcode_center{
+            background-color: #fff;
+            height: .8rem;
+            line-height: .8rem;
+            border-radius: .08rem;
+            text-align: center;
+            margin-bottom: .27rem;
+            box-shadow:2px 3px 10px 0px rgba(199,199,199,0.47);
+        }
+        .right img{
+            vertical-align: -.07rem;
+            width: .36rem;
+            margin-right: .07rem;
+        }
+        .text_right{
+            margin-right: .3rem;
+            font-size: .24rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav left-arrow title="我的社区" @click-left="retreat">
+                        <div slot="right" @click="returns" class="right">
+                                <img src="../../../icon/return.png" alt=""><span class="text_right">退出社区</span>
+                        </div>
+                    </head-nav>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <div class="wrap">
+                            <div class="text_first"><i></i>{{datas.name}}</div>
+                            <div class="text_two">{{datas.address}}</div>
+                            <div class="text_three">我的小区</div>
+                            <div class="text_title" @click="ischek">{{datas.name}}<img v-if="datas.code" src="../../../icon/active.png" alt=""><img v-else src="../../../icon/yuan.png" alt=""></div>
+                            <ul class="list">
+                                <li v-for="(item,index) in lists" :key="index" @click="chekTo(index)">{{item.name}}<img v-if="item.code" src="../../../icon/active.png" alt=""><img v-else src="../../../icon/yuan.png" alt=""></li>
+                            </ul>
+                        </div>
+                        <div class="QRcode">
+                            <div class="QRcode_first">我的二维码</div>
+                            <div class="QRcode_center">社区二维码</div>
+                            <div class="QRcode_center">家庭守护下载地址</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/vue.min.js"></script>
+    <script src="../../../js/axios.min.js"></script>
+    <script src="../../../js/rem.js"></script>
+    <script src="../../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../../components/components.js"></script>
+    <script src="../../../js/es6-promise.auto.min.js"></script>
+    <script src="../../../js/http.js"></script>
+    <script>
+       (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    datas:[],
+                    lists:[],
+                    userType:'',
+                    plotId:'',
+                    userId:'',
+                    communityId:''
+                },
+                mounted() {
+                    var This = this
+                    //获取小区列表
+                    This.listData()
+                     // 获取社区信息地址
+                    This.housing()
+                    //获取默认选中小区
+                    This.plots()
+                    This.userId=localStorage.getItem('userId');
+                    This.communityId=localStorage.getItem('communityId');
+                },
+                methods: {
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                    },
+                    //获取默认选中小区
+                    plots:function(){
+                        this.userType=localStorage.getItem('userType');
+                        this.plotId=localStorage.getItem('plotId')
+                        if(this.userType==0){
+                            this.datas.code=true
+                        }
+                        if(this.userType==1){
+                            for(var i=0;i<this.lists.length;i++){
+                                if(this.plotId==this.lists[i].id){
+                                    this.lists[index].code=true;
+                                }
+                            }
+                        }
+                    },  
+                    //获取小区列表
+                    listData:function(){
+                        var This=this;
+                        This.apiGet('Comminuty/plots',{
+                            id:This.communityId
+                        }).then(function(res){
+                            for(var i=0;i<res.data.data.length;i++){
+                                res.data.data[i].code=false
+                            }
+                            This.lists=res.data.data
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //切换小区
+                    switchover:function(){
+                        var This=this;
+                        This.apiPost('user/editidentity',{
+                            communityId:This.communityId,
+                            userId:This.userId,
+                            userType:This.userType,
+                            plotId:This.plotId
+                        }).then(function(res){
+                            res.data.data.code=false;
+                            This.datas=res.data.data
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    // 获取社区信息地址
+                    housing:function(){
+                        var This=this;
+                        This.apiGet('Comminuty/Get',{
+                            id:This.communityId
+                        }).then(function(res){
+                            res.data.data.code=false;
+                            This.datas=res.data.data
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    ischek:function(){
+                        for(var i=0;i<this.lists.length;i++){
+                            this.lists[i].code=false;
+                        }
+                        this.datas.code=true
+                        this.userType=0
+                        this.plotId=this.datas.id
+                        this.switchover()
+                    },
+                    chekTo:function(index){
+                        for(var i=0;i<this.lists.length;i++){
+                            this.lists[i].code=false;
+                        }
+                        this.lists[index].code=true;
+                        this.datas.code=false;
+                        this.userType=1;
+                        this.plotId=this.lists[index].id;
+                        this.switchover();
+                    },
+                    returns:function(){
+                        var This=this;
+                        This.apiGet('Comminuty/OutComminuty',{
+                            userid:This.userId
+                        }).then(function(res){
+                            // This.datas=res.data.data
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    }
+                },
+            })
+        })()
+    </script>
+</body>
+
+</html>

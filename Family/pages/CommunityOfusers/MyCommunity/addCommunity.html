@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>新增小区</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <style>
+        .wrap {
+            position: relative;
+            font-size: .28rem;
+            display: inline-block;
+            width: 6.58rem;
+            margin-top: .21rem;
+            margin-left: .31rem;
+            background-color: #fff;
+            box-shadow:0px 3px 9px 0px rgba(160,160,160,0.33);
+            border-radius: .1rem;
+        }
+        .wrap>div{
+            height: .72rem;
+            line-height: .72rem;
+            margin-left: .25rem;
+        }
+        .wrap>div input{
+            height: .7rem;
+            line-height: .7rem;
+            width: 4.7rem;
+            margin-left: .2rem;
+            font-size: .24rem;
+            outline: none;
+            border:0;
+            vertical-align: top;
+        }
+        .main-scroll{
+            background-color: #F0F0F0;
+        }
+        .right{
+            font-size: .32rem;
+            margin-right: .31rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav left-arrow :title="title" @click-left="retreat">
+                        <div slot="right" class="right" @click="accomplish">完成</div>
+                    </head-nav>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <div class="wrap">
+                            <div><label for="text">小区名称</label><input type="text" id="text" placeholder="请填写小区名称" v-model="name"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/vue.min.js"></script>
+    <script src="../../../js/axios.min.js"></script>
+    <script src="../../../js/rem.js"></script>
+    <script src="../../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../../components/components.js"></script>
+    <script src="../../../js/es6-promise.auto.min.js"></script>
+    <script src="../../../js/http.js"></script>
+    <script>
+       (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    name:'',
+                    title:'',
+                    state:'',
+                    isid:'',
+                    communityId:''
+                },
+                mounted() {
+                    var This = this
+                    This.communityId=localStorage.getItem('communityId');
+                    This.getEidit()
+                },
+                methods: {
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                        // window.history.go(-1)
+                    },
+                    //编辑小区获取编辑信息
+                    getEidit:function(){
+                        this.state=getQueryVariable().EditId
+                        this.title='新增小区'
+                        if(this.state==2){
+                            this.name=getQueryVariable().name
+                            this.isid=getQueryVariable().id
+                            this.title='编辑小区'
+                        }
+                    },
+                    //新增
+                    addPlot:function(){
+                        var This=this;
+                        This.apiPost('Plot/add',{
+                            name:This.name,
+                            // communityid:'454b65c9b7734959a2bd5535c28fe771'
+                            communityid:This.communityId
+                        }).then(function(res){
+                            if(res.data.data=='ok'){
+                                window.location.href='./index.html'
+                            }
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    //编辑
+                    eiditPlot:function(){
+                        var This=this;
+                        This.apiPost('plot/edit',{
+                            name:This.name,
+                            id:This.isid
+                        }).then(function(res){
+                            if(res.data.data=='ok'){
+                                window.location.href='./index.html'
+                            }
+                            console.log(res)
+                        }).catch(function(error){
+                            console.log(error)
+                        })
+                    },
+                    // 提交
+                    accomplish:function(){
+                        if(this.state==1){
+                            this.addPlot()
+                        }
+                        if(this.state==2){
+                            this.eiditPlot()
+                        }
+                    }
+                },
+            })
+        })()
+    </script>
+</body>
+
+</html>

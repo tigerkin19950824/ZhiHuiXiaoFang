@@ -1,0 +1,166 @@
+
+.main-scroll{
+    background-color: #EFEFEF;
+}
+.network-num {
+    width: 6.58rem;
+    height: .92rem;
+    margin: 0 auto;
+    border-radius: .1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+  }
+
+  .network-num .icon-left {
+    margin-left: .24rem;
+    width: 0.3rem;
+    height: auto;
+  }
+
+  .network-num .title {
+    margin-left: .13rem;
+    width: 1.7rem;
+    height: .27rem;
+    font-size: .28rem;
+    color: #333;
+    line-height: .24rem;
+    margin-top: 0.06rem;
+  }
+
+  .network-num .num {
+    flex: 1 1 auto;
+    margin-right: .25rem;
+    text-align: right;
+    width: .55rem;
+    height: .24rem;
+    font-size: .32rem;
+    color: #168FE6;
+    line-height: .24rem;
+  }
+
+  .network-num .icon-right {
+    width: .23rem;
+    height: .3rem;
+    margin-right: .24rem;
+  }
+
+  .chart {
+    width: 6.58rem;
+    /*height: 3.39rem;*/
+    margin: .2rem auto 0;
+    padding: .32rem 0;
+    background: rgba(255, 255, 255, 1);
+    border-radius: .1rem;
+    box-sizing: border-box;
+    padding-top: 0.3rem;
+  }
+  .chart .title_tab{
+      height: 0.4rem;
+      line-height: 0.4rem;
+      border:1px solid #4188D6;
+      color: #4188D6;
+      margin: 0 0.19rem;
+      font-size: 0.24rem;
+      display: flex;
+  }
+  .chart .title_tab>div{
+      flex: 1;
+      border-right: 1px solid #4188D6;
+      text-align: center;
+  }
+  .chart .title_tab>div.active{
+      background-color: #4188D6 !important;
+      color: #ffffff !important;
+  }
+  .chart .name {
+    padding-bottom: 0.24rem;
+    border-bottom:1px solid #DCDCDC; 
+    padding-left: 0.24rem;
+    box-sizing: border-box;
+  }
+
+  .chart .name i {
+    display: inline-block;
+    width: .08rem;
+    height: .32rem;
+    background: rgba(104, 189, 255, 1);
+    border-radius: .04rem;
+    vertical-align: top;
+  }
+
+  .chart .name span {
+    display: inline-block;
+    margin-left: .12rem;
+    font-size: .28rem;
+    line-height: .32rem;
+    color: #333;
+    vertical-align: top;
+  }
+
+  .chart .frame {
+    width: 100%;
+    /* width: 6.18rem; */
+    height: 3.8rem;
+    margin: 0 auto;
+    margin-top: .2rem;
+  }
+
+  .name_r_select{
+      float: right;
+  }
+  .chart .name .name_r_select>.one,.chart .name .name_r_select>.two{
+    position: relative;
+    width: 0.8rem;
+    font-size: 0.2rem;
+    text-align: center;
+    margin-left: 0;
+    line-height: 0.52rem !important;
+  }
+  .line{
+      position: absolute;
+      width: 0.6rem;
+      height: 0.04rem;
+      margin: 0 auto;
+      display: inline-block;
+      background-color: #2EA2F9;
+      left: 50%;
+      margin-left: -0.3rem !important;
+      bottom: 0;
+  }
+  .name_r_select02{
+    float: right;
+}
+.chart .name .name_r_select02>.one02,.chart .name .name_r_select02>.two02{
+    position: relative;
+    width: 1.2rem;
+    font-size: 0.2rem;
+    text-align: center;
+    margin-left: 0;
+    line-height: 0.52rem !important;
+  }
+  .chart .right_info{
+    float: right;
+    margin-right: 0.24rem;
+    font-size: 0.28rem;
+    line-height: 0.34rem;
+  }
+  .line02{
+      position: absolute;
+      width: 1rem;
+      height: 0.04rem;
+      margin: 0 auto;
+      display: inline-block;
+      background-color: #2EA2F9;
+      left: 50%;
+      margin-left: -0.5rem !important;
+      bottom: 0;
+  }
+  .border-bottom{
+      border-bottom:1px solid #DCDCDC;
+  }
+
+  .border-right-none{
+    border-right: none !important;
+  }

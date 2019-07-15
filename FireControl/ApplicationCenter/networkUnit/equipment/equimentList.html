@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+  <meta charset="UTF-8">
+  <title>联网单位设备数据统计</title>
+  <link rel="stylesheet" href="../../../css/reset.css">
+  <link rel="stylesheet" href="../../../css/common.css">
+  <link rel="stylesheet" href="../../../components/components.css">
+  <link rel="stylesheet" href="./equimentList.css">
+  <script src="../../../js/rem.js"></script>
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <div class="struc noFooter">
+      <div class="header">
+        <head-nav left-arrow title="联网单位设备数据统计" @click-left="onClickLeft"></head-nav>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <div style="height: .2rem;"></div>
+          <a class="network-num shadow-item" href="./equipmentNum.html">
+            <img class="icon-left" src="../../../icon/network.png" alt="">
+            <div class="title">联网设备数量</div>
+            <div class="num">{{num}}</div>
+            <img class="icon-right" src="../../../icon/jiantou_right_icon.png" alt="">
+          </a>
+          <div class="chart shadow-item">
+            <div class="name border-bottom">
+              <i></i><span>设备异常单位排名</span>
+              <div class="name_r_select">
+                <span class="one" @click="lineSelect01(0)">故障<span class="line" v-show="iotStatus == 0"></span></span>
+                <span class="two" @click="lineSelect01(1)">离线<span class="line" v-show="iotStatus == 1"></span></span>
+              </div>
+            </div>
+            <iframe class="frame" v-show="iotStatus == 0" src="http://192.168.10.160:8898/thinkReport/board/APP_Device/deviceErrUnitRank?iotStatus=0" frameborder="0"></iframe>
+            <iframe class="frame" v-show="iotStatus == 1" src="http://192.168.10.160:8898/thinkReport/board/APP_Device/deviceErrUnitRank?iotStatus=1" frameborder="0"></iframe>
+          </div>
+          <!-- <div class="chart">
+            <div class="name"><i></i><span>消防主机品牌统计</span></div>
+            <iframe class="frame" id="frame_content" src="http://192.168.10.160:8898/thinkReport/board/App_Unit/UnitAttribute/" frameborder="0"></iframe>
+          </div> -->
+          <div class="chart">
+            <div class="name"><i></i><span>设备类型统计</span></div>
+            <iframe class="frame" id="fram01"  frameborder="0"></iframe>
+          </div>
+          <div class="chart">
+            <div class="name border-bottom">
+              <i></i><span>设备完好率</span>
+              <div class="name_r_select02">
+                <span class="one02" @click="lineSelect02(0)">加装设备<span class="line02"
+                  v-show="wutosAdd == 0"></span></span>
+                <span class="two02" @click="lineSelect02(1)">固有设备<span class="line02"
+                  v-show="wutosAdd == 1"></span></span>
+              </div>
+            </div>
+            <iframe class="frame" v-show="wutosAdd == 0" src="http://192.168.10.160:8898/thinkReport/board/APP_Device/DeviceWellRate?wutosAdd=0"  frameborder="0"></iframe>
+            <iframe class="frame" v-show="wutosAdd == 1" src="http://192.168.10.160:8898/thinkReport/board/APP_Device/DeviceWellRate?wutosAdd=1"  frameborder="0"></iframe>
+          </div>
+          <div style="height: .4rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../../js/es6-promise.auto.min.js"></script>
+  <script src="../../../js/vue.min.js"></script>
+  <script src="../../../js/axios.min.js"></script>
+  <script src="../../../js/http.js"></script>
+  <script src="../../../components/components.js"></script>
+  <script>
+    
+    (function () {
+       
+     
+
+
+      var frame01 = document.getElementById('fram01');
+      var frame02 = document.getElementById('fram02');
+      // frame01.setAttribute('src', 'http://192.168.10.37:8898/thinkReport/board/dataCenter/deviceType/');
+      // frame02.setAttribute('src', 'http://192.168.10.37:8898/thinkReport/board/dataCenter/deviceNormalRate/');
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          line01_show: true,
+          line02_show: true,
+          num:'',
+          iotStatus: 0,
+          wutosAdd: 0,
+        },
+        mounted:function(){
+          this.getNum();
+          var This = this;
+          var iframe = document.getElementById('frame_content');
+          console.log(iframe)
+          if (iframe) {
+            iframe.onload =  this.aaa(iframe);
+          }
+        },
+        methods: {
+          aaa:function(iframe) {
+              console.log(iframe.contentDocument.documentElement.scrollHeight || iframe.contentDocument.body.scrollHeight)
+              iframe.style.height = (iframe.contentDocument.documentElement.scrollHeight+380 || iframe.contentDocument.body.scrollHeight+380)+"px";
+            },
+          onClickLeft: function () {
+            window.location.href = 'wutos://finish';
+          },
+          getNum: function () {
+          var This = this
+          this.apiGet('/Public/GetStatisticsData').then(function (res) {
+              // unitCount 单位数量
+              // deviceCount 设备数量
+              // alarmCount 告警数量
+
+              This.num = res.data.deviceCount;
+
+            }).catch(function (reason) {
+              setTimeout(function () {
+                This.getNum()
+              }, 3000)
+            })
+          },
+          lineSelect01(val) {
+            this.iotStatus = val;
+          },
+          lineSelect02(val) {
+            this.wutosAdd = val;
+          },
+        }
+      })
+    })();
+  </script>
+</body>
+
+</html>

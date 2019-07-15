@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>A类告警-误报</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/base.css"/>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/imageview.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/pageCS/detailsPage.css"/>
+	</head>
+	<body>
+		<div class="header-back public-color">
+			<a onclick="window.location.href='wutos://finish'" class="icon-back mui-pull-left back-btn"></a>
+			<div class="header-title" alarmType="0">告警详情-火警误报</div>
+		</div>
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--这里放置真实显示的DOM内容-->
+				<div class="mui-card position">
+					<!--页眉，放置标题-->
+					<div class="mui-card-header">
+						<div class="position-div">
+							<p class="company"></p>
+							<p class="companyIp"></p>
+						</div>
+						<i class="mui-icon"></i>
+					</div>
+					<!--内容区-->
+					<div class="mui-card-content">
+						<div>消防管辖：<span class="color-gray" id="fireControlJurisdiction"></span></div>
+						<div>消防监督员：<span class="color-gray" id="supervisorsResponsible"></span></div>
+						<div>单位类别: <span class="color-gray" id="unitTypeInfo"></span></div>
+						<div>单位属性: <span class="color-gray" id="unitAttribute"></span></div>
+						<div>总建筑面积: <span class="color-gray" id="totalBuildingArea"></span></div>
+						<div>消控室位置: <span class="color-gray" id="fireControlRoomLocationInfo"></span></div>
+					</div>
+				</div>
+				<div class="mui-card callPhone">
+					<!--内容区-->
+					<div class="mui-card-content">
+						<div class="mui-row">
+							<!-- <div class="mui-col-sm-12 mui-col-xs-12">
+								<div class="safetyManager">
+									<div>
+										<p>消防安全管理人：<span></span></p>
+										<p ></p>
+									</div>
+									<i></i>
+								</div>
+							</div> -->
+						</div>
+					</div>
+				</div>
+				<div class="mui-card visualization">
+					<!--页眉，放置标题-->
+					<div class="mui-card-header"><p><span></span>可视化</p>
+					</div>
+					<!--内容区-->
+					<div class="mui-card-content">
+						<ul class="mui-table-view">
+							<!-- <li class="mui-table-view-cell">
+								<a class="mui-navigate-right">大楼-2层</a>
+							</li> -->
+						</ul>
+					</div>
+				</div>
+				<div class="mui-card falseAlarmLog">
+					<!--页眉，放置标题-->
+					<div class="mui-card-header">
+						<p><span></span>告警日志</p>
+					</div>
+					<!--内容区-->
+					<div class="mui-card-content main-list">
+						<div class="alarmLog">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/script_px2rem.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.imageViewer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">mui.init({})</script>
+		<script src="../../js/pageJS/fireAlarmDetails.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

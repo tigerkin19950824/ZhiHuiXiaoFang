@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>我的二维码</title>
+    <link rel="stylesheet" href="../../../css/reset.css">
+    <link rel="stylesheet" href="../../../css/common.css">
+    <link rel="stylesheet" href="../../../components/components.css">
+    <style>
+        .wrap {
+            position: relative;
+            display: inline-block;
+            width: 6rem;
+            height: 7.8rem;
+            margin-top: 1.6rem;
+            margin-left: .59rem;
+            background-color: #fff;
+            box-shadow:0px 3px 9px 0px rgba(160,160,160,0.33);
+            border-radius: .08rem;
+        }
+        .blur{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top:0;
+            background-color: #000000;
+            opacity: 0.6;
+        }
+        .right img{
+            vertical-align: middle;
+            width: .44rem;
+            margin-right: .32rem;
+        }
+        .text_first{
+            position: absolute;
+            width: 1.36rem;
+            height: 1.36rem;
+            text-align: center;
+            border-radius: 50%;
+            left:2.32rem;
+            overflow: hidden;
+            top:-.51rem;
+        }
+        .text_first>img{
+            width: 100%;
+            height: 100%;
+        }
+        .text_two{
+            margin-top: 1.03rem;
+            color:#333333;
+            font-size: .34rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        .text_three{
+            margin-top: .6rem;
+            /* margin-left: .65rem; */
+            margin-bottom: .62rem;
+        }
+        #test{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        #test img{
+            /* width: 4.71rem; */
+            margin: 0 auto;
+        }
+        .text_foor{
+            text-align: center;
+            color:#999999;
+            font-size: .2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="page-all">
+            <div class="struc noFooter">
+                <div class="header">
+                    <head-nav left-arrow title="我的二维码" @click-left="retreat">
+                        <div slot="right" @click="returns" class="right">
+                                <img src="../../../icon/fanhui.png" alt="">
+                        </div>
+                    </head-nav>
+                </div>
+                <div class="main">
+                    <div class="main-scroll">
+                        <div class="blur"></div>
+                        <div class="wrap">
+                            <div class="text_first"><img src="../../../icon/sqtx.png" alt=""></div>
+                            <div class="text_two">{{titles}}</div>
+                            <div class="text_three"><span id="test"></span></div>
+                            <div class="text_foor">扫一扫上面的社区二维码，加入社区</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/vue.min.js"></script>
+    <script src="../../../js/axios.min.js"></script>
+    <script src="../../../js/rem.js"></script>
+    <script src="../../../js/getQueryVariable.js"></script>
+    <!-- 注册组件，Vue实例需要在window加载完成之后创建 -->
+    <script src="../../../components/components.js"></script>
+    <script src="../../../js/es6-promise.auto.min.js"></script>
+    <script src="../../../js/http.js"></script>
+    <script src="../../../js/qrcode.min.js"></script>
+    <script>
+       (function () {
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    titles:'',
+                    id:'',
+                    communityId:'',
+                    familyId:''
+                },
+                mounted() {
+                    var This = this
+                    This.familyId=localStorage.getItem('familyId');
+                    This.communityId=localStorage.getItem('communityId');
+                    This.state()
+                },
+                methods: {
+                    setQRcode(){
+                        var This=this
+                        var qrcode = new QRCode("test", {
+                            width: 600,
+                            height: 600,
+                            text:This.id,
+                        });
+                    },
+                    retreat:function() {
+                        window.location.href='wutos://finish'
+                    },
+                    state:function(){
+                        if(getQueryVariable().id==1||getQueryVariable().id==2) {
+                            this.titles='家庭二维码'
+                        }else{
+                            this.titles='社区二维码'
+                        }
+                        if(getQueryVariable().id==3){
+                            this.id=this.communityId
+                            this.setQRcode()
+                        }
+                        if(getQueryVariable().id==1){
+                            this.id=this.familyId
+                            this.setQRcode()
+                        }
+                    },
+                    returns:function(){
+                    }
+                },
+            })
+        })()
+    </script>
+</body>
+
+</html>

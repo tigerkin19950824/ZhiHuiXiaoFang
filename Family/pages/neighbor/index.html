@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>邻里守护</title>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../components/components.css">
+  <script src="../../js/rem.js"></script>
+  <style>
+
+    * {
+      box-sizing: content-box;
+    }
+
+    .struc .main {
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .tabs-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .tabs-nav .tab-wrap .tab-ul-2 {
+      justify-content: space-around;
+    }
+
+    .tabs-nav .tab-wrap .tab-ul-2 div.tab-text {
+      flex-grow: 0;
+    }
+
+    .tab-cont {
+      position: absolute;
+      top: .88rem;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      overflow: auto;
+    }
+
+    .tab-cont .hs-search {
+      background-color: #fff;
+    }
+
+    .tab-cont-posttion {
+      overflow: hidden;
+    }
+
+    .tab-cont-posttion .list {
+      position: absolute;
+      top: .78rem;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    /* 社区家庭 start */
+    .sqjt {
+      margin-top: .2rem;
+    }
+
+    .sqjt .sqjt-item {
+      width: 6.6rem;
+      margin: 0 auto .2rem;
+      border-radius: .1rem;
+      background-color: #ffffff;
+      overflow: hidden;
+      padding-bottom: 0.2rem;
+    }
+
+    .sqjt .sqjt-item .navTop {
+      /* line-height: .56rem;
+      height: .56rem; */
+      font-size: 0.28rem;
+      background: #fff url('../../icon/jiantou_bottom_icon.png') 6rem .25rem no-repeat;
+      background-size: .3rem auto;
+      padding-top: 0.24rem;
+      padding-left: 0.24rem;
+      box-sizing: border-box;
+    }
+
+    .sqjt .sqjt-item .navTop i {
+      display: inline-block;
+      width: .08rem;
+      height: .32rem;
+      background: rgba(104, 189, 255, 1);
+      border-radius: .04rem;
+      vertical-align: middle;
+      margin-right: .12rem;
+    }
+    .sqjt .sqjt-item .navTop span{
+      display: inline-block;
+      height: 0.33rem;
+      line-height: 0.33rem;
+      vertical-align: middle;
+    }
+    .sqjt-item .jt-num {
+      margin-left: .36rem;
+      font-size: .24rem;
+      line-height: .5rem;
+      color: #666666;
+      margin-top: 0.2rem;
+    }
+
+    .sqjt-item .content {
+      padding: .2rem 0;
+      border-top: 1px solid #E5E5E5;
+    }
+
+    .sqjt-item .content .dy {
+      margin-left: .3rem;
+      font-size: .24rem;
+      color: #999;
+      line-height: .46rem;
+    }
+
+    /* 社区家庭 end */
+
+    /* 社区人员 start */
+    .sqry {
+      margin-top: .2rem;
+    }
+
+    .sqry .sqry-item {
+      width: 6.6rem;
+      margin: 0 auto .2rem;
+      border-radius: .1rem;
+      background-color: #ffffff;
+    }
+
+    .sqry-item .navTop {
+      line-height: .56rem;
+      height: .56rem;
+      font-size: 0.28rem;
+      background-size: .38rem auto;
+      padding-top: 0.2rem;
+      padding-left: 0.24rem;
+      padding-bottom: 0.1rem;
+    }
+    .sqry-item .navTop span{
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .sqry-item .navTop i {
+      display: inline-block;
+      width: .08rem;
+      height: .32rem;
+      background: rgba(104, 189, 255, 1);
+      border-radius: .04rem;
+      vertical-align: middle;
+      margin-right: .12rem;
+    }
+
+    .sqry-item .content {
+      border-top: 1px solid #eee;
+    }
+
+    .sqry-item .content .member {
+      margin: 0 .24rem;
+      height: 1.32rem;
+      border-top: 1px solid #e5e5e5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sqry-item .content .member .img {
+      width: .84rem;
+      height: .84rem
+    }
+
+    .sqry-item .content .member .img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sqry-item .content .member .data {
+      flex: 1 1 auto;
+      margin-left: .23rem;
+    }
+
+    /* .sqry-item .content .member .data .n-s {
+
+    } */
+
+    .sqry-item .content .member .data .n-s .name {
+      font-size: .3rem;
+      line-height: .46rem;
+      color: #333;
+      vertical-align: middle;
+    }
+
+    .sqry-item .content .member .data .n-s .level {
+      margin-left: .2rem;
+      font-size: .2rem;
+      color: #666666;
+      line-height: .46rem;
+      vertical-align: middle;
+    }
+
+    .sqry-item .content .member .data .n-s .level-0 {
+      color: rgba(214, 110, 86, 1);
+    }
+
+    .sqry-item .content .member .data .n-s .edit {
+      width: .24rem;
+      height: .28rem;
+      vertical-align: middle;
+      margin-left: 0.2rem;
+    }
+
+    .sqry-item .content .member .data .tel {
+      font-size: .24rem;
+      line-height: .32rem;
+      color: rgba(153, 153, 153, 1);
+    }
+
+    /*.sqry-item .content .member .btns .edit {*/
+    /*height: .5rem;*/
+    /*border: 1px solid rgba(153, 153, 153, 1);*/
+    /*border-radius: .08rem;*/
+    /*}*/
+
+    /*.sqry-item .content .member .btns .del {*/
+    /*margin-left: .2rem;*/
+    /*height: .5rem;*/
+    /*border: 1px solid rgba(153, 153, 153, 1);*/
+    /*border-radius: .08rem;*/
+    /*}*/
+    .sqry-item .content .member .btns .del img.remove {
+      width: .36rem;
+      height: .36rem;
+    }
+
+    /* 社区人员 end */
+
+    /* dialog */
+    .dialog-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, .5);
+      z-index: 999;
+    }
+
+    .dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate3d(-50%, -50%, 0);
+      -moz-transform: translate3d(-50%, -50%, 0);
+      -ms-transform: translate3d(-50%, -50%, 0);
+      -o-transform: translate3d(-50%, -50%, 0);
+      transform: translate3d(-50%, -50%, 0);
+      width: 6rem;
+      height: 3.1rem;
+      background: #fff;
+      border-radius: .1rem;
+      z-index: 1001;
+    }
+
+    .dialog .dialog-title {
+      margin-top: .5rem;
+      font-size: .3rem;
+      line-height: .32rem;
+      text-align: center;
+      color: #333;
+    }
+
+    .dialog .dialog-message {
+      margin-top: .4rem;
+      font-size: .28rem;
+      line-height: .32rem;
+      text-align: center;
+      color: #666;
+    }
+
+    .dialog .dialog-btns {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: .9rem;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .dialog .dialog-btns .dialog-btn-cancel {
+      width: 2rem;
+      height: .6rem;
+      background: #fff;
+      border: 1px solid rgba(191, 191, 191, 1);
+      box-shadow: .02rem .03rem .1rem 0 rgba(208, 208, 208, 0.47);
+      border-radius: .08rem;
+      font-size: .26rem;
+      line-height: .6rem;
+      text-align: center;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    .dialog .dialog-btns .dialog-btn-confirm {
+      width: 2rem;
+      height: .6rem;
+      background: #1A8EE9;
+      /* border: 1px solid rgba(191, 191, 191, 1); */
+      box-shadow: .02rem .03rem .1rem 0 rgba(208, 208, 208, 0.47);
+      border-radius: .08rem;
+      font-size: .26rem;
+      line-height: .6rem;
+      text-align: center;
+      color: #fff;
+    }
+
+    /* dialog */
+
+    /* popup */
+    .popup {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4rem;
+      background-color: #fff;
+      z-index: 1001;
+    }
+
+    .popup-top {
+      height: .8rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .popup-top .popup-cancel {
+      width: 1rem;
+      font-size: .26rem;
+      line-height: .8rem;
+      text-align: center;
+      color: #666;
+    }
+
+    .popup-top .popup-save {
+      width: 1rem;
+      font-size: .26rem;
+      line-height: .8rem;
+      text-align: center;
+      color: #3673BB;
+    }
+
+    .popup .popup-options {
+      margin-top: .2rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      align-content: flex-start;
+    }
+
+    .popup .popup-options .role {
+      flex-grow: 0;
+      flex-shrink: 0;
+      width: 2rem;
+      height: .6rem;
+      margin: .2rem;
+      background-color: #F0F0F0;
+      box-sizing: border-box;
+      border: 1px solid #eee;
+      font-size: .24rem;
+      line-height: .6rem;
+      text-align: center;
+      color: #333;
+      border-radius: 0.08rem;
+    }
+
+    .popup .popup-options .active {
+      background-color: #E1EFFA;
+      color: #1A8EE9;
+      border: 1px solid #1A8EE9;
+    }
+    .border-top-none{
+      border-top: none !important;
+    }
+    /* popup */
+
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page-all">
+    <div class="struc noFooter">
+      <div class="header">
+        <head-nav left-arrow title="邻里守护" @click-left="onClickLeft"></head-nav>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <tabs-nav class="tabs-nav" ref="tabsZj" :tabs="tabs" v-model="tab_index" :swipe-threshold="5"
+                    line-width="1.2rem"></tabs-nav>
+
+          <!-- 社区家庭 -->
+          <div class="tab-cont tab-cont-0 tab-cont-posttion" v-show="tab_index===0">
+            <hs-search class="hs-search-0" v-model="search_text_0" placeholder="请输入搜索关键词"
+                       @search="onSearch"></hs-search>
+            <hs-list-load
+              class="list"
+              :width="sqjt.cont_width"
+              :height="sqjt.cont_height"
+
+              v-model="sqjt.loading"
+              :immediate-check="false"
+              :finished="sqjt.finished"
+              :finished-text="sqjt.finished_text"
+              :offset="1200"
+              @load="getSqjt(sqjt.page)"
+
+              pull-refresh
+              @refresh="onRefreshSqjt"
+            >
+              <ul class="sqjt">
+                <template v-for="(item, index) in sqjt.list">
+                  <li class="sqjt-item shadow-item" @click="unfold(item)">
+                    <div class="navTop"><i></i><span>{{item.plotName}}</span></div>
+                    <div class="jt-num">联网家庭数量：{{item.count}}</div>
+                    <div class="content" v-if="item.active">
+                      <p class="dy" v-for="dy in item.families">{{dy.familyAddress}}</p>
+                    </div>
+                  </li>
+                </template>
+              </ul>
+            </hs-list-load>
+            <hs-list-null v-model="sqjt.show_list_null"></hs-list-null>
+          </div>
+
+          <!-- 社区人员 -->
+          <div class="tab-cont tab-cont-1 tab-cont-posttion" v-show="tab_index===1">
+            <hs-search class="hs-search-1" v-model="search_text_1" placeholder="请输入搜索关键词"
+                       @search="onSearch"></hs-search>
+            <hs-list-load
+              class="list"
+              :width="sqry.cont_width"
+              :height="sqry.cont_height"
+
+              v-model="sqry.loading"
+              :immediate-check="false"
+              :finished="sqry.finished"
+              :finished-text="sqry.finished_text"
+              :offset="1200"
+              @load="getSqry(sqry.page)"
+
+              pull-refresh
+              @refresh="onRefreshSqry"
+            >
+              <template v-for="(item, index) in sqry.list">
+                <ul class="sqry">
+                  <li class="sqry-item shadow-item">
+                    <div class="navTop"><i></i><span v-if="item.userType == 0">{{item.communityName}}</span><span v-if="item.userType == 1">{{item.plotName}}</span></div>
+                    <div class="content">
+                      <!-- 下面处理过数据 记得。。。。 -->
+                      <div class="member" v-for="(aa, ide) in item.communityUsers" :class="{'border-top-none':ide == '0'}">
+                        <div class="img"><img src="https://blcyzycc.gitee.io/lutu/img/lutu/tx.png" alt=""></div>
+                        <div class="data">
+                          <p class="n-s">
+                            <em class="name">{{aa.userName}}</em>
+                            <span class="level" :class="{'level-0': aa.roleId == '43'}">{{role_id[aa.roleId]}}</span>
+                            <img class="edit" src="../../icon/edit.png" alt="" v-if="aa.roleId!=='43'"
+                                 @click="editCY(aa)">
+                          </p>
+                          <p class="tel">{{aa.phoneNumber}}</p>
+                        </div>
+                        <div class="btns" v-if="aa.roleId!=='43'">
+                          <div class="del" @click="removeCY(aa)"><img src="../../icon/remove.png" alt="" class="remove">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </template>
+            </hs-list-load>
+            <hs-list-null v-model="sqry.show_list_null"></hs-list-null>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-bg" v-if="del_show" @click="del_show=false"></div>
+    <div class="dialog" v-if="del_show">
+      <div class="dialog-title">请确认</div>
+      <div class="dialog-message">请确认将此用户从社区中移除</div>
+      <div class="dialog-btns">
+        <div class="dialog-btn-cancel" @click="del_show=false">取消</div>
+        <div class="dialog-btn-confirm" @click="confirmDel">确认</div>
+      </div>
+    </div>
+
+    <div class="dialog-bg" v-if="edit_show" @click="edit_show=false"></div>
+    <div class="popup" v-if="edit_show">
+      <div class="popup-top">
+        <div class="popup-cancel" @click="edit_show=false">取消</div>
+        <div class="popup-save" @click="confirmEdit">保存</div>
+      </div>
+      <div class="popup-options">
+        <template v-for="(ro, id) in role_id">
+          <div class="role" :class="{active: edit_sel_id===id}" :key="id" @click="selectRole(id)">{{ro}}</div>
+        </template>
+      </div>
+    </div>
+
+    <!--<hs-go-back v-show="tab_index===2" cont-ele=".struc .main .tab-cont-0 .hs-list-load"
+                item-ele=".struc .main .tab-cont-0 .sqjt-item" :list="sqjt.list" :total="sqjt.total"></hs-go-back>
+    <hs-go-back v-show="tab_index===4" cont-ele=".struc .main .tab-cont-1 .hs-list-load"
+                item-ele=".struc .main .tab-cont-1 .sqry-item" :list="sqry.list" :total="sqry.total"></hs-go-back>-->
+  </div>
+</div>
+
+<script src="../../js/es6-promise.auto.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/axios.min.js"></script>
+<script src="../../js/http.js"></script>
+<script src="../../js/getQueryVariable.js"></script>
+<script src="../../components/components.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: function () {
+        return {
+          tabs: ['社区家庭', '社区人员'],
+          tab_index: 0,
+
+          search_text_0: '',
+          search_text_1: '',
+
+          sqjt: { // 社区家庭列表
+            cont_width: '375px', // 组件宽度
+            cont_height: '375px', // 组件高度
+            loading: false, // 是否正在加载
+            finished: true, // 是否全部加载完成------------------------没有分页直接设为true
+            page: 0,
+            list: [],
+            finished_text: '没有更多了',
+            show_list_null: false,
+            // total: 0
+          },
+
+          sqry: { // 社区人员
+            cont_width: '375px', // 组件宽度
+            cont_height: '375px', // 组件高度
+            loading: false, // 是否正在加载
+            finished: true, // 是否全部加载完成------------------------没有分页直接设为true
+            page: 0,
+            list: [],
+            finished_text: '没有更多了',
+            show_list_null: false,
+            // total: 0
+          },
+          del_show: false,
+          del_item: {}, // 当前点击删除的data
+
+          edit_show: false,
+          edit_now_item: '', // 设置角色时，当前选中的角色信息
+          edit_sel_id: '',
+          role_id: {
+            '43': '社区管理员',
+            '55': '社区消防站长',
+            '56': '社区消防队长',
+            '57': '小区工作人员',
+            '58': '社区消防队员'
+          },
+
+          cid:'' ,//社区id
+          fid:'',//家庭id
+        }
+      },
+      watch: {
+        search_text_0:function(oldVal){
+          if(oldVal == ''){
+            this.sqjt.finished = true;
+            this.sqjt.page = 0
+            this.sqjt.list = [];
+            this.getSqjt();
+          }
+        },
+        search_text_1:function(oldVal){
+          if(oldVal == ''){
+            this.sqry.finished = true;
+            this.sqry.page = 0
+            this.sqry.list = [];
+            this.getSqry()
+          }
+        },
+        tab_index: function (val) {
+          switch (val) {
+            case 0:
+
+              break;
+            case 1:
+              // this.getSqry()
+              break;
+            default:
+              break
+          }
+        }
+      },
+      created: function () {
+        // var query = getQueryVariable()
+        // this.id = query.id
+        // this.name = query.name
+      },
+      mounted: function () {
+        this.cid = localStorage.getItem('communityId'); // 获取社区id
+        this.fid = localStorage.getItem('familyId'); // 获取家庭id
+
+        this.getSqjt()
+        this.getSqry()
+        this.getListWH()
+      },
+      filters: {
+        level: function (val) {
+          if (!val) {
+            return '未知状态'
+          }
+          return /(A|B|C|D)/.test(val) ? val + '类告警' : val
+        },
+        sqryState: function (val) {
+          // 1：待指派；2：未开始；3：未确认；4：进行中；5：已完成；6：被取消
+          return ['', '待指派', '未开始', '未确认', '进行中', '已完成', '被取消'][Number(val)]
+        }
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        onClickRight: function () {
+          if (this.tab_index === 2) {
+            this.screen_show_2 = !this.screen_show_2
+          } else if (this.tab_index === 4) {
+            this.screen_show_4 = !this.screen_show_4
+          }
+        },
+        // 获取list的宽高
+        getListWH: function () {
+          var This = this
+
+          this.$nextTick(function () {
+            var a = ''
+            var b = ''
+            if (This.tab_index === 0) {
+              a = '.struc .main .tab-cont-0'
+              b = '.struc .main .hs-search-0'
+            } else if (This.tab_index === 1) {
+              a = '.struc .main .tab-cont-1'
+              b = '.struc .main .hs-search-1'
+            }
+
+            setTimeout(function () {
+              var ele = document.querySelector(a)
+              var eSearch = document.querySelector(b)
+
+              This.sqjt.cont_width = This.sqry.cont_width = ele.clientWidth + 'px'
+              This.sqjt.cont_height = This.sqry.cont_height = ele.clientHeight - eSearch.clientHeight + 'px'
+            })
+          })
+        },
+        onSearch: function () {
+          if (this.tab_index === 0) {
+            this.sqjt.loading = false
+            this.sqjt.finished = true
+            this.sqjt.page = 0
+            // this.sqjt.list = []
+            var data = [];
+            for(var i=0;i<this.sqjt.list.length;i++){
+              if(this.sqjt.list[i].plotName !== null){
+                if(this.sqjt.list[i].plotName.indexOf(this.search_text_0) !== -1){
+                  data.push(this.sqjt.list[i]);
+                }
+              }
+            }
+            this.sqjt.list = [];
+            this.sqjt.list = data;
+            // this.getSqjt()
+          } else if (this.tab_index === 1) {
+            this.sqry.loading = false
+            this.sqry.finished = true
+            this.sqry.page = 0
+            var data02 = [];
+            for(var i=0;i<this.sqry.list.length;i++){
+              if(this.sqry.list[i].communityName !== null){
+                if(this.sqry.list[i].communityName.indexOf(this.search_text_1) !== -1){
+                  data02.push(this.sqry.list[i]);
+                }
+              }
+            }
+            this.sqry.list = [];
+            this.sqry.list = data02;
+            // this.getSqry()
+          }
+        },
+        unfold: function (item) {
+          item.active = !item.active
+        },
+        // 获取社区家庭列表数据
+        getSqjt: function (index) {
+          var This = this
+
+          this.apiGet('/Comminuty/familys', {
+            isfamily: false,
+            // offset: 1,
+            // keyword: 1,
+            // limit: 20
+          }).then(function (res) {
+            var data = res.data.data.plots
+            // This.sqjt.total = res.data.data.total
+
+            if (!data) data = [];
+            for (var j = 0; j < data.length; j++) {
+              data[j].active = false
+              This.sqjt.list.push(data[j])
+            }
+
+            if (data.length === 0) {
+              This.sqjt.finished = true
+            }
+
+            if (data.length === 0 && This.list.length === 0) {
+              // 显示缺省页
+              This.sqjt.show_list_null = true
+              This.sqjt.finished_text = ''
+            } else {
+              This.sqjt.show_list_null = false
+            }
+
+            This.sqjt.loading = false
+          }).catch(function (reason) {
+            This.sqjt.loading = false
+            This.sqjt.finished = true
+          })
+
+          this.sqjt.page++
+        },
+        // 社区家庭下拉刷新
+        onRefreshSqjt: function () {
+          this.sqjt.finished = true //------------------------没有分页直接设为true
+          this.sqjt.list = []
+          this.sqjt.page = 0
+
+          this.sqjt.show_list_null = false
+          setTimeout(function () {
+            this.getSqjt(this.sqjt.page)
+          }.bind(this), 1000)
+        },
+        // 获取社区人员列表数据
+        getSqry: function (index) {
+          var This = this
+
+          this.apiGet('/Comminuty/cpusers', {
+            id: this.cid, //社区id
+            fid: this.fid // 家庭id
+          }).then(function (res) {
+            var data = res.data.data
+            // This.sqry.total = res.data.total
+
+            if (!data) data = []
+            for (var j = 0; j < data.length; j++) {
+              This.sqry.list.push(data[j])
+            }
+
+            if (data.length === 0) {
+              This.sqry.finished = true
+            }
+
+            if (data.length === 0 && This.list.length === 0) {
+              // 显示缺省页
+              This.sqry.show_list_null = true
+              This.sqry.finished_text = ''
+            } else {
+              This.sqry.show_list_null = false
+            }
+
+            This.sqry.loading = false
+          }).catch(function (reason) {
+            This.sqry.loading = false
+            This.sqry.finished = true
+          })
+
+          this.sqry.page++
+        },
+        // 社区人员下拉刷新
+        onRefreshSqry: function () {
+          this.sqry.finished = true //------------------------没有分页直接设为true
+          this.sqry.list = []
+          this.sqry.page = 0
+
+          this.sqry.show_list_null = false
+          setTimeout(function () {
+            this.getSqry(this.sqry.page)
+          }.bind(this), 1000)
+        },
+        // 编辑
+        editCY: function (item) {
+          this.edit_show = !this.edit_show
+          this.edit_now_item = item
+          this.edit_sel_id = item.roleId
+        },
+        // 修改
+        selectRole: function(id) {
+          this.edit_sel_id = id
+          console.log();
+        },
+        // 确认修改
+        confirmEdit: function () {
+          this.apiPost('/user/UpdateRoleByUserId', {
+            userid: this.edit_now_item.userId,
+            roleid: this.edit_sel_id
+          }).then(function (res) {
+            if (res.data.code == 1) {
+              this.edit_show = false
+              this.onRefreshSqry();
+            } else {
+              console.log('修改失败');
+            }
+          }.bind(this)).catch(function (reason) {
+            this.del_show = true
+          })
+        },
+        // 删除
+        removeCY: function (item) {
+          this.del_show = true
+          this.del_item = item
+        },
+        // 确认删除
+        confirmDel: function () {
+          this.apiGet('/Comminuty/OutComminuty', {
+            userid: this.del_item.userId
+          }).then(function (res) {
+            if (res.data.code == 1) {
+              this.del_show = false
+              this.onRefreshSqry()
+            } else {
+              console.log('删除失败');
+            }
+          }.bind(this)).catch(function (reason) {
+            this.del_show = true
+          })
+        }
+      }
+    });
+  })();
+</script>
+</body>
+</html>

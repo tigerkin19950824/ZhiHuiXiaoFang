@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html style="font-size: 52.0833px;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>隐患详情</title>
+  <link rel="stylesheet" href="../../../css/reset.css">
+  <link rel="stylesheet" href="../../../css/common.css">
+  <link rel="stylesheet" href="../../../components/components.css">
+  <script src="../../../js/rem.js"></script>
+  <!-- mui -->
+  <link rel="stylesheet" href="../../../css/imageview.css"/>
+  <link rel="stylesheet" href="../../../css/mui.imageviewer.css"/>
+  <link rel="stylesheet" href="../../../css/mui.min.css">
+  <style>
+    .detailWrap,
+    .main-scroll {
+      background-color: #EFEFEF;
+    }
+
+    .clear::after {
+      content: '';
+      height: 0;
+      display: block;
+      visibility: hidden;
+      clear: both;
+    }
+
+    .detailWrap {
+      width: 100%;
+      padding: 0 0.4rem;
+      box-sizing: border-box;
+      position: relative;
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
+    }
+
+    .detailWrap .itemWrap {
+      width: 100%;
+    }
+
+    .detailItem {
+      padding-bottom: 0.34rem;
+      position: relative;
+    }
+
+    .line {
+      width: 1px;
+      background-color: #3673BB;
+      position: absolute;
+      left: 0;
+      top: 1.14rem;
+      bottom: -0.09rem;
+      left: 0.45rem;
+    }
+
+    .d_left {
+      display: inline-block;
+      width: 0.9rem;
+    }
+
+    .d_left .sign {
+      width: 0.4rem;
+      height: 0.4rem;
+      text-align: center;
+      display: block;
+      margin: 0 auto;
+      margin-top: 0.05rem;
+    }
+
+    .d_left .sign > img {
+      width: 0.4rem;
+      height: 0.4rem;
+    }
+    .d_left .sign > .sign_pro{
+      width: 0.24rem;
+      height: 0.24rem;
+    }
+
+    .d_left .time_day {
+      width: 100%;
+      font-size: 0.2rem;
+      line-height: 0.3rem;
+      color: #333333;
+      margin-top: 0.1rem;
+      text-align: center;
+    }
+
+    .d_left .time_time {
+      width: 100%;
+      font-size: 0.18rem;
+      line-height: 0.3rem;
+      color: #999999;
+      text-align: center;
+    }
+
+    .d_right {
+      float: right;
+      width: 5.28rem;
+      background-color: #ffffff;
+      padding-bottom: 0.31rem;
+      box-sizing: border-box;
+      border-radius: 0.1rem;
+    }
+
+    .d_right > .title {
+      font-size: 0.28rem;
+      color: #3673BB;
+      border-bottom: 1px solid #DCDCDC;
+      padding-left: 0.28rem;
+      padding-top: 0.19rem;
+      padding-bottom: 0.12rem;
+    }
+
+    .d_right .place {
+      margin-top: 0.16rem;
+      padding-left: 0.28rem;
+    }
+
+    .d_right .person,
+    .d_right .result {
+      margin-top: 0.16rem;
+      padding-left: 0.28rem;
+    }
+
+    .d_right .result .imgs{
+      display: inline-block;
+      width: 70%;
+    }
+    .d_right .result .imgs .img{
+      display: inline-block;
+      width: 0.9rem;
+      height: 0.9rem;
+      margin-right: 0.2rem;
+    }
+    .d_right .result .imgs .img img{
+      width: 100%;
+      height: 100%;
+      border-radius: 0.08rem;
+    }
+
+    .d_right .place_title,
+    .d_right .person_title,
+    .d_right .result_title {
+      color: #666666;
+      font-size: 0.24rem;
+      display: inline-block;
+    }
+    .d_right .result_title.imgs_label{
+      vertical-align: top;
+    }
+    .d_right .place_val,
+    .d_right .person_val,
+    .d_right .result_val {
+      font-size: 0.24rem;
+      color: #999999;
+      line-height: 0.3rem;
+    }
+
+    .d_right .result_val {
+      display: inline-block;
+      width: 3.19rem;
+    }
+
+    .d_right .normal {
+      width: 0.57rem !important;
+      height: 0.3rem !important;
+      display: inline-block !important;
+      line-height: 0.3rem !important;
+      background-color: #45C7F2 !important;
+      font-size: 0.18rem !important;
+      color: #ffffff !important;
+      border-radius: 0.15rem !important;
+      text-align: center;
+    }
+
+    .padding_bottom_none {
+      padding-bottom: 0 !important;
+    }
+  </style>
+</head>
+
+<body>
+<div id="app">
+  <div class="page-all" v-cloak>
+    <div class="struc noFooter">
+      <div class="header">
+        <head-nav left-arrow title="隐患详情" @click-left="onClickLeft"></head-nav>
+      </div>
+      <div class="main">
+        <div class="main-scroll">
+          <div class="detailWrap">
+            <div class="itemWrap" v-for="(item,index) in list" :key="index">
+              <div class="detailItem clear" :class="{padding_bottom_none:index == list.length-1}"
+                   v-if="item.label == '隐患上报'">
+                <div class="line" v-if="index !== list.length-1"></div>
+                <div class="d_left">
+                  <div class="sign"><img src="../../../icon/warn_start.png" alt=""></div>
+                  <div class="time_day">{{item.creationTime | getTime(true)}}</div>
+                  <div class="time_time">{{item.creationTime | getTime(false)}}</div>
+                </div>
+                <div class="d_right clear shadow-item">
+                  <div class="title">隐患上报</div>
+                  <div class="place">
+                    <span class="place_title">上报人：</span>
+                    <span class="place_val">{{item.operator}}</span>
+                  </div>
+                  <div class="person">
+                    <span class="person_title">隐患场所：</span>
+                    <span class="person_val">{{item.areaName}}</span>
+                  </div>
+                  <div class="result">
+                    <span class="result_title">隐患描述：</span>
+                    <span class="result_val">{{item.description}}</span>
+                  </div>
+                  <div class="result">
+                    <span class="result_title imgs_label">隐患照片：</span>
+                    <div class="imgs">
+                      <div class="img" v-for="(img, index) in item.imgs"><img :src="img" :data-preview-src="img"
+                                                                              data-preview-group="1"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="detailItem clear" :class="{padding_bottom_none:index == list.length-1}"
+                   v-if="item.label == '隐患指派'">
+                <div class="line" v-if="index !== list.length-1"></div>
+                <div class="d_left">
+                  <div class="sign"><img src="../../../icon/warn_middle.png" alt="" class="sign_pro"></div>
+                  <div class="time_day">{{item.creationTime | getTime(true)}}</div>
+                  <div class="time_time">{{item.creationTime | getTime(false)}}</div>
+                </div>
+                <div class="d_right clear">
+                  <div class="title">隐患指派</div>
+                  <div class="place">
+                    <span class="place_title">指派人：</span>
+                    <span class="place_val">{{item.operator}}</span>
+                  </div>
+                  <div class="person">
+                    <span class="person_title">是否有效：</span>
+                    <span class="person_val" v-if="item.isValid">有效隐患</span>
+                    <span class="person_val" v-else>无效效隐患</span>
+                  </div>
+                  <div class="result">
+                    <span class="result_title">隐患整改人：</span>
+                    <span class="result_val">{{item.rectifyUser}}</span>
+                  </div>
+                  <div class="result">
+                    <span class="result_title">隐患审核人：</span>
+                    <span class="result_val">{{item.reviewUser}}</span>
+                  </div>
+                  <div class="result">
+                    <span class="result_title">文字描述：</span>
+                    <span class="result_val">{{item.description}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="detailItem clear" :class="{padding_bottom_none:index == list.length-1}"
+                   v-if="item.label == '隐患整改'">
+                <div class="line" v-if="index !== list.length-1"></div>
+                <div class="d_left">
+                  <div class="sign"><img src="../../../icon/warn_middle.png" alt="" class="sign_pro"></div>
+                  <div class="time_day">{{item.creationTime | getTime(true)}}</div>
+                  <div class="time_time">{{item.creationTime | getTime(false)}}</div>
+                </div>
+                <div class="d_right clear">
+                  <div class="title">隐患整改</div>
+                  <div class="place">
+                    <span class="place_title">整改人：</span>
+                    <span class="place_val">{{item.operator}}</span>
+                  </div>
+                  <div class="person">
+                    <span class="person_title">整改结果：</span>
+                    <span class="person_val">{{item.result}}</span>
+                  </div>
+                  <div class="result">
+                    <span class="result_title imgs_label">整改照片：</span>
+                    <div class="imgs">
+                      <div class="img" v-for="(img, index) in item.imgs"><img :src="img" alt="" :data-preview-src="img"
+                                                                              data-preview-group="2"></div>
+                    </div>
+                  </div>
+                  <div class="result">
+                    <span class="result_title">整改描述：</span>
+                    <span class="result_val">{{item.description}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="detailItem clear" :class="{padding_bottom_none:index == list.length-1}"
+                   v-if="item.label == '隐患复查'">
+                <div class="line" v-if="index !== list.length-1"></div>
+                <div class="d_left">
+                  <div class="sign"><img src="../../../icon/warn_end.png" alt=""></div>
+                  <div class="time_day">{{item.creationTime | getTime(true)}}</div>
+                  <div class="time_time">{{item.creationTime | getTime(false)}}</div>
+                </div>
+                <div class="d_right clear">
+                  <div class="title">隐患复查</div>
+                  <div class="place">
+                    <span class="place_title">复查人：</span>
+                    <span class="place_val">{{item.operator}}</span>
+                  </div>
+                  <div class="person">
+                    <span class="person_title">复查结果：</span>
+                    <span class="person_val">{{item.result}}</span>
+                  </div>
+                  <div class="result">
+                    <span class="result_title">文字描述：</span>
+                    <span class="result_val">{{item.description}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hs-list-null v-model="show_list_null"></hs-list-null>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../../js/es6-promise.auto.min.js"></script>
+<script src="../../../js/vue.min.js"></script>
+<script src="../../../js/axios.min.js"></script>
+<script src="../../../js/http.js"></script>
+<script src="../../../js/getQueryVariable.js"></script>
+<script src="../../../components/components.js"></script>
+<!-- mui -->
+<script src="../../../js/mui.min.js"></script>
+<script src="../../../js/mui.imageViewer.js"></script>
+<script src="../../../js/mui.previewimage.js"></script>
+<script src="../../../js/mui.zoom.js"></script>
+<script>
+  (function () {
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        show_list_null:false,
+        finished_text:'没有更多了',
+        id: '',
+        search_text: '',
+        list: []
+      },
+      created: function () {
+        this.id = getQueryVariable().id;
+        this.getData();
+      },
+      mounted: function () {
+  
+      },
+      filters: {
+        getTime: function (val, type) {
+          var date = val.match(/\d{1,2}(\d{1,2}-\d{1,2}-\d{1,2}) (\d{1,2}:\d{1,2}):\d{1,2}/)
+          if (type) {
+            return date[1]
+          } else {
+            return date[2]
+          }
+        }
+      },
+      methods: {
+        onClickLeft: function () {
+          window.location.href = 'wutos://finish'
+        },
+        //获取数据
+        getData() {
+          var This = this;
+          this.apiGet('/Maintenance/GetHiddenDangerDetailById', {
+            dangerid: this.id //测试id:c4bf3dcfa20840bbbe74884479ce4384
+          }).then(function (res) {
+            var data = res.data;
+            if(!data || data.length == 0){
+               // 显示缺省页
+               This.show_list_null = true;
+                This.finished_text = '';
+            }
+
+            for (var i = 0; i < data.length; i++) {
+              var datum = data[i]
+
+              if (!datum.fileUrls) {
+                datum.fileUrls = '[]'
+              }
+
+              try {
+                datum.fileUrls = JSON.parse(datum.fileUrls)
+              } catch (e) {
+                datum.fileUrls = []
+              }
+
+              datum.imgs = []
+              for (var j = 0; j < datum.fileUrls.length; j++) {
+                datum.imgs.push(imageURL + datum.fileUrls[j].FileName)
+              }
+            }
+
+            for(var l = 0;l < data.length; l++){
+              This.list.push(data[l]);
+            }
+
+            // mui预览图片
+            This.$nextTick(function () {
+              previewImg()
+            })
+          }).catch(function (err) {
+  
+          })
+        },
+        getImg() {
+
+        },
+        onSearch: function () {
+
+        }
+      }
+    });
+
+    // 图片预览
+    function previewImg() {
+      mui.previewImage();
+    }
+
+  })();
+</script>
+</body>
+
+</html>

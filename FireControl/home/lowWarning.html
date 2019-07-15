@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>低分预警</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/pageCS/fireAlarm.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/pageCS/lowWarning.css"/>
+	</head>
+	<body>
+		<div class="public-color">
+			<div class="header-back public-color">
+				<a href="wutos://finish" class="icon-back mui-pull-left back-btn"></a>
+				<div class="header-title" alarmType="1">低分预警</div>
+				<div class="screening icon-up">筛选</div>
+			</div>
+			<div class="search-base public-color">
+			<div class="search-box">
+				<i class="search-icon mui-icon"></i>
+				<form><input type="search" id="search" placeholder="搜索内容描述..."></form>
+				<i class="del-icon mui-icon" onclick="removeSearchFn()"></i>
+			   </div>
+			</div>
+		</div>
+		<div class="mui-content">
+			<!--下拉刷新容器-->
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--数据列表-->
+					<ul class="mui-table-view mui-table-view-chevron">
+						<div class="mui-card">
+							<div class="mui-card-content">
+								<div>
+									<div class="score">
+										<p class="branch">50</p>
+										<p class="scoreType">综合评分</p>
+										<!-- <div class="triangle"></div> -->
+									</div>
+								</div>
+								<div class="warningContent">
+									<p class="warningCompany">
+										武汉普天科技有限公司	
+									</p>
+									<p class="warningType">
+										1分钟前
+
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="mui-card">
+							<div class="mui-card-content">
+								<div>
+									<div class="score">
+										<p class="branch">50</p>
+										<p class="scoreType">综合评分</p>
+										<!-- <div class="triangle"></div> -->
+									</div>
+								</div>
+								<div class="warningContent">
+									<p class="warningCompany">
+										武汉普天科技有限公司	
+									</p>
+									<p class="warningType">
+										1分钟前	
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="mui-card">
+							<div class="mui-card-content">
+								<div>
+									<div class="score">
+										<p class="branch">92</p>
+										<p class="scoreType">综合评分</p>
+										<!-- <div class="triangle"></div> -->
+									</div>
+								</div>
+								<div class="warningContent">
+									<p class="warningCompany">
+										武汉普天科技有限公司	
+									</p>
+									<p class="warningType">
+										1分钟前	
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="mui-card">
+							<div class="mui-card-content">
+								<div>
+									<div class="score">
+										<p class="branch">50</p>
+										<p class="scoreType">综合评分</p>
+										<!-- <div class="triangle"></div> -->
+									</div>
+								</div>
+								<div class="warningContent">
+									<p class="warningCompany">
+										武汉普天科技有限公司	
+									</p>
+									<p class="warningType">
+										1分钟前
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="mui-card">
+							<div class="mui-card-content">
+								<div>
+									<div class="score">
+										<p class="branch">60</p>
+										<p class="scoreType">综合评分</p>
+										<!-- <div class="triangle"></div> -->
+									</div>
+								</div>
+								<div class="warningContent">
+									<p class="warningCompany">
+										武汉普天科技有限公司	
+									</p>
+									<p class="warningType">
+										1分钟前
+									</p>
+								</div>
+							</div>
+						</div>
+					</ul>
+			</div>
+		</div>
+		<div  class="Mask">
+			<div class="screen">
+					<div class="unitType">
+						<p>单位类型 <i></i><span class="selectionSpan unitTypeSpan"></span></p>
+						<div class="mui-row">
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn" svtype='0'>火灾高危单位</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn"  svtype='1'>其他重点单位</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn"  svtype='2'>十小场所</button>
+							</div>
+							<div class="mui-col-sm-4 mui-col-xs-4">
+							<button type="button" class="mui-btn" svtype='3'>其他一般单位</button>
+							</div>
+						</div>	
+					</div>
+					<div class="confirm-btn">
+					 <a href="javascript:;" class="reset fl" onclick="okButFn(0)">重置</a>
+					 <a href="javascript:;" class="confirm fr" onclick="okButFn(1)">确定</a>
+					</div>
+			</div>
+		</div>
+		<script src="../js/jquery-3.2.1.min.js"></script>
+		<script src="../js/script_px2rem.js"></script>
+		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/pageJS/lowWarning.js"></script>
+	</body>
+	<script>
+		for(var i=0;i<$(".mui-table-view .mui-card").length;i++){
+			if(parseInt($(".branch").eq(i).text())<=50){ 
+				$(".branch").eq(i).parent().addClass("zhpf-1")
+			}else if(parseInt($(".branch").eq(i).text())>50&&parseInt($(".branch").eq(i).text())<=80){
+				$(".branch").eq(i).parent().addClass("zhpf-2")
+			}else if(parseInt($(".branch").eq(i).text())>80&&parseInt($(".branch").eq(i).text())<=100){
+				$(".branch").eq(i).parent().addClass("zhpf-3")
+			}
+		}
+		
+	</script>
+</html>
